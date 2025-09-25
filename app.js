@@ -1,4 +1,4 @@
-// Простая и надежная версия без сложных функций
+// Простая и надежная версия приложения
 console.log("App started!");
 
 // Показ экрана
@@ -167,10 +167,4 @@ function prevProfile() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Документ загружен!");
     loadProfile();
-    
-    // Простая инициализация Telegram Web App
-    if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.expand();
-        console.log("Telegram Web App инициализирован");
-    }
 });
