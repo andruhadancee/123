@@ -527,14 +527,14 @@ main {
 }
 
 .discipline-icon {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
     flex-shrink: 0;
-    border-radius: 4px;
+    border-radius: 6px;
     background: rgba(255, 255, 255, 0.08);
-    padding: 2px;
-    box-shadow: 0 0 8px rgba(217, 70, 170, 0.2);
+    padding: 3px;
+    box-shadow: 0 0 10px rgba(217, 70, 170, 0.2);
     border: 1px solid rgba(217, 70, 170, 0.15);
 }
 
@@ -543,22 +543,22 @@ main {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 20px;
     background: rgba(255, 255, 255, 0.05);
     padding: 0;
-    box-shadow: 0 0 6px rgba(217, 70, 170, 0.15);
+    box-shadow: 0 0 8px rgba(217, 70, 170, 0.15);
 }
 
 /* Иконки для мобильных устройств - чуть меньше */
 @media (max-width: 768px) {
     .discipline-icon {
-        width: 20px;
-        height: 20px;
-        padding: 2px;
+        width: 24px;
+        height: 24px;
+        padding: 3px;
     }
     
     .discipline-icon-emoji {
-        font-size: 14px;
+        font-size: 18px;
     }
     
     .discipline-with-icon {

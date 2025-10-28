@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Reduce discipline icon size and make submit buttons more compact"
+git commit -m "Increase discipline icons size and make submit buttons compact"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
