@@ -454,32 +454,62 @@
 
 @media (max-width: 480px) {
     /* Header */
+    .admin-header {
+        padding: 16px 0;
+    }
+    
     .admin-header h1 {
-        font-size: 28px;
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
     }
     
     .btn-primary {
         width: 100%;
         justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 12px 20px;
+        border-radius: 25px;
+        box-shadow: 0 2px 12px rgba(255, 255, 255, 0.15);
     }
     
     /* Tabs */
+    .admin-tabs {
+        padding-bottom: 12px;
+    }
+    
     .tab-btn {
-        padding: 8px 12px;
+        padding: 8px 14px;
         font-size: 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .tab-btn:active {
+        transform: scale(0.96);
     }
     
     /* Cards */
     .tournament-admin-card {
-        padding: 12px;
+        padding: 14px;
+        border-radius: 16px;
+        border-width: 1.5px;
+        background: rgba(45, 27, 61, 0.4);
     }
     
     .info-label {
         font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        opacity: 0.8;
     }
     
     .info-value {
-        font-size: 12px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
     }
     
     .tournament-admin-actions {
@@ -489,36 +519,74 @@
     
     .tournament-admin-actions button {
         width: 100%;
+        border-radius: 20px;
+        font-weight: 600;
+        padding: 10px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .tournament-admin-actions button:active {
+        transform: scale(0.96);
     }
     
     /* Forms */
+    .form-group label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: -0.1px;
+    }
+    
     .form-group input,
     .form-group select,
     .form-group textarea {
-        font-size: 13px;
-        padding: 8px;
+        font-size: 14px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border-width: 1.5px;
+        background: rgba(45, 27, 61, 0.4);
     }
     
     /* Modal */
+    .modal {
+        padding: 8px;
+    }
+    
     .modal-content {
         width: 100%;
-        margin: 10px;
-        padding: 16px;
-        max-height: 90vh;
+        margin: 0;
+        padding: 20px;
+        max-height: 92vh;
         overflow-y: auto;
+        border-radius: 20px;
+    }
+    
+    .modal-header {
+        margin-bottom: 16px;
     }
     
     .modal-header h2 {
-        font-size: 18px;
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
     }
     
     .modal-footer {
         flex-direction: column-reverse;
-        gap: 8px;
+        gap: 10px;
+        margin-top: 20px;
     }
     
     .modal-footer button {
         width: 100%;
+        padding: 12px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 14px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .modal-footer button:active {
+        transform: scale(0.96);
     }
     
     /* Grids */
@@ -526,6 +594,22 @@
     #past-tournaments-grid,
     #links-grid {
         gap: 12px;
+    }
+    
+    /* Плавные анимации */
+    .tournament-admin-card,
+    .tab-btn,
+    button,
+    input,
+    select,
+    textarea {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Улучшенная читаемость */
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 }
 
