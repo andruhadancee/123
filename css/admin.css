@@ -217,10 +217,9 @@
 }
 
 .link-item {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
-    gap: 12px;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .link-item label {
@@ -229,12 +228,12 @@
 }
 
 .link-item .discipline-icon {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
 
 .link-item .discipline-icon-emoji {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .link-item input {
@@ -452,22 +451,17 @@
     }
     
     /* Links */
-    .link-item {
-        grid-template-columns: auto auto 1fr;
-        gap: 8px;
-    }
-    
     .link-item label {
         font-size: 13px;
     }
     
     .link-item .discipline-icon {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
     }
     
     .link-item .discipline-icon-emoji {
-        font-size: 16px;
+        font-size: 14px;
     }
     
     /* Modal */
