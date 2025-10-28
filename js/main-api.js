@@ -207,18 +207,35 @@ function initCountdown(timerId, dateString) {
     
     function updateTimer() {
         try {
-            // Парсим дату в формате ДД.ММ.ГГГГ или ДД-ММ-ГГГГ
-            const parts = dateString.split(/[.-]/);
-            if (parts.length !== 3) {
-                container.innerHTML = '';
-                return;
+            let targetDate;
+            
+            // Парсим разные форматы дат
+            const dotsFormat = dateString.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+            const dashesFormat = dateString.match(/(\d{1,2})-(\d{1,2})-(\d{4})/);
+            const russianFormat = dateString.match(/(\d{1,2})\s+(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)\s+(\d{4})/i);
+            
+            if (dotsFormat) {
+                const [, day, month, year] = dotsFormat;
+                targetDate = new Date(year, parseInt(month) - 1, parseInt(day));
+            } else if (dashesFormat) {
+                const [, day, month, year] = dashesFormat;
+                targetDate = new Date(year, parseInt(month) - 1, parseInt(day));
+            } else if (russianFormat) {
+                const [, day, monthName, year] = russianFormat;
+                const months = {
+                    'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3, 'мая': 4, 'июня': 5,
+                    'июля': 6, 'августа': 7, 'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
+                };
+                targetDate = new Date(year, months[monthName.toLowerCase()], parseInt(day));
+            } else {
+                // Пробуем стандартный парсинг
+                targetDate = new Date(dateString);
+                if (isNaN(targetDate.getTime())) {
+                    container.innerHTML = '';
+                    return;
+                }
             }
             
-            const day = parseInt(parts[0]);
-            const month = parseInt(parts[1]) - 1;
-            const year = parseInt(parts[2]);
-            
-            const targetDate = new Date(year, month, day);
             const now = new Date();
             const diff = targetDate - now;
             
