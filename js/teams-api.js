@@ -64,9 +64,7 @@ function createTeamCard(team, tournament) {
         <div class="team-card">
             <div class="team-name">${team.name}</div>
             <div class="team-info">
-                <span>👤 ${team.captain}</span>
                 <span>👥 ${team.players} игроков</span>
-                <span>📅 ${team.registration_date}</span>
             </div>
         </div>
     `;

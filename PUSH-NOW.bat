@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Fix add discipline button handler + reduce mobile nav text size again"
+git commit -m "Remove captain and date from team cards + increase text size"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
