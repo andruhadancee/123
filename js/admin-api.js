@@ -61,13 +61,18 @@ function setupEventListeners() {
     // Save social links
     document.getElementById('save-social-btn').addEventListener('click', saveSocialLinks);
     
-    // Add discipline
-    document.getElementById('add-discipline-btn').addEventListener('click', addDiscipline);
-    document.getElementById('new-discipline-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            addDiscipline();
-        }
-    });
+    // Add discipline (from links tab)
+    document.getElementById('add-discipline-btn').addEventListener('click', addDisciplineFromPrompt);
+    
+    // Add discipline (from disciplines tab)
+    const newDisciplineInput = document.getElementById('new-discipline-input');
+    if (newDisciplineInput) {
+        newDisciplineInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addDiscipline();
+            }
+        });
+    }
     
     // Team management
     document.getElementById('add-team-btn').addEventListener('click', openAddTeamModal);
@@ -204,8 +209,11 @@ async function loadRegistrationLinksForm() {
     const links = await API.links.getAll();
     
     grid.innerHTML = disciplines.map(discipline => `
-        <div class="link-item">
-            <label>${discipline}</label>
+        <div class="link-item" data-discipline="${discipline}">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <label style="margin-bottom: 0;">${discipline}</label>
+                <button class="btn-delete-discipline" data-discipline="${discipline}" title="Удалить дисциплину">🗑️</button>
+            </div>
             <input type="text" 
                    class="link-input" 
                    data-discipline="${discipline}" 
@@ -213,6 +221,16 @@ async function loadRegistrationLinksForm() {
                    placeholder="Любая ссылка: https://..., mailto:..., tel:...">
         </div>
     `).join('');
+    
+    // Добавляем обработчики для кнопок удаления
+    document.querySelectorAll('.btn-delete-discipline').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const discipline = e.target.dataset.discipline;
+            if (confirm(`Удалить дисциплину "${discipline}"?`)) {
+                await deleteDiscipline(discipline);
+            }
+        });
+    });
 }
 
 async function saveRegistrationLinks() {
@@ -462,6 +480,24 @@ async function addDiscipline() {
         await loadRegistrationLinksForm();
         input.value = '';
         alert(`Дисциплина "${newDiscipline}" добавлена!`);
+    } catch (error) {
+        alert('Ошибка добавления дисциплины: ' + error.message);
+    }
+}
+
+// Добавление дисциплины через prompt (для вкладки "Ссылки на формы")
+async function addDisciplineFromPrompt() {
+    const newDiscipline = prompt('Введите название новой дисциплины:');
+    
+    if (!newDiscipline || !newDiscipline.trim()) {
+        return;
+    }
+    
+    try {
+        await API.disciplines.create(newDiscipline.trim());
+        await loadDisciplinesList();
+        await loadRegistrationLinksForm();
+        alert(`Дисциплина "${newDiscipline.trim()}" добавлена!`);
     } catch (error) {
         alert('Ошибка добавления дисциплины: ' + error.message);
     }
