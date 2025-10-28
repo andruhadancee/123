@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Use local game logos (Dota 2, CS 2, MLBB) and gamepad emoji for others"
+git commit -m "Reduce discipline icon size and make submit buttons more compact"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
