@@ -46,14 +46,14 @@ module.exports = async (req, res) => {
         
         // POST - добавить команду
         if (req.method === 'POST') {
-            const { tournamentId, name, captain, players, registrationDate } = req.body;
+            const { tournamentId, name, players } = req.body;
             
             const result = await pool.query(
                 `INSERT INTO registered_teams 
-                (tournament_id, name, captain, players, registration_date)
+                (tournament_id, name, players, captain, registration_date)
                 VALUES ($1, $2, $3, $4, $5)
                 RETURNING *`,
-                [tournamentId, name, captain, players, registrationDate]
+                [tournamentId, name, players, '', new Date().toLocaleDateString('ru-RU')]
             );
             
             // Обновляем счётчик команд в турнире
@@ -69,14 +69,14 @@ module.exports = async (req, res) => {
         
         // PUT - обновить команду
         if (req.method === 'PUT') {
-            const { id, tournamentId, name, captain, players, registrationDate } = req.body;
+            const { id, tournamentId, name, players } = req.body;
             
             const result = await pool.query(
                 `UPDATE registered_teams 
-                SET tournament_id = $1, name = $2, captain = $3, players = $4, registration_date = $5
-                WHERE id = $6
+                SET tournament_id = $1, name = $2, players = $3
+                WHERE id = $4
                 RETURNING *`,
-                [tournamentId, name, captain, players, registrationDate, id]
+                [tournamentId, name, players, id]
             );
             
             if (result.rows.length === 0) {
