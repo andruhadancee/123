@@ -30,7 +30,7 @@ git commit -m "%commit_msg%"
 echo.
 
 echo Отправка на GitHub...
-git push -u origin main
+git push -u origin main --force
 echo.
 
 echo ====================================
