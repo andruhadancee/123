@@ -61,12 +61,6 @@ function setupEventListeners() {
     // Save social links
     document.getElementById('save-social-btn').addEventListener('click', saveSocialLinks);
     
-    // Add discipline (from links tab)
-    const addDisciplineBtn = document.getElementById('add-discipline-btn');
-    if (addDisciplineBtn) {
-        addDisciplineBtn.addEventListener('click', addDisciplineFromPrompt);
-    }
-    
     // Add discipline (from disciplines tab)
     const newDisciplineInput = document.getElementById('new-discipline-input');
     if (newDisciplineInput) {
@@ -483,24 +477,6 @@ async function addDiscipline() {
         await loadRegistrationLinksForm();
         input.value = '';
         alert(`Дисциплина "${newDiscipline}" добавлена!`);
-    } catch (error) {
-        alert('Ошибка добавления дисциплины: ' + error.message);
-    }
-}
-
-// Добавление дисциплины через prompt (для вкладки "Ссылки на формы")
-async function addDisciplineFromPrompt() {
-    const newDiscipline = prompt('Введите название новой дисциплины:');
-    
-    if (!newDiscipline || !newDiscipline.trim()) {
-        return;
-    }
-    
-    try {
-        await API.disciplines.create(newDiscipline.trim());
-        await loadDisciplinesList();
-        await loadRegistrationLinksForm();
-        alert(`Дисциплина "${newDiscipline.trim()}" добавлена!`);
     } catch (error) {
         alert('Ошибка добавления дисциплины: ' + error.message);
     }

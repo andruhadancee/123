@@ -195,6 +195,8 @@
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     padding: 32px;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .links-container h2 {
@@ -228,6 +230,7 @@
 
 .link-item input {
     width: 100%;
+    max-width: 500px;
 }
 
 /* Modal */
@@ -340,7 +343,7 @@
 .form-group input,
 .form-group select {
     width: 100%;
-    max-width: 600px;
+    max-width: 450px;
     padding: 12px 16px;
     background: rgba(10, 10, 20, 0.5);
     border: 1px solid var(--border-color);
