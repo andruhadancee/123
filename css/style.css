@@ -1162,19 +1162,33 @@ main {
 
 .timer-container {
     margin: 12px 0;
+    min-height: 45px;
+    display: flex;
+    align-items: center;
 }
 
 .timer-badge {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px;
-    background: rgba(139, 90, 191, 0.15);
-    border: 1px solid rgba(139, 90, 191, 0.3);
-    border-radius: 20px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(139, 90, 191, 0.15), rgba(107, 45, 143, 0.15));
+    border: 2px solid rgba(139, 90, 191, 0.4);
+    border-radius: 25px;
     font-size: 13px;
     font-weight: 600;
     color: var(--color-pink);
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2);
+    animation: timerPulse 2s ease-in-out infinite;
+}
+
+@keyframes timerPulse {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(139, 90, 191, 0.4);
+    }
 }
 
 .timer-label {
@@ -1188,9 +1202,15 @@ main {
 }
 
 .timer-ended {
-    background: rgba(255, 59, 48, 0.1);
-    border-color: rgba(255, 59, 48, 0.3);
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.15), rgba(255, 59, 48, 0.1));
+    border-color: rgba(255, 59, 48, 0.4);
     color: #ff3b30;
+    animation: none;
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.2);
+}
+
+.timer-container:empty {
+    display: none;
 }
 
 /* ===== TOURNAMENT CARD ANIMATIONS ===== */
@@ -1211,8 +1231,28 @@ main {
     }
 }
 
+.tournament-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.tournament-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(139, 90, 191, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.tournament-card:hover::before {
+    left: 100%;
+}
+
 .tournament-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-4px) scale(1.02);
     box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
 }
 

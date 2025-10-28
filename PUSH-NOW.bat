@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Add calendar feature with tournament schedule"
+git commit -m "Fix timers + add design improvements: animations, gradients, effects"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

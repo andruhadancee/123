@@ -139,7 +139,7 @@ function createTournamentCard(tournament, links) {
                 </div>
             </div>
             
-            ${hasTimer ? `<div class="timer-container" id="${timerId}"></div>` : ''}
+            <div class="timer-container" id="${timerId}" data-date="${tournament.date}"></div>
             
             <a href="${regLink}" target="_blank" class="btn-submit" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
                 Подать заявку
@@ -151,9 +151,10 @@ function createTournamentCard(tournament, links) {
 // Инициализация таймеров после отображения
 function initTimers() {
     document.querySelectorAll('.timer-container').forEach(container => {
-        const card = container.closest('.tournament-card');
-        const dateText = card.querySelector('.info-item:nth-child(2) .info-value').textContent;
-        initCountdown(container.id, dateText);
+        const dateText = container.getAttribute('data-date');
+        if (dateText) {
+            initCountdown(container.id, dateText);
+        }
     });
 }
 
