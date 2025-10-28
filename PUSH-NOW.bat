@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Fix disciplines loading in regulation modal + complete features"
+git commit -m "Fix regulations: add schema and fix disciplines display"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
