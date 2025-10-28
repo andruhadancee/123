@@ -1,0 +1,69 @@
+-- WB Cyber Club Database Schema
+
+-- Таблица турниров
+CREATE TABLE IF NOT EXISTS tournaments (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    discipline VARCHAR(100) NOT NULL,
+    date VARCHAR(100) NOT NULL,
+    prize VARCHAR(100) NOT NULL,
+    teams INTEGER DEFAULT 0,
+    max_teams INTEGER NOT NULL,
+    registration_link TEXT,
+    custom_link TEXT,
+    status VARCHAR(50) DEFAULT 'active',
+    winner VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Таблица ссылок на регистрацию
+CREATE TABLE IF NOT EXISTS registration_links (
+    id SERIAL PRIMARY KEY,
+    discipline VARCHAR(100) UNIQUE NOT NULL,
+    link TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Таблица социальных ссылок
+CREATE TABLE IF NOT EXISTS social_links (
+    id SERIAL PRIMARY KEY,
+    platform VARCHAR(50) UNIQUE NOT NULL,
+    link TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Таблица дисциплин
+CREATE TABLE IF NOT EXISTS disciplines (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Таблица зарегистрированных команд
+CREATE TABLE IF NOT EXISTS registered_teams (
+    id SERIAL PRIMARY KEY,
+    tournament_id INTEGER REFERENCES tournaments(id) ON DELETE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    captain VARCHAR(255) NOT NULL,
+    players INTEGER NOT NULL,
+    registration_date VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Вставка дефолтных дисциплин
+INSERT INTO disciplines (name) VALUES 
+    ('CS 2'),
+    ('Dota 2'),
+    ('Valorant'),
+    ('Overwatch 2'),
+    ('League of Legends')
+ON CONFLICT (name) DO NOTHING;
+
+-- Индексы для быстрого поиска
+CREATE INDEX IF NOT EXISTS idx_tournaments_status ON tournaments(status);
+CREATE INDEX IF NOT EXISTS idx_tournaments_discipline ON tournaments(discipline);
+CREATE INDEX IF NOT EXISTS idx_teams_tournament ON registered_teams(tournament_id);
+

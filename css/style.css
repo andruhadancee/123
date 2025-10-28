@@ -271,6 +271,8 @@ main {
     padding: 32px;
     position: relative;
     transition: all 0.3s ease;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 .tournament-card:hover {
@@ -292,6 +294,10 @@ main {
     color: var(--color-text-primary);
     margin-bottom: 4px;
     flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
 }
 
 .tournament-number {
@@ -307,6 +313,7 @@ main {
 
 .info-item {
     display: flex;
+    min-width: 0;
     flex-direction: column;
     gap: 4px;
 }
@@ -321,6 +328,9 @@ main {
     font-size: 18px;
     color: var(--color-text-primary);
     font-weight: 600;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .tournament-card .btn-submit {
@@ -379,6 +389,8 @@ main {
     border-radius: 12px;
     padding: 20px;
     transition: all 0.3s ease;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 .team-card:hover {
@@ -391,6 +403,8 @@ main {
     font-weight: 600;
     color: var(--color-text-primary);
     margin-bottom: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .team-info {

@@ -3,6 +3,7 @@ node_modules/
 *.log
 .env
 .env.local
+.vercel
 
 # Видео файлы (большие - не загружаем)
 *.mp4

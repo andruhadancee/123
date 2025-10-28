@@ -141,6 +141,8 @@
     gap: 24px;
     align-items: center;
     transition: all 0.3s ease;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 .tournament-admin-card:hover {
@@ -151,6 +153,13 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 16px;
+    min-width: 0;
+}
+
+.tournament-admin-info > div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-width: 0;
 }
 
 .tournament-admin-actions {
