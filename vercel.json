@@ -3,5 +3,9 @@
   "outputDirectory": ".",
   "installCommand": "npm install",
   "devCommand": null,
-  "framework": null
+  "framework": null,
+  "rewrites": [
+    { "source": "/teams", "destination": "/index.html" },
+    { "source": "/archive", "destination": "/index.html" }
+  ]
 }

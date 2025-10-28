@@ -188,22 +188,30 @@ nav a {
     font-weight: 500;
     transition: all 0.3s ease;
     white-space: nowrap;
-    background: rgba(45, 27, 61, 0.3);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(139, 90, 191, 0.2);
+    background: transparent;
+    border: 1px solid transparent;
 }
 
 nav a:hover {
     color: var(--color-text-primary);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(139, 90, 191, 0.3);
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
     border-color: var(--color-pink);
 }
 
 nav a.active {
     color: var(--color-text-primary);
-    box-shadow: 0 8px 20px rgba(139, 90, 191, 0.3);
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
     border-color: var(--color-pink);
+}
+
+/* Page Sections */
+.page-section {
+    display: none;
+}
+
+.page-section.active {
+    display: block;
 }
 
 /* Social Links */
