@@ -45,7 +45,7 @@ function createTournamentTeamsSection(tournament, teams) {
     
     return `
         <div class="tournament-section">
-            <h2>${formatDisciplineWithIcon(tournament.discipline)} ${tournament.title}</h2>
+            <h2><span class="tournament-header-icon">${getDisciplineIcon(tournament.discipline)}</span> <span class="tournament-header-discipline">${tournament.discipline}</span> ${tournament.title}</h2>
             <div class="teams-list">
                 ${teamsHTML}
             </div>
@@ -58,7 +58,6 @@ function createTeamCard(team, tournament) {
         <div class="team-card">
             <div class="team-name">${team.name}</div>
             <div class="team-info">
-                <span>${formatDisciplineWithIcon(tournament.discipline)}</span>
                 <span>👤 ${team.captain}</span>
                 <span>👥 ${team.players} игроков</span>
                 <span>📅 ${team.registration_date}</span>
