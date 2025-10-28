@@ -318,6 +318,79 @@ const API = {
                 throw error;
             }
         }
+    },
+    
+    // Регламенты
+    regulations: {
+        // Получить все регламенты
+        async getAll() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/regulations`);
+                if (!response.ok) throw new Error('Ошибка загрузки регламентов');
+                return await response.json();
+            } catch (error) {
+                console.error('❌ Ошибка получения регламентов:', error);
+                return [];
+            }
+        },
+        
+        // Получить регламент по дисциплине
+        async getByDiscipline(discipline) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/regulations?discipline=${encodeURIComponent(discipline)}`);
+                if (!response.ok) throw new Error('Ошибка загрузки регламента');
+                return await response.json();
+            } catch (error) {
+                console.error('❌ Ошибка получения регламента:', error);
+                throw error;
+            }
+        },
+        
+        // Создать регламент
+        async create(regulationData) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/regulations`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(regulationData)
+                });
+                if (!response.ok) throw new Error('Ошибка создания регламента');
+                return await response.json();
+            } catch (error) {
+                console.error('❌ Ошибка создания регламента:', error);
+                throw error;
+            }
+        },
+        
+        // Обновить регламент
+        async update(id, regulationData) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/regulations?id=${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(regulationData)
+                });
+                if (!response.ok) throw new Error('Ошибка обновления регламента');
+                return await response.json();
+            } catch (error) {
+                console.error('❌ Ошибка обновления регламента:', error);
+                throw error;
+            }
+        },
+        
+        // Удалить регламент
+        async delete(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/regulations?id=${id}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) throw new Error('Ошибка удаления регламента');
+                return await response.json();
+            } catch (error) {
+                console.error('❌ Ошибка удаления регламента:', error);
+                throw error;
+            }
+        }
     }
 };
 

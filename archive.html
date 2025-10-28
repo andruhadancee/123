@@ -33,7 +33,7 @@
                 <a href="index.html">Турниры</a>
                 <a href="teams.html">Команды</a>
                 <a href="archive.html" class="active">Прошедшие турниры</a>
-                <a href="#" id="regulations-btn">Регламент</a>
+                <a href="#" id="regulations-btn" onclick="openRegulationsModal(event)">Регламент</a>
             </nav>
             
             <div class="social-links">
@@ -57,6 +57,22 @@
         </div>
     </header>
 
+    <!-- Regulations Modal -->
+    <div class="modal" id="regulations-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Регламент турниров</h2>
+                <button class="modal-close" id="close-regulations-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Выберите дисциплину для просмотра регламента:</p>
+                <div id="regulations-buttons" class="regulations-buttons">
+                    <!-- Кнопки дисциплин будут добавлены динамически -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <main class="container">
         <div class="tournaments-grid" id="archive-grid">
@@ -66,6 +82,8 @@
 
     <!-- API Client -->
     <script src="js/api-client.js"></script>
+    <!-- Regulations Script -->
+    <script src="js/regulations.js"></script>
     <!-- Archive Script -->
     <script src="js/archive-api.js"></script>
 </body>

@@ -649,3 +649,91 @@
     }
 }
 
+/* ===== REGULATIONS STYLES ===== */
+
+.regulation-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+}
+
+.regulation-item:hover {
+    border-color: var(--color-pink);
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.2);
+}
+
+.regulation-info h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--color-text-primary);
+}
+
+.regulation-link {
+    color: var(--color-pink);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.regulation-link:hover {
+    text-decoration: underline;
+}
+
+.regulation-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.regulation-actions .btn-edit,
+.regulation-actions .btn-delete {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.regulation-actions .btn-edit {
+    background: rgba(139, 90, 191, 0.1);
+    color: var(--color-pink);
+}
+
+.regulation-actions .btn-edit:hover {
+    background: rgba(139, 90, 191, 0.2);
+    transform: translateY(-2px);
+}
+
+.regulation-actions .btn-delete {
+    background: rgba(255, 59, 48, 0.1);
+    color: #ff3b30;
+}
+
+.regulation-actions .btn-delete:hover {
+    background: rgba(255, 59, 48, 0.2);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .regulation-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .regulation-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+

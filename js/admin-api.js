@@ -119,6 +119,7 @@ async function loadAdminData() {
     await loadDisciplinesList();
     await loadRegistrationLinksForm();
     await loadSocialLinksForm();
+    await loadRegulationsList();
     console.log('✅ Админка загружена');
 }
 
@@ -654,4 +655,156 @@ async function handleTeamFormSubmit(e) {
         alert('Ошибка сохранения команды: ' + error.message);
     }
 }
+
+// ========== РЕГЛАМЕНТЫ ==========
+
+async function loadRegulationsList() {
+    const list = document.getElementById('regulations-list');
+    if (!list) return;
+    
+    try {
+        const regulations = await API.regulations.getAll();
+        
+        if (regulations.length === 0) {
+            list.innerHTML = '<div class="empty-state"><p>Нет загруженных регламентов</p></div>';
+            return;
+        }
+        
+        list.innerHTML = regulations.map(r => `
+            <div class="regulation-item" data-id="${r.id}">
+                <div class="regulation-info">
+                    <h3>${r.discipline_name}</h3>
+                    <a href="${r.pdf_url}" target="_blank" class="regulation-link">Открыть PDF</a>
+                </div>
+                <div class="regulation-actions">
+                    <button class="btn-edit" onclick="editRegulation(${r.id})">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                    <button class="btn-delete" onclick="deleteRegulation(${r.id})">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.error('Error loading regulations:', error);
+        list.innerHTML = '<div class="error-state"><p>Ошибка загрузки регламентов</p></div>';
+    }
+}
+
+function openAddRegulationModal() {
+    document.getElementById('regulation-modal-title').textContent = 'Добавить регламент';
+    document.getElementById('regulation-form').reset();
+    document.getElementById('regulation-id').value = '';
+    document.getElementById('regulation-modal').classList.add('active');
+    loadDisciplinesForRegulation();
+}
+
+function closeRegulationModal() {
+    document.getElementById('regulation-modal').classList.remove('active');
+}
+
+async function loadDisciplinesForRegulation() {
+    const select = document.getElementById('regulation-discipline');
+    const disciplines = await API.disciplines.getAll();
+    
+    select.innerHTML = '<option value="">Выберите дисциплину</option>' +
+        disciplines.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
+}
+
+async function handleRegulationFormSubmit(e) {
+    e.preventDefault();
+    
+    const disciplineName = document.getElementById('regulation-discipline').value;
+    const pdfUrl = document.getElementById('regulation-pdf-url').value;
+    
+    try {
+        if (document.getElementById('regulation-id').value) {
+            // Редактирование
+            const id = document.getElementById('regulation-id').value;
+            await API.regulations.update(id, { pdf_url: pdfUrl, discipline_name: disciplineName });
+            alert('Регламент обновлён!');
+        } else {
+            // Добавление
+            await API.regulations.create({ discipline_name: disciplineName, pdf_url: pdfUrl });
+            alert('Регламент добавлен!');
+        }
+        
+        closeRegulationModal();
+        await loadRegulationsList();
+    } catch (error) {
+        alert('Ошибка сохранения регламента: ' + error.message);
+    }
+}
+
+async function editRegulation(id) {
+    try {
+        const regulations = await API.regulations.getAll();
+        const regulation = regulations.find(r => r.id === id);
+        
+        if (!regulation) {
+            alert('Регламент не найден');
+            return;
+        }
+        
+        document.getElementById('regulation-modal-title').textContent = 'Редактировать регламент';
+        document.getElementById('regulation-id').value = regulation.id;
+        document.getElementById('regulation-pdf-url').value = regulation.pdf_url;
+        
+        await loadDisciplinesForRegulation();
+        document.getElementById('regulation-discipline').value = regulation.discipline_name;
+        
+        document.getElementById('regulation-modal').classList.add('active');
+    } catch (error) {
+        alert('Ошибка загрузки регламента: ' + error.message);
+    }
+}
+
+async function deleteRegulation(id) {
+    if (!confirm('Вы уверены, что хотите удалить этот регламент?')) {
+        return;
+    }
+    
+    try {
+        await API.regulations.delete(id);
+        alert('Регламент удалён!');
+        await loadRegulationsList();
+    } catch (error) {
+        alert('Ошибка удаления регламента: ' + error.message);
+    }
+}
+
+// Добавляем обработчики в setupEventListeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Регламенты
+    const addRegulationBtn = document.getElementById('add-regulation-btn');
+    const closeRegulationModalBtn = document.getElementById('close-regulation-modal');
+    const cancelRegulationBtn = document.getElementById('cancel-regulation-btn');
+    const regulationForm = document.getElementById('regulation-form');
+    const regulationModal = document.getElementById('regulation-modal');
+    
+    if (addRegulationBtn) {
+        addRegulationBtn.addEventListener('click', openAddRegulationModal);
+    }
+    if (closeRegulationModalBtn) {
+        closeRegulationModalBtn.addEventListener('click', closeRegulationModal);
+    }
+    if (cancelRegulationBtn) {
+        cancelRegulationBtn.addEventListener('click', closeRegulationModal);
+    }
+    if (regulationForm) {
+        regulationForm.addEventListener('submit', handleRegulationFormSubmit);
+    }
+    if (regulationModal) {
+        regulationModal.addEventListener('click', function(e) {
+            if (e.target === this) closeRegulationModal();
+        });
+    }
+});
 
