@@ -48,6 +48,7 @@
         <div class="admin-tabs">
             <button class="tab-btn active" data-tab="active">Активные турниры</button>
             <button class="tab-btn" data-tab="past">Прошедшие турниры</button>
+            <button class="tab-btn" data-tab="teams">Зарегистрированные команды</button>
             <button class="tab-btn" data-tab="disciplines">Дисциплины</button>
             <button class="tab-btn" data-tab="links">Ссылки на формы</button>
             <button class="tab-btn" data-tab="social">Социальные кнопки</button>
@@ -73,6 +74,18 @@
             </div>
             <div class="tournaments-admin-grid" id="past-tournaments-grid">
                 <!-- Past tournaments will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Teams Tab -->
+        <div class="tab-content" id="teams-tab">
+            <div class="links-container">
+                <h2>Зарегистрированные команды</h2>
+                <p class="hint">Управление командами по турнирам</p>
+                
+                <div id="teams-admin-container">
+                    <!-- Teams will be loaded here -->
+                </div>
             </div>
         </div>
 
@@ -121,25 +134,25 @@
                 
                 <div class="links-grid">
                     <div class="link-item">
-                        <label>Twitch</label>
-                        <input type="url" 
+                        <label>Twitch (любая ссылка)</label>
+                        <input type="text" 
                                class="social-input" 
                                id="twitch-link" 
-                               placeholder="https://twitch.tv/your-channel">
+                               placeholder="Любая ссылка: https://..., mailto:..., tel:...">
                     </div>
                     <div class="link-item">
-                        <label>Telegram</label>
-                        <input type="url" 
+                        <label>Telegram (любая ссылка)</label>
+                        <input type="text" 
                                class="social-input" 
                                id="telegram-link" 
-                               placeholder="https://t.me/your-channel">
+                               placeholder="Любая ссылка: https://..., mailto:..., tel:...">
                     </div>
                     <div class="link-item">
-                        <label>Связаться с нами</label>
-                        <input type="url" 
+                        <label>Связаться с нами (любая ссылка)</label>
+                        <input type="text" 
                                class="social-input" 
                                id="contact-link" 
-                               placeholder="https://t.me/your-contact или mailto:email@example.com">
+                               placeholder="Любая ссылка: https://..., mailto:..., tel:...">
                     </div>
                 </div>
                 

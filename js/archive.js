@@ -1,6 +1,9 @@
 // Страница прошедших турниров
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Сначала загружаем данные из localStorage
+    loadTournamentsFromStorage();
+    // Потом отображаем турниры
     loadPastTournaments();
 });
 

@@ -83,6 +83,7 @@ function switchTab(tabName) {
 function loadAdminData() {
     loadActiveTournaments();
     loadPastTournaments();
+    loadTeamsAdmin();
     loadDisciplinesList();
     loadRegistrationLinksForm();
     loadSocialLinksForm();
@@ -117,9 +118,14 @@ function loadPastTournaments() {
     
     grid.innerHTML = tournaments.map(t => createAdminTournamentCard(t, true)).join('');
     
-    // Add event listeners for delete buttons
+    // Add event listeners for edit and delete buttons
     tournaments.forEach(t => {
+        const editBtn = document.getElementById(`edit-past-${t.id}`);
         const deleteBtn = document.getElementById(`delete-past-${t.id}`);
+        
+        if (editBtn) {
+            editBtn.addEventListener('click', () => openEditPastModal(t));
+        }
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => deletePastTournamentConfirm(t.id));
         }
@@ -166,6 +172,7 @@ function createAdminTournamentCard(tournament, isPast = false) {
                     <button class="btn-edit" id="edit-${tournament.id}">Изменить</button>
                     <button class="btn-danger" id="delete-${tournament.id}">Удалить</button>
                 ` : `
+                    <button class="btn-edit" id="edit-past-${tournament.id}">Изменить</button>
                     <button class="btn-danger" id="delete-past-${tournament.id}">Удалить</button>
                 `}
             </div>
@@ -230,6 +237,39 @@ function openAddPastModal() {
     updateDisciplineDropdown();
 }
 
+function openEditPastModal(tournament) {
+    currentEditingId = tournament.id;
+    document.getElementById('modal-title').textContent = 'Редактировать прошедший турнир';
+    
+    document.getElementById('tournament-id').value = tournament.id;
+    document.getElementById('tournament-name').value = tournament.title;
+    document.getElementById('tournament-discipline').value = tournament.discipline;
+    
+    // Convert date format
+    const dateMatch = tournament.date.match(/(\d+)\s+(\w+)\s+(\d+)/);
+    if (dateMatch) {
+        const months = {
+            'января': '01', 'февраля': '02', 'марта': '03', 'апреля': '04',
+            'мая': '05', 'июня': '06', 'июля': '07', 'августа': '08',
+            'сентября': '09', 'октября': '10', 'ноября': '11', 'декабря': '12'
+        };
+        const day = dateMatch[1].padStart(2, '0');
+        const month = months[dateMatch[2]];
+        const year = dateMatch[3];
+        document.getElementById('tournament-date').value = `${year}-${month}-${day}`;
+    }
+    
+    document.getElementById('tournament-prize').value = tournament.prize;
+    document.getElementById('tournament-max-teams').value = tournament.maxTeams;
+    document.getElementById('tournament-custom-link').value = tournament.customLink || '';
+    document.getElementById('tournament-winner').value = tournament.winner || '';
+    document.getElementById('tournament-status').value = 'past';
+    document.getElementById('winner-field').style.display = 'block';
+    
+    document.getElementById('tournament-modal').classList.add('active');
+    updateDisciplineDropdown();
+}
+
 function openEditModal(tournament) {
     currentEditingId = tournament.id;
     document.getElementById('modal-title').textContent = 'Редактировать турнир';
@@ -279,7 +319,12 @@ function handleFormSubmit(e) {
     };
     
     if (currentEditingId) {
-        updateTournament(currentEditingId, formData);
+        // Проверяем, это активный или прошедший турнир
+        if (status === 'past') {
+            updatePastTournament(currentEditingId, formData);
+        } else {
+            updateTournament(currentEditingId, formData);
+        }
     } else {
         if (status === 'past') {
             addPastTournament(formData);
@@ -448,6 +493,59 @@ function updateDisciplineDropdown() {
     // Восстанавливаем выбранное значение если оно есть
     if (currentValue && disciplines.includes(currentValue)) {
         select.value = currentValue;
+    }
+}
+
+// Загрузка команд в админке
+function loadTeamsAdmin() {
+    const container = document.getElementById('teams-admin-container');
+    const allTeams = getAllRegisteredTeams();
+    const tournaments = getActiveTournaments();
+    
+    if (Object.keys(allTeams).length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>Пока нет зарегистрированных команд</p></div>';
+        return;
+    }
+    
+    container.innerHTML = Object.keys(allTeams).map(tournamentId => {
+        const tournament = tournaments.find(t => t.id == tournamentId);
+        const teams = allTeams[tournamentId] || [];
+        
+        return `
+            <div class="tournament-section" style="margin-bottom: 30px;">
+                <h3 style="margin-bottom: 15px;">${tournament ? tournament.title : `Турнир #${tournamentId}`}</h3>
+                ${teams.length > 0 ? teams.map((team, index) => `
+                    <div class="discipline-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(107, 45, 143, 0.2); border-radius: 8px; margin-bottom: 10px;">
+                        <div>
+                            <div style="font-size: 16px; font-weight: 600; margin-bottom: 5px;">${team.name}</div>
+                            <div style="font-size: 14px; color: var(--color-text-secondary);">
+                                👤 ${team.captain} | 👥 ${team.players} игроков | 📅 ${team.registrationDate}
+                            </div>
+                        </div>
+                        <button class="btn-danger" onclick="deleteTeam(${tournamentId}, ${index})">Удалить</button>
+                    </div>
+                `).join('') : '<p style="color: var(--color-text-secondary);">Нет команд</p>'}
+            </div>
+        `;
+    }).join('');
+}
+
+// Удаление команды
+function deleteTeam(tournamentId, teamIndex) {
+    if (!confirm('Вы уверены, что хотите удалить эту команду?')) {
+        return;
+    }
+    
+    const stored = localStorage.getItem('wbcyber_tournaments');
+    if (stored) {
+        const data = JSON.parse(stored);
+        if (data.registeredTeams && data.registeredTeams[tournamentId]) {
+            data.registeredTeams[tournamentId].splice(teamIndex, 1);
+            localStorage.setItem('wbcyber_tournaments', JSON.stringify(data));
+            loadTournamentsFromStorage();
+            loadTeamsAdmin();
+            alert('Команда удалена!');
+        }
     }
 }
 

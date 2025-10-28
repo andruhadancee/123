@@ -12,16 +12,29 @@ function loadSocialLinksToPage() {
     const telegramBtn = document.querySelector('.social-btn.telegram');
     const contactBtn = document.querySelector('.btn-contact');
     
-    if (twitchBtn && socialLinks.twitch) {
-        twitchBtn.href = socialLinks.twitch;
+    // Применяем ЛЮБЫЕ ссылки которые ввел пользователь
+    if (twitchBtn) {
+        if (socialLinks.twitch && socialLinks.twitch.trim()) {
+            twitchBtn.href = socialLinks.twitch.trim();
+        } else {
+            twitchBtn.href = '#'; // Если пусто, ставим #
+        }
     }
     
-    if (telegramBtn && socialLinks.telegram) {
-        telegramBtn.href = socialLinks.telegram;
+    if (telegramBtn) {
+        if (socialLinks.telegram && socialLinks.telegram.trim()) {
+            telegramBtn.href = socialLinks.telegram.trim();
+        } else {
+            telegramBtn.href = '#';
+        }
     }
     
-    if (contactBtn && socialLinks.contact) {
-        contactBtn.href = socialLinks.contact;
+    if (contactBtn) {
+        if (socialLinks.contact && socialLinks.contact.trim()) {
+            contactBtn.href = socialLinks.contact.trim();
+        } else {
+            contactBtn.href = '#';
+        }
     }
 }
 

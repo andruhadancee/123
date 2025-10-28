@@ -1,6 +1,9 @@
 // Страница зарегистрированных команд
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Сначала загружаем данные из localStorage
+    loadTournamentsFromStorage();
+    // Потом отображаем команды
     loadRegisteredTeams();
 });
 
