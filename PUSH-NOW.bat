@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Add perfect centered loader with bouncing dots"
+git commit -m "Improve loader: faster animation and perfect centering"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
