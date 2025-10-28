@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Add glowing nav buttons with transparent background"
+git commit -m "Make nav buttons transparent and light like social buttons"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

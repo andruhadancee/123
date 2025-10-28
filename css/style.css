@@ -182,27 +182,31 @@ nav {
 
 nav a {
     padding: 12px 20px;
-    color: var(--color-text-secondary);
+    color: white;
     text-decoration: none;
     border-radius: 50px;
     font-weight: 500;
     transition: all 0.3s ease;
     white-space: nowrap;
-    background: transparent;
-    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 nav a:hover {
-    color: var(--color-text-primary);
+    color: white;
     transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
-    border-color: var(--color-pink);
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.4);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 nav a.active {
-    color: var(--color-text-primary);
-    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
-    border-color: var(--color-pink);
+    color: white;
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.4);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 /* Social Links */
