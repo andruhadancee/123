@@ -642,6 +642,12 @@ main {
         flex: 1 1 0;
         text-align: center;
         min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    nav a:active {
+        transform: scale(0.98);
     }
     
     .social-links {
@@ -755,12 +761,19 @@ main {
     }
     
     nav a {
-        padding: 8px 6px;
+        padding: 8px 4px;
         font-size: 9px;
         border-radius: 16px;
         flex: 1 1 0;
         min-width: 0;
         line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: keep-all;
+    }
+    
+    nav a:active {
+        transform: scale(0.98);
     }
     
     .social-btn {
