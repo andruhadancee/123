@@ -1,7 +1,8 @@
 // Календарь турниров
 let calendarOpen = false;
 
-function openCalendar() {
+function openCalendar(e) {
+    e.preventDefault();
     const modal = document.getElementById('calendar-modal');
     calendarOpen = true;
     loadCalendarData();
@@ -13,6 +14,24 @@ function closeCalendar() {
     calendarOpen = false;
     modal.classList.remove('active');
 }
+
+// Close calendar on click outside or close button
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('calendar-modal');
+    const closeBtn = document.getElementById('close-calendar-modal');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeCalendar);
+    }
+    
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCalendar();
+            }
+        });
+    }
+});
 
 async function loadCalendarData() {
     const container = document.getElementById('calendar-container');

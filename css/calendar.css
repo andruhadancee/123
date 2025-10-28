@@ -1,0 +1,105 @@
+/* Calendar Styles */
+
+.calendar-month {
+    margin-bottom: 40px;
+}
+
+.calendar-month-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin-bottom: 20px;
+    letter-spacing: -0.3px;
+}
+
+.calendar-month-tournaments {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.calendar-tournament-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(139, 90, 191, 0.1);
+    border: 1px solid rgba(139, 90, 191, 0.3);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.calendar-tournament-card:hover {
+    background: rgba(139, 90, 191, 0.15);
+    border-color: var(--color-pink);
+    transform: translateX(4px);
+}
+
+.calendar-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    height: 60px;
+    background: var(--gradient-button);
+    border-radius: 12px;
+    padding: 8px;
+}
+
+.calendar-day {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+    color: white;
+}
+
+.calendar-month-day {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+}
+
+.calendar-tournament-info {
+    flex: 1;
+}
+
+.calendar-tournament-info h4 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+}
+
+.calendar-tournament-details {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+    .calendar-tournament-card {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .calendar-date {
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 12px;
+        min-width: auto;
+        height: auto;
+    }
+    
+    .calendar-day {
+        font-size: 20px;
+        margin-right: 8px;
+    }
+}
+
