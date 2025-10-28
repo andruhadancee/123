@@ -714,8 +714,9 @@ async function loadDisciplinesForRegulation() {
     const select = document.getElementById('regulation-discipline');
     const disciplines = await API.disciplines.getAll();
     
+    // API возвращает массив строк, а не объектов
     select.innerHTML = '<option value="">Выберите дисциплину</option>' +
-        disciplines.map(d => `<option value="${d.name}">${d.name}</option>`).join('');
+        disciplines.map(d => `<option value="${d}">${d}</option>`).join('');
 }
 
 async function handleRegulationFormSubmit(e) {
