@@ -249,17 +249,17 @@ main {
 }
 
 .page-title {
-    font-size: 48px;
+    font-size: 42px;
     font-weight: 700;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
     text-transform: capitalize;
 }
 
 /* ===== TOURNAMENTS GRID ===== */
 .tournaments-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 18px;
 }
 
 /* Tournament Card - Стиль Orchid Cup */
@@ -268,7 +268,7 @@ main {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(217, 70, 170, 0.2);
     border-radius: 12px;
-    padding: 20px;
+    padding: 16px 20px;
     position: relative;
     transition: all 0.3s ease;
     overflow: hidden;
@@ -285,11 +285,11 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .tournament-card h2 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: var(--color-text-primary);
     margin-bottom: 0;
@@ -298,6 +298,7 @@ main {
     overflow-wrap: break-word;
     hyphens: auto;
     max-width: 100%;
+    line-height: 1.3;
 }
 
 .tournament-number {
@@ -307,8 +308,8 @@ main {
 .tournament-info {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px 16px;
-    margin-bottom: 16px;
+    gap: 8px 12px;
+    margin-bottom: 12px;
 }
 
 .info-item {
@@ -319,28 +320,30 @@ main {
 }
 
 .info-label {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--color-text-secondary);
     font-weight: 500;
+    line-height: 1.2;
 }
 
 .info-value {
-    font-size: 15px;
+    font-size: 14px;
     color: var(--color-text-primary);
     font-weight: 600;
     word-wrap: break-word;
     overflow-wrap: break-word;
     max-width: 100%;
+    line-height: 1.3;
 }
 
 .tournament-card .btn-submit {
     width: 100%;
-    padding: 12px;
+    padding: 10px 12px;
     background: white;
     color: #6b2d8f;
     border: 2px solid white;
     border-radius: 50px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
