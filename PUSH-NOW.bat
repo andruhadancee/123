@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Fix mobile nav: keep buttons in single row with smaller font"
+git commit -m "Add Discord icon to all pages social links"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
