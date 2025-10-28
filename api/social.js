@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
         
         // POST - сохранить социальные ссылки
         if (req.method === 'POST') {
-            const { twitch, telegram, contact } = req.body;
+            const { twitch, telegram, discord, contact } = req.body;
             
             // Удаляем старые
             await pool.query('DELETE FROM social_links');
@@ -40,6 +40,7 @@ module.exports = async (req, res) => {
             const platforms = [
                 { platform: 'twitch', link: twitch },
                 { platform: 'telegram', link: telegram },
+                { platform: 'discord', link: discord },
                 { platform: 'contact', link: contact }
             ];
             

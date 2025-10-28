@@ -410,6 +410,7 @@ async function loadSocialLinksForm() {
     
     document.getElementById('twitch-link').value = socialLinks.twitch || '';
     document.getElementById('telegram-link').value = socialLinks.telegram || '';
+    document.getElementById('discord-link').value = socialLinks.discord || '';
     document.getElementById('contact-link').value = socialLinks.contact || '';
 }
 
@@ -419,6 +420,7 @@ async function saveSocialLinks() {
     const socialLinks = {
         twitch: document.getElementById('twitch-link').value.trim(),
         telegram: document.getElementById('telegram-link').value.trim(),
+        discord: document.getElementById('discord-link').value.trim(),
         contact: document.getElementById('contact-link').value.trim()
     };
     

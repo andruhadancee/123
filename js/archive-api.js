@@ -81,6 +81,10 @@ async function loadSocialLinks() {
         const telegramBtn = document.querySelector('.social-btn.telegram');
         if (telegramBtn) telegramBtn.href = socialLinks.telegram;
     }
+    if (socialLinks.discord) {
+        const discordBtn = document.querySelector('.social-btn.discord');
+        if (discordBtn) discordBtn.href = socialLinks.discord;
+    }
     if (socialLinks.contact) {
         const contactBtn = document.querySelector('.btn-contact');
         if (contactBtn) contactBtn.href = socialLinks.contact;
