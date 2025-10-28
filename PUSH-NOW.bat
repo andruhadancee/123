@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Fix regulations API - remove pool.end()"
+git commit -m "Fix regulations API - proper pool handling"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

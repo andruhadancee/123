@@ -1,18 +1,23 @@
 // API для работы с регламентами (Vercel serverless format)
 const { Pool } = require('pg');
 
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-    ssl: { rejectUnauthorized: false }
-});
+function createPool() {
+    return new Pool({
+        connectionString: process.env.POSTGRES_URL,
+        ssl: { rejectUnauthorized: false }
+    });
+}
 
 module.exports = async (req, res) => {
+    const pool = createPool();
+    
     // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     
     if (req.method === 'OPTIONS') {
+        await pool.end();
         return res.status(200).end();
     }
 
@@ -109,6 +114,8 @@ module.exports = async (req, res) => {
     } catch (error) {
         console.error('Error:', error);
         return res.status(500).json({ error: error.message || 'Internal server error' });
+    } finally {
+        await pool.end();
     }
 };
 
