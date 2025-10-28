@@ -428,7 +428,7 @@ main {
     background: rgba(45, 27, 61, 0.4);
     border: 1px solid rgba(139, 90, 191, 0.2);
     border-radius: 12px;
-    padding: 18px;
+    padding: 14px 16px;
     transition: all 0.3s ease;
     overflow: hidden;
     word-wrap: break-word;
@@ -443,7 +443,7 @@ main {
     font-size: 18px;
     font-weight: 600;
     color: var(--color-text-primary);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
@@ -729,11 +729,12 @@ main {
     }
     
     .team-card {
-        padding: 14px;
+        padding: 12px 14px;
     }
     
     .team-name {
         font-size: 16px;
+        margin-bottom: 5px;
     }
     
     .team-info {
@@ -891,7 +892,7 @@ main {
     }
     
     .team-card {
-        padding: 14px;
+        padding: 11px 13px;
         border-radius: 12px;
     }
     
@@ -899,12 +900,13 @@ main {
         font-size: 15px;
         font-weight: 700;
         letter-spacing: -0.2px;
+        margin-bottom: 4px;
     }
     
     .team-info {
         font-size: 13px;
         gap: 8px;
-        margin-top: 6px;
+        margin-top: 0;
     }
     
     /* Empty state */

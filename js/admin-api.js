@@ -530,7 +530,7 @@ async function loadTeamsAdmin() {
                         <div>
                             <div style="font-size: 16px; font-weight: 600; margin-bottom: 5px;">${team.name}</div>
                             <div style="font-size: 14px; color: var(--color-text-secondary);">
-                                👤 ${team.captain} | 👥 ${team.players} игроков | 📅 ${team.registration_date}
+                                👥 ${team.players} игроков
                             </div>
                         </div>
                         <div style="display: flex; gap: 10px;">
@@ -581,14 +581,7 @@ async function editTeam(teamId) {
     document.getElementById('team-tournament-id').value = team.tournament_id;
     document.getElementById('team-tournament').value = team.tournament_id;
     document.getElementById('team-name').value = team.name;
-    document.getElementById('team-captain').value = team.captain;
     document.getElementById('team-players').value = team.players;
-    
-    // Конвертируем дату из DD.MM.YYYY в YYYY-MM-DD
-    const dateParts = team.registration_date.split('.');
-    if (dateParts.length === 3) {
-        document.getElementById('team-date').value = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
-    }
     
     document.getElementById('team-modal').classList.add('active');
     await loadTournamentDropdown();
@@ -635,17 +628,10 @@ async function handleTeamFormSubmit(e) {
     
     const tournamentId = document.getElementById('team-tournament').value;
     
-    // Конвертируем дату в DD.MM.YYYY
-    const dateValue = document.getElementById('team-date').value;
-    const date = new Date(dateValue);
-    const formattedDate = `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
-    
     const teamData = {
         tournamentId: parseInt(tournamentId),
         name: document.getElementById('team-name').value,
-        captain: document.getElementById('team-captain').value,
-        players: parseInt(document.getElementById('team-players').value),
-        registrationDate: formattedDate
+        players: parseInt(document.getElementById('team-players').value)
     };
     
     try {
