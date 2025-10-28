@@ -6,21 +6,90 @@ const API_BASE_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:3000' 
     : ''; // В production Vercel автоматически обрабатывает /api
 
+// Система кеширования для быстрой загрузки
+const CACHE_DURATION = 2 * 60 * 1000; // 2 минуты
+
+function getCachedData(key) {
+    try {
+        const cached = localStorage.getItem(`cache_${key}`);
+        if (!cached) return null;
+        
+        const { data, timestamp } = JSON.parse(cached);
+        const now = Date.now();
+        
+        // Проверяем, не устарел ли кеш
+        if (now - timestamp < CACHE_DURATION) {
+            console.log(`✅ Данные загружены из кеша: ${key}`);
+            return data;
+        }
+        
+        // Кеш устарел, удаляем его
+        localStorage.removeItem(`cache_${key}`);
+        return null;
+    } catch (error) {
+        return null;
+    }
+}
+
+function setCachedData(key, data) {
+    try {
+        localStorage.setItem(`cache_${key}`, JSON.stringify({
+            data,
+            timestamp: Date.now()
+        }));
+    } catch (error) {
+        console.warn('Не удалось сохранить в кеш:', error);
+    }
+}
+
+function clearCache(pattern) {
+    try {
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.startsWith(`cache_${pattern}`)) {
+                localStorage.removeItem(key);
+            }
+        });
+        console.log(`🗑️ Кеш очищен: ${pattern}`);
+    } catch (error) {
+        console.warn('Не удалось очистить кеш:', error);
+    }
+}
+
 const API = {
     // Турниры
     tournaments: {
         // Получить все турниры (можно фильтровать по статусу)
         async getAll(status = null) {
             try {
+                const cacheKey = `tournaments_${status || 'all'}`;
+                
+                // Пытаемся получить из кеша
+                const cached = getCachedData(cacheKey);
+                if (cached) return cached;
+                
+                // Если в кеше нет, загружаем с сервера
                 let url = `${API_BASE_URL}/api/tournaments`;
                 if (status) {
                     url += `?status=${status}`;
                 }
                 const response = await fetch(url);
                 if (!response.ok) throw new Error('Ошибка загрузки турниров');
-                return await response.json();
+                const data = await response.json();
+                
+                // Сохраняем в кеш
+                setCachedData(cacheKey, data);
+                return data;
             } catch (error) {
                 console.error('❌ Ошибка получения турниров:', error);
+                // Возвращаем кеш, даже если устарел
+                const cacheKey = `tournaments_${status || 'all'}`;
+                const oldCache = localStorage.getItem(`cache_${cacheKey}`);
+                if (oldCache) {
+                    try {
+                        return JSON.parse(oldCache).data;
+                    } catch {}
+                }
                 return [];
             }
         },
@@ -34,6 +103,7 @@ const API = {
                     body: JSON.stringify(tournamentData)
                 });
                 if (!response.ok) throw new Error('Ошибка создания турнира');
+                clearCache('tournaments'); // Очищаем кеш турниров
                 return await response.json();
             } catch (error) {
                 console.error('❌ Ошибка создания турнира:', error);
@@ -50,6 +120,7 @@ const API = {
                     body: JSON.stringify(tournamentData)
                 });
                 if (!response.ok) throw new Error('Ошибка обновления турнира');
+                clearCache('tournaments'); // Очищаем кеш турниров
                 return await response.json();
             } catch (error) {
                 console.error('❌ Ошибка обновления турнира:', error);
@@ -64,6 +135,8 @@ const API = {
                     method: 'DELETE'
                 });
                 if (!response.ok) throw new Error('Ошибка удаления турнира');
+                clearCache('tournaments'); // Очищаем кеш турниров
+                clearCache('teams'); // Очищаем кеш команд
                 return await response.json();
             } catch (error) {
                 console.error('❌ Ошибка удаления турнира:', error);
