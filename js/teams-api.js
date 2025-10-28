@@ -4,12 +4,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('🚀 Инициализация страницы команд...');
     await loadRegisteredTeams();
     await loadSocialLinks();
+    hideLoader();
     console.log('✅ Страница команд загружена');
 });
 
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.classList.add('hidden');
+        setTimeout(() => loader.style.display = 'none', 300);
+    }
+}
+
 async function loadRegisteredTeams() {
     const container = document.getElementById('teams-container');
-    container.innerHTML = '<div class="loading">Загрузка команд...</div>';
     
     const tournaments = await API.tournaments.getAll('active');
     const allTeams = await API.teams.getAll();

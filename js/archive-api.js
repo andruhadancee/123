@@ -4,12 +4,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('🚀 Инициализация страницы архива...');
     await loadPastTournaments();
     await loadSocialLinks();
+    hideLoader();
     console.log('✅ Страница архива загружена');
 });
 
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.classList.add('hidden');
+        setTimeout(() => loader.style.display = 'none', 300);
+    }
+}
+
 async function loadPastTournaments() {
     const grid = document.getElementById('archive-grid');
-    grid.innerHTML = '<div class="loading">Загрузка архива...</div>';
     
     const tournaments = await API.tournaments.getAll('finished');
     

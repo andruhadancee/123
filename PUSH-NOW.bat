@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Fix vercel config"
+git commit -m "Add beautiful loader and improve mobile design"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
