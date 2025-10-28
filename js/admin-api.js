@@ -91,11 +91,7 @@ function setupEventListeners() {
     });
     document.getElementById('team-form').addEventListener('submit', handleTeamFormSubmit);
     
-    // Logout
-    document.getElementById('logout-btn').addEventListener('click', function() {
-        localStorage.removeItem('wbcyber_admin');
-        window.location.href = 'index.html';
-    });
+    // Logout - убрано, так как кнопка удалена
 }
 
 function switchTab(tabName) {

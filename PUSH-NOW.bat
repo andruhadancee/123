@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Remove all header buttons from admin panel"
+git commit -m "Fix admin panel loading - remove logout button handler"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
