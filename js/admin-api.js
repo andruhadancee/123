@@ -62,7 +62,10 @@ function setupEventListeners() {
     document.getElementById('save-social-btn').addEventListener('click', saveSocialLinks);
     
     // Add discipline (from links tab)
-    document.getElementById('add-discipline-btn').addEventListener('click', addDisciplineFromPrompt);
+    const addDisciplineBtn = document.getElementById('add-discipline-btn');
+    if (addDisciplineBtn) {
+        addDisciplineBtn.addEventListener('click', addDisciplineFromPrompt);
+    }
     
     // Add discipline (from disciplines tab)
     const newDisciplineInput = document.getElementById('new-discipline-input');

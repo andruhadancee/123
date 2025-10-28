@@ -29,12 +29,12 @@
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(217, 70, 170, 0.4);
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.4);
 }
 
 .btn-secondary {
     padding: 12px 24px;
-    background: rgba(217, 70, 170, 0.1);
+    background: rgba(139, 90, 191, 0.1);
     color: var(--color-text-primary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
@@ -45,7 +45,7 @@
 }
 
 .btn-secondary:hover {
-    background: rgba(217, 70, 170, 0.2);
+    background: rgba(139, 90, 191, 0.2);
     border-color: var(--color-pink);
 }
 
@@ -108,7 +108,7 @@
     display: flex;
     gap: 8px;
     margin-bottom: 32px;
-    border-bottom: 2px solid rgba(217, 70, 170, 0.2);
+    border-bottom: 2px solid rgba(139, 90, 191, 0.2);
     padding-bottom: 0;
 }
 
@@ -304,7 +304,7 @@
 }
 
 .modal-close:hover {
-    background: rgba(217, 70, 170, 0.1);
+    background: rgba(139, 90, 191, 0.1);
 }
 
 .modal-footer {
@@ -354,7 +354,7 @@
 .form-group select:focus {
     outline: none;
     border-color: var(--color-pink);
-    box-shadow: 0 0 0 3px rgba(217, 70, 170, 0.1);
+    box-shadow: 0 0 0 3px rgba(139, 90, 191, 0.1);
 }
 
 .form-group small {

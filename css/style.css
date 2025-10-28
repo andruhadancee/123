@@ -9,14 +9,14 @@
     --color-purple-dark: #2d1b3d;
     --color-purple: #6b2d8f;
     --color-purple-light: #8b3db5;
-    --color-pink: #d946aa;
-    --color-pink-light: #ec4899;
-    --color-pink-bright: #ff6bc5;
+    --color-pink: #8b5abf;
+    --color-pink-light: #9d6fd4;
+    --color-pink-bright: #b17ee0;
     
     /* Gradient */
-    --gradient-main: linear-gradient(135deg, #0a0a14 0%, #2d1b3d 25%, #6b2d8f 50%, #d946aa 100%);
+    --gradient-main: linear-gradient(135deg, #0a0a14 0%, #2d1b3d 25%, #6b2d8f 50%, #8b5abf 100%);
     --gradient-card: linear-gradient(135deg, rgba(45, 27, 61, 0.6) 0%, rgba(107, 45, 143, 0.4) 100%);
-    --gradient-button: linear-gradient(90deg, #d946aa 0%, #ec4899 100%);
+    --gradient-button: linear-gradient(90deg, #8b5abf 0%, #9d6fd4 100%);
     
     /* Text */
     --color-text-primary: #ffffff;
@@ -24,7 +24,7 @@
     
     /* Borders */
     --border-radius: 16px;
-    --border-color: rgba(217, 70, 170, 0.3);
+    --border-color: rgba(139, 90, 191, 0.3);
 }
 
 /* ===== RESET & BASE ===== */
@@ -192,7 +192,7 @@ nav a {
 
 nav a:hover {
     color: var(--color-text-primary);
-    background: rgba(217, 70, 170, 0.1);
+    background: rgba(139, 90, 191, 0.1);
 }
 
 nav a.active {
@@ -227,7 +227,7 @@ nav a.active {
     border-color: rgba(255, 255, 255, 0.3);
     color: white;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(217, 70, 170, 0.2);
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2);
 }
 
 .btn-contact {
@@ -246,7 +246,7 @@ nav a.active {
 
 .btn-contact:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(217, 70, 170, 0.4);
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.4);
     background: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.5);
 }
@@ -276,7 +276,7 @@ main {
 .tournament-card {
     background: rgba(45, 27, 61, 0.3);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(217, 70, 170, 0.2);
+    border: 1px solid rgba(139, 90, 191, 0.2);
     border-radius: 12px;
     padding: 16px 20px;
     position: relative;
@@ -287,7 +287,7 @@ main {
 
 .tournament-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(217, 70, 170, 0.3);
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
     border-color: var(--color-pink);
 }
 
@@ -365,7 +365,7 @@ main {
 }
 
 .tournament-card .btn-submit:hover {
-    box-shadow: 0 8px 24px rgba(217, 70, 170, 0.4);
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.4);
     transform: translateY(-2px);
     background: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.5);
@@ -426,7 +426,7 @@ main {
 
 .team-card {
     background: rgba(45, 27, 61, 0.4);
-    border: 1px solid rgba(217, 70, 170, 0.2);
+    border: 1px solid rgba(139, 90, 191, 0.2);
     border-radius: 12px;
     padding: 16px;
     transition: all 0.3s ease;
@@ -516,7 +516,7 @@ main {
     background: var(--gradient-button);
     border-radius: 50%;
     animation: bounce 0.8s ease-in-out infinite;
-    box-shadow: 0 0 20px rgba(217, 70, 170, 0.5);
+    box-shadow: 0 0 20px rgba(139, 90, 191, 0.5);
 }
 
 .loader-dot:nth-child(1) {
@@ -566,8 +566,8 @@ main {
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.08);
     padding: 3px;
-    box-shadow: 0 0 10px rgba(217, 70, 170, 0.2);
-    border: 1px solid rgba(217, 70, 170, 0.15);
+    box-shadow: 0 0 10px rgba(139, 90, 191, 0.2);
+    border: 1px solid rgba(139, 90, 191, 0.15);
 }
 
 /* Смайлик для дисциплин без логотипа */
@@ -578,7 +578,7 @@ main {
     font-size: 20px;
     background: rgba(255, 255, 255, 0.05);
     padding: 0;
-    box-shadow: 0 0 8px rgba(217, 70, 170, 0.15);
+    box-shadow: 0 0 8px rgba(139, 90, 191, 0.15);
 }
 
 /* Иконки для мобильных устройств - чуть меньше */
