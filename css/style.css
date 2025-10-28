@@ -149,6 +149,7 @@ header .container {
     align-items: center;
     justify-content: space-between;
     gap: 40px;
+    flex-wrap: wrap;
 }
 
 /* Logo */
@@ -176,6 +177,7 @@ nav {
     display: flex;
     gap: 8px;
     flex: 1;
+    justify-content: center;
 }
 
 nav a {
@@ -598,14 +600,19 @@ main {
     nav {
         order: 3;
         width: 100%;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 6px;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 4px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     nav a {
-        padding: 8px 14px;
-        font-size: 13px;
+        padding: 10px 12px;
+        font-size: 12px;
+        white-space: nowrap;
+        flex: 1;
+        text-align: center;
     }
     
     .social-links {
@@ -705,13 +712,16 @@ main {
     }
     
     nav {
-        gap: 4px;
+        gap: 3px;
+        flex-wrap: nowrap;
     }
     
     nav a {
-        padding: 6px 12px;
-        font-size: 11px;
+        padding: 8px 8px;
+        font-size: 10px;
         border-radius: 20px;
+        flex: 1;
+        min-width: 0;
     }
     
     .social-btn {

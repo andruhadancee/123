@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Increase discipline icons size and make submit buttons compact"
+git commit -m "Fix navigation: fit 3 buttons in one row on mobile, align header on desktop"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
