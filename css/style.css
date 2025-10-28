@@ -443,47 +443,248 @@ main {
 }
 
 /* ===== RESPONSIVE ===== */
+
+/* Планшеты */
 @media (max-width: 1200px) {
     .tournaments-grid {
         grid-template-columns: 1fr;
     }
+    
+    .container {
+        padding: 0 20px;
+    }
 }
 
+/* Планшеты и большие телефоны */
 @media (max-width: 768px) {
+    /* Header */
+    header {
+        padding: 16px 0;
+    }
+    
     header .container {
         flex-wrap: wrap;
+        gap: 16px;
+    }
+    
+    .logo-image {
+        height: 40px;
     }
     
     nav {
         order: 3;
         width: 100%;
         flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+    
+    nav a {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    
+    .social-links {
+        gap: 8px;
+    }
+    
+    .social-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .btn-contact {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+    
+    /* Main Content */
+    main {
+        padding: 24px 16px 40px;
     }
     
     .page-title {
         font-size: 32px;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
+    }
+    
+    /* Tournament Cards */
+    .tournaments-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
     }
     
     .tournament-card {
-        padding: 16px;
+        padding: 14px 16px;
     }
     
     .tournament-card h2 {
-        font-size: 16px;
+        font-size: 15px;
+    }
+    
+    .tournament-info {
+        gap: 10px;
+    }
+    
+    .info-label {
+        font-size: 10px;
     }
     
     .info-value {
-        font-size: 14px;
+        font-size: 13px;
     }
     
+    .tournament-card .btn-submit {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    /* Teams */
     .teams-list {
         grid-template-columns: 1fr;
     }
     
+    .tournament-section {
+        padding: 16px;
+    }
+    
+    .tournament-section h2 {
+        font-size: 18px;
+    }
+    
+    .team-card {
+        padding: 12px;
+    }
+    
+    .team-name {
+        font-size: 14px;
+    }
+    
+    .team-info {
+        font-size: 12px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+/* Маленькие телефоны */
+@media (max-width: 480px) {
+    /* Header */
+    header {
+        padding: 12px 0;
+    }
+    
+    .logo-image {
+        height: 35px;
+    }
+    
+    nav {
+        gap: 4px;
+    }
+    
+    nav a {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .social-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .social-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .btn-contact {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    /* Main */
+    main {
+        padding: 20px 12px 32px;
+    }
+    
+    .container {
+        padding: 0 12px;
+    }
+    
+    .page-title {
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+    
+    /* Tournament Cards */
     .tournaments-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 12px;
+    }
+    
+    .tournament-card {
+        padding: 12px 14px;
+    }
+    
+    .tournament-card h2 {
+        font-size: 14px;
+    }
+    
+    .tournament-card-header {
+        margin-bottom: 10px;
+    }
+    
+    .tournament-info {
+        gap: 8px 10px;
+        margin-bottom: 10px;
+    }
+    
+    .info-label {
+        font-size: 10px;
+    }
+    
+    .info-value {
+        font-size: 12px;
+    }
+    
+    .tournament-card .btn-submit {
+        padding: 9px;
+        font-size: 12px;
+    }
+    
+    /* Teams */
+    .tournament-section {
+        padding: 12px;
+    }
+    
+    .tournament-section h2 {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .team-card {
+        padding: 10px;
+    }
+    
+    .team-name {
+        font-size: 13px;
+    }
+    
+    .team-info {
+        font-size: 11px;
+        gap: 6px;
+    }
+    
+    /* Empty state */
+    .empty-state {
+        padding: 30px 12px;
+    }
+    
+    .empty-state h3 {
+        font-size: 18px;
+    }
+    
+    .empty-state p {
+        font-size: 13px;
     }
 }
 
