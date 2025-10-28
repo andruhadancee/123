@@ -636,14 +636,17 @@ main {
     }
     
     nav a {
-        padding: 10px 8px;
-        font-size: 11px;
-        white-space: nowrap;
+        padding: 8px 6px;
+        font-size: 10px;
+        white-space: normal;
         flex: 1 1 0;
         text-align: center;
         min-width: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        line-height: 1.3;
+        word-break: break-word;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     nav a:active {
@@ -761,15 +764,18 @@ main {
     }
     
     nav a {
-        padding: 8px 4px;
-        font-size: 9px;
+        padding: 6px 3px;
+        font-size: 8px;
         border-radius: 16px;
         flex: 1 1 0;
         min-width: 0;
         line-height: 1.2;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-break: keep-all;
+        white-space: normal;
+        word-break: break-word;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
     }
     
     nav a:active {
