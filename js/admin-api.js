@@ -207,15 +207,15 @@ async function loadRegistrationLinksForm() {
     
     grid.innerHTML = disciplines.map(discipline => `
         <div class="link-item" data-discipline="${discipline}">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <label style="margin-bottom: 0;">${discipline}</label>
-                <button class="btn-delete-discipline" data-discipline="${discipline}" title="Удалить дисциплину">🗑️</button>
-            </div>
+            ${getDisciplineIcon(discipline)}
+            <label style="margin-bottom: 0;">${discipline}</label>
+            <button class="btn-delete-discipline" data-discipline="${discipline}" title="Удалить дисциплину">🗑️</button>
             <input type="text" 
                    class="link-input" 
                    data-discipline="${discipline}" 
                    value="${links[discipline] || ''}" 
-                   placeholder="Любая ссылка: https://..., mailto:..., tel:...">
+                   placeholder="Любая ссылка: https://..., mailto:..., tel:..."
+                   style="grid-column: 1 / -1;">
         </div>
     `).join('');
     

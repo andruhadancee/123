@@ -218,14 +218,23 @@
 
 .link-item {
     display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 16px;
+    grid-template-columns: auto auto 1fr;
+    gap: 12px;
     align-items: center;
 }
 
 .link-item label {
     font-weight: 600;
     color: var(--color-text-primary);
+}
+
+.link-item .discipline-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.link-item .discipline-icon-emoji {
+    font-size: 18px;
 }
 
 .link-item input {
@@ -444,12 +453,21 @@
     
     /* Links */
     .link-item {
-        grid-template-columns: 1fr;
+        grid-template-columns: auto auto 1fr;
         gap: 8px;
     }
     
     .link-item label {
         font-size: 13px;
+    }
+    
+    .link-item .discipline-icon {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .link-item .discipline-icon-emoji {
+        font-size: 16px;
     }
     
     /* Modal */
