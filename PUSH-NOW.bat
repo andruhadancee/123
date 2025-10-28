@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Fix mobile navigation: reduce button size to fit in one row"
+git commit -m "Fix teams page: move tournament name to new line, change color to dark purple"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

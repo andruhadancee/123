@@ -390,11 +390,15 @@ main {
     font-size: 22px;
     font-weight: 600;
     margin-bottom: 16px;
-    color: var(--color-pink-light);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tournament-discipline-line {
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
 }
 
 .tournament-header-icon {
@@ -405,6 +409,13 @@ main {
 .tournament-header-discipline {
     color: var(--color-text-primary);
     font-weight: 700;
+    font-size: 18px;
+}
+
+.tournament-title-line {
+    color: #8b5abf;
+    font-size: 20px;
+    font-weight: 600;
 }
 
 .teams-list {
@@ -699,6 +710,15 @@ main {
     
     .tournament-section h2 {
         font-size: 18px;
+        gap: 6px;
+    }
+    
+    .tournament-header-discipline {
+        font-size: 16px;
+    }
+    
+    .tournament-title-line {
+        font-size: 17px;
     }
     
     .team-card {
@@ -845,6 +865,15 @@ main {
         margin-bottom: 12px;
         font-weight: 700;
         letter-spacing: -0.3px;
+        gap: 6px;
+    }
+    
+    .tournament-header-discipline {
+        font-size: 15px;
+    }
+    
+    .tournament-title-line {
+        font-size: 16px;
     }
     
     .team-card {
