@@ -205,15 +205,6 @@ nav a.active {
     border-color: var(--color-pink);
 }
 
-/* Page Sections */
-.page-section {
-    display: none;
-}
-
-.page-section.active {
-    display: block;
-}
-
 /* Social Links */
 .social-links {
     display: flex;

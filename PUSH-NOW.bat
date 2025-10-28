@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Convert to SPA - instant page switching without reload + glowing nav buttons"
+git commit -m "Add glowing nav buttons with transparent background"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
