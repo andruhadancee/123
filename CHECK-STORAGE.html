@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка localStorage</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+        h2 { color: #ff6b9d; }
+        pre {
+            background: #0a0a0a;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        button {
+            background: #ff6b9d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #ff4d85; }
+        .warning { color: #ffaa00; }
+        .success { color: #00ff88; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Проверка localStorage - WB Cyber Club</h1>
+    
+    <div class="section">
+        <h2>Турниры (wbcyber_tournaments)</h2>
+        <pre id="tournaments"></pre>
+    </div>
+    
+    <div class="section">
+        <h2>Ссылки на формы (wbcyber_registration_links)</h2>
+        <pre id="links"></pre>
+    </div>
+    
+    <div class="section">
+        <h2>Социальные ссылки (wbcyber_social_links)</h2>
+        <pre id="social"></pre>
+    </div>
+    
+    <div class="section">
+        <h2>Дисциплины (wbcyber_disciplines)</h2>
+        <pre id="disciplines"></pre>
+    </div>
+    
+    <div class="section">
+        <h2>Действия</h2>
+        <button onclick="location.reload()">🔄 Обновить</button>
+        <button onclick="clearAll()">🗑️ Очистить ВСЁ</button>
+        <button onclick="window.open('admin.html', '_blank')">⚙️ Открыть админку</button>
+        <button onclick="window.open('index.html', '_blank')">🏠 Открыть сайт</button>
+    </div>
+
+    <script>
+        function display() {
+            // Турниры
+            const tournaments = localStorage.getItem('wbcyber_tournaments');
+            document.getElementById('tournaments').innerHTML = tournaments 
+                ? `<span class="success">✅ Найдено!</span>\n${JSON.stringify(JSON.parse(tournaments), null, 2)}`
+                : '<span class="warning">⚠️ Пусто</span>';
+            
+            // Ссылки
+            const links = localStorage.getItem('wbcyber_registration_links');
+            document.getElementById('links').innerHTML = links 
+                ? `<span class="success">✅ Найдено!</span>\n${JSON.stringify(JSON.parse(links), null, 2)}`
+                : '<span class="warning">⚠️ Пусто</span>';
+            
+            // Социальные
+            const social = localStorage.getItem('wbcyber_social_links');
+            document.getElementById('social').innerHTML = social 
+                ? `<span class="success">✅ Найдено!</span>\n${JSON.stringify(JSON.parse(social), null, 2)}`
+                : '<span class="warning">⚠️ Пусто</span>';
+            
+            // Дисциплины
+            const disciplines = localStorage.getItem('wbcyber_disciplines');
+            document.getElementById('disciplines').innerHTML = disciplines 
+                ? `<span class="success">✅ Найдено!</span>\n${JSON.stringify(JSON.parse(disciplines), null, 2)}`
+                : '<span class="warning">⚠️ Пусто</span>';
+        }
+        
+        function clearAll() {
+            if (confirm('Вы уверены? Это удалит ВСЕ данные!')) {
+                localStorage.clear();
+                alert('✅ Очищено! Теперь настройте всё заново в админке.');
+                location.reload();
+            }
+        }
+        
+        display();
+    </script>
+</body>
+</html>
+

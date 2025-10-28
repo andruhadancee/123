@@ -196,7 +196,12 @@ function updateTournament(tournamentId, updateData) {
 
 // Сохранение в localStorage (временное решение)
 function saveTournamentsToStorage() {
+    console.log('💾 Сохранение в localStorage:', {
+        active: tournamentsDB.active.length,
+        past: tournamentsDB.past.length
+    });
     localStorage.setItem('wbcyber_tournaments', JSON.stringify(tournamentsDB));
+    console.log('✅ Сохранено успешно!');
 }
 
 // Загрузка из localStorage
@@ -237,6 +242,7 @@ function loadTournamentsFromStorage() {
     }
 }
 
-// Инициализация при загрузке
-loadTournamentsFromStorage();
+// НЕ вызываем автоматически! 
+// Вызов будет из main.js, teams.js, archive.js когда нужно
+// loadTournamentsFromStorage();
 
