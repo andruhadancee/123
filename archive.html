@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WB Cyber Club - Прошедшие турниры</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="animated-bg">
+        <video autoplay muted loop playsinline>
+            <source src="Dark Gradient 03.mp4" type="video/mp4">
+        </video>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="cyberclub-logo.png" alt="WB Cyber Club" class="logo-image">
+            </div>
+            
+            <nav>
+                <a href="index.html">Турниры</a>
+                <a href="teams.html">Зарегистрированные команды</a>
+                <a href="archive.html" class="active">Прошедшие турниры</a>
+            </nav>
+            
+            <div class="social-links">
+                <a href="#" class="social-btn twitch" title="Twitch">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+                    </svg>
+                </a>
+                <a href="#" class="social-btn telegram" title="Telegram">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                    </svg>
+                </a>
+                <a href="#" class="btn-contact">Связаться с нами</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <h1 class="page-title">Прошедшие турниры</h1>
+        
+        <div class="tournaments-grid" id="archive-grid">
+            <!-- Past tournaments will be loaded here dynamically -->
+        </div>
+    </main>
+
+    <script src="js/tournaments-data.js"></script>
+    <script src="js/archive.js"></script>
+</body>
+</html>
+

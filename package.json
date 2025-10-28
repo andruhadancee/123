@@ -1,0 +1,25 @@
+{
+  "name": "wb-cyber-club",
+  "version": "1.0.0",
+  "description": "Сайт регистрации на турниры WB Cyber Club",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "esports",
+    "tournaments",
+    "cybersport",
+    "gaming"
+  ],
+  "author": "WB Cyber Club",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+

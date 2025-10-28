@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WB Cyber Club - Админ-панель</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="animated-bg">
+        <video autoplay muted loop playsinline>
+            <source src="Dark Gradient 03.mp4" type="video/mp4">
+        </video>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="cyberclub-logo.png" alt="WB Cyber Club" class="logo-image">
+            </div>
+            
+            <nav>
+                <a href="index.html">Турниры</a>
+                <a href="teams.html">Зарегистрированные команды</a>
+                <a href="archive.html">Прошедшие турниры</a>
+                <a href="admin.html" class="active">Админ-панель</a>
+            </nav>
+            
+            <div class="social-links">
+                <button class="btn-contact" id="logout-btn">Выход</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Content -->
+    <main class="container">
+        <div class="admin-header">
+            <h1 class="page-title">Админ-панель</h1>
+            <button class="btn-primary" id="add-tournament-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Добавить турнир
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+            <button class="tab-btn active" data-tab="active">Активные турниры</button>
+            <button class="tab-btn" data-tab="past">Прошедшие турниры</button>
+            <button class="tab-btn" data-tab="links">Ссылки на формы</button>
+        </div>
+
+        <!-- Active Tournaments Tab -->
+        <div class="tab-content active" id="active-tab">
+            <div class="tournaments-admin-grid" id="active-tournaments-grid">
+                <!-- Active tournaments will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Past Tournaments Tab -->
+        <div class="tab-content" id="past-tab">
+            <div class="tournaments-admin-grid" id="past-tournaments-grid">
+                <!-- Past tournaments will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Registration Links Tab -->
+        <div class="tab-content" id="links-tab">
+            <div class="links-container">
+                <h2>Ссылки на формы регистрации</h2>
+                <p class="hint">Укажите ссылки на Google Forms для каждой дисциплины</p>
+                
+                <div class="links-grid" id="links-grid">
+                    <!-- Links will be loaded here -->
+                </div>
+                
+                <button class="btn-primary" id="save-links-btn">Сохранить ссылки</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Tournament Modal -->
+    <div class="modal" id="tournament-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Добавить турнир</h2>
+                <button class="modal-close" id="close-modal">&times;</button>
+            </div>
+            
+            <form id="tournament-form">
+                <input type="hidden" id="tournament-id">
+                
+                <div class="form-group">
+                    <label for="tournament-name">Название турнира *</label>
+                    <input type="text" id="tournament-name" placeholder="Турнир 5X5 CS2 WBCYBERCLUB" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tournament-discipline">Дисциплина *</label>
+                        <select id="tournament-discipline" required>
+                            <option value="">Выберите дисциплину</option>
+                            <option value="CS 2">CS 2</option>
+                            <option value="Dota 2">Dota 2</option>
+                            <option value="Valorant">Valorant</option>
+                            <option value="Overwatch 2">Overwatch 2</option>
+                            <option value="League of Legends">League of Legends</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tournament-date">Дата турнира *</label>
+                        <input type="date" id="tournament-date" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tournament-prize">Призовой фонд *</label>
+                        <input type="text" id="tournament-prize" placeholder="25 000 ₽" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tournament-max-teams">Максимум команд *</label>
+                        <input type="number" id="tournament-max-teams" placeholder="16" min="2" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tournament-custom-link">Пользовательская ссылка (необязательно)</label>
+                    <input type="url" id="tournament-custom-link" placeholder="https://forms.gle/...">
+                    <small>Если не указана, будет использована ссылка из настроек дисциплины</small>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancel-btn">Отмена</button>
+                    <button type="submit" class="btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/tournaments-data.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
+
