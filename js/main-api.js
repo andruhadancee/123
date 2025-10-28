@@ -55,7 +55,7 @@ function createTournamentCard(tournament, links) {
             <div class="tournament-info">
                 <div class="info-item">
                     <span class="info-label">Дисциплина</span>
-                    <span class="info-value">${tournament.discipline}</span>
+                    <span class="info-value">${formatDisciplineWithIcon(tournament.discipline)}</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Дата</span>

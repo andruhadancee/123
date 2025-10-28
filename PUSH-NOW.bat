@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Improve loader: faster animation and perfect centering"
+git commit -m "Replace emoji with real game logos for discipline icons"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

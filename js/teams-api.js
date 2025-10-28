@@ -40,12 +40,12 @@ async function loadRegisteredTeams() {
 
 function createTournamentTeamsSection(tournament, teams) {
     const teamsHTML = teams.length > 0 
-        ? teams.map(team => createTeamCard(team)).join('')
+        ? teams.map(team => createTeamCard(team, tournament)).join('')
         : '<div class="empty-state"><p>Команды еще не зарегистрировались</p></div>';
     
     return `
         <div class="tournament-section">
-            <h2>${tournament.title}</h2>
+            <h2>${formatDisciplineWithIcon(tournament.discipline)} ${tournament.title}</h2>
             <div class="teams-list">
                 ${teamsHTML}
             </div>
@@ -53,11 +53,12 @@ function createTournamentTeamsSection(tournament, teams) {
     `;
 }
 
-function createTeamCard(team) {
+function createTeamCard(team, tournament) {
     return `
         <div class="team-card">
             <div class="team-name">${team.name}</div>
             <div class="team-info">
+                <span>${formatDisciplineWithIcon(tournament.discipline)}</span>
                 <span>👤 ${team.captain}</span>
                 <span>👥 ${team.players} игроков</span>
                 <span>📅 ${team.registration_date}</span>

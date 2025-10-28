@@ -7,7 +7,16 @@ document.addEventListener('DOMContentLoaded', function() {
     initAdminPanel();
     loadAdminData();
     setupEventListeners();
+    hideLoader();
 });
+
+function hideLoader() {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.classList.add('hidden');
+        setTimeout(() => loader.style.display = 'none', 300);
+    }
+}
 
 function initAdminPanel() {
     // Простая проверка авторизации (в реальном проекте использовать Firebase Auth)
@@ -155,7 +164,7 @@ function createAdminTournamentCard(tournament, isPast = false) {
                 </div>
                 <div class="info-item">
                     <span class="info-label">Дисциплина</span>
-                    <span class="info-value">${tournament.discipline}</span>
+                    <span class="info-value">${formatDisciplineWithIcon(tournament.discipline)}</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Дата</span>

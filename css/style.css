@@ -513,6 +513,36 @@ main {
     }
 }
 
+/* ===== DISCIPLINE ICONS ===== */
+.discipline-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.discipline-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px;
+}
+
+/* Иконки для мобильных устройств - чуть меньше */
+@media (max-width: 768px) {
+    .discipline-icon {
+        width: 20px;
+        height: 20px;
+        padding: 2px;
+    }
+    
+    .discipline-with-icon {
+        gap: 6px;
+    }
+}
+
 /* ===== RESPONSIVE ===== */
 
 /* Планшеты */
