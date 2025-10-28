@@ -1,8 +1,7 @@
 {
-  "functions": {
-    "api/**/*.js": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  }
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "installCommand": "npm install",
+  "devCommand": null,
+  "framework": null
 }
