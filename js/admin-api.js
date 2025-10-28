@@ -210,7 +210,6 @@ async function loadRegistrationLinksForm() {
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                 ${getDisciplineIcon(discipline)}
                 <label style="margin-bottom: 0; flex: 1;">${discipline}</label>
-                <button class="btn-delete-discipline" data-discipline="${discipline}" title="Удалить дисциплину">🗑️</button>
             </div>
             <input type="text" 
                    class="link-input" 
@@ -219,16 +218,6 @@ async function loadRegistrationLinksForm() {
                    placeholder="Любая ссылка: https://..., mailto:..., tel:...">
         </div>
     `).join('');
-    
-    // Добавляем обработчики для кнопок удаления
-    document.querySelectorAll('.btn-delete-discipline').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            const discipline = e.target.dataset.discipline;
-            if (confirm(`Удалить дисциплину "${discipline}"?`)) {
-                await deleteDiscipline(discipline);
-            }
-        });
-    });
 }
 
 async function saveRegistrationLinks() {

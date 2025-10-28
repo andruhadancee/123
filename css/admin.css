@@ -66,25 +66,7 @@
     border-color: #ef4444;
 }
 
-.btn-delete-discipline {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    border-radius: 6px;
-    padding: 4px 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-delete-discipline:hover {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: #ef4444;
-    transform: scale(1.1);
-}
+/* Кнопка удаления дисциплины (не используется в форме ссылок) */
 
 .btn-edit {
     padding: 8px 16px;
@@ -239,6 +221,24 @@
 .link-item input {
     width: 100%;
     max-width: 500px;
+    padding: 10px 14px;
+    background: rgba(45, 27, 61, 0.6);
+    border: 1px solid rgba(139, 90, 191, 0.3);
+    border-radius: 8px;
+    color: var(--color-text-primary);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.link-item input:focus {
+    outline: none;
+    border-color: rgba(139, 90, 191, 0.6);
+    background: rgba(45, 27, 61, 0.8);
+    box-shadow: 0 0 0 3px rgba(139, 90, 191, 0.1);
+}
+
+.link-item input::placeholder {
+    color: rgba(184, 184, 209, 0.5);
 }
 
 /* Modal */
