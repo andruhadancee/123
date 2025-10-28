@@ -44,7 +44,7 @@ body {
     min-height: 100vh;
 }
 
-/* ===== АНИМИРОВАННЫЙ ГРАДИЕНТНЫЙ ФОН ===== */
+/* ===== КРАСИВЫЙ ГРАДИЕНТНЫЙ ФОН ===== */
 .animated-bg {
     position: fixed;
     top: 0;
@@ -54,30 +54,14 @@ body {
     z-index: -1;
     overflow: hidden;
     background: linear-gradient(
-        135deg,
+        180deg,
         #0a0a14 0%,
-        #1a0a28 15%,
-        #2d1b3d 30%,
-        #4a1f5c 45%,
-        #6b2d8f 60%,
-        #8b3db5 75%,
-        #d946aa 90%,
-        #ff6bc5 100%
+        #1a0f28 20%,
+        #2d1b3d 40%,
+        #3d2550 60%,
+        #4a2d62 80%,
+        #2d1b3d 100%
     );
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
-}
-
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
 }
 
 /* Градиентный overlay - затемнение снизу как на orchidcup.ru */
@@ -125,16 +109,19 @@ header .container {
     display: flex;
     align-items: center;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .logo-image {
     height: 50px;
     width: auto;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    filter: brightness(1);
 }
 
-.logo-image:hover {
+.logo:hover .logo-image {
     transform: scale(1.05);
+    filter: brightness(1.2);
 }
 
 /* Navigation */
