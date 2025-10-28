@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Align admin tournament card buttons to top (align-items: start)"
+git commit -m "Fix add team button by removing date field initialization"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

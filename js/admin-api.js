@@ -594,10 +594,6 @@ async function openAddTeamModal() {
     document.getElementById('team-form').reset();
     document.getElementById('team-tournament-id').value = '';
     
-    // Установить текущую дату
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('team-date').value = today;
-    
     document.getElementById('team-modal').classList.add('active');
     await loadTournamentDropdown();
 }
