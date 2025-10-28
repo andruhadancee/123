@@ -1,17 +1,18 @@
-// Главная страница - отображение активных турниров
+// Главная страница - отображение активных турниров (с API)
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     console.log('🚀 Инициализация главной страницы...');
-    // ВАЖНО: Сначала загружаем ВСЕ данные из localStorage
-    loadTournamentsFromStorage();
-    // Потом отображаем турниры
-    loadActiveTournaments();
+    await loadActiveTournaments();
+    await loadSocialLinks();
     console.log('✅ Главная страница загружена');
 });
 
-function loadActiveTournaments() {
+async function loadActiveTournaments() {
     const grid = document.getElementById('tournaments-grid');
-    const tournaments = getActiveTournaments();
+    grid.innerHTML = '<div class="loading">Загрузка турниров...</div>';
+    
+    const tournaments = await API.tournaments.getAll('active');
+    const links = await API.links.getAll();
     
     if (tournaments.length === 0) {
         grid.innerHTML = `
@@ -23,11 +24,18 @@ function loadActiveTournaments() {
         return;
     }
     
-    grid.innerHTML = tournaments.map(tournament => createTournamentCard(tournament)).join('');
+    grid.innerHTML = tournaments.map(tournament => createTournamentCard(tournament, links)).join('');
 }
 
-function createTournamentCard(tournament) {
-    const regLink = tournament.registrationLink || '#';
+function createTournamentCard(tournament, links) {
+    // Приоритет: custom_link > links[discipline] > '#'
+    let regLink = '#';
+    if (tournament.custom_link && tournament.custom_link.trim()) {
+        regLink = tournament.custom_link.trim();
+    } else if (links[tournament.discipline]) {
+        regLink = links[tournament.discipline];
+    }
+    
     console.log(`🎮 Карточка турнира "${tournament.title}": ${regLink}`);
     
     return `
@@ -51,7 +59,7 @@ function createTournamentCard(tournament) {
                 </div>
                 <div class="info-item">
                     <span class="info-label">Команд</span>
-                    <span class="info-value">${tournament.teams} / ${tournament.maxTeams}</span>
+                    <span class="info-value">${tournament.teams || 0} / ${tournament.max_teams}</span>
                 </div>
             </div>
             
@@ -60,5 +68,23 @@ function createTournamentCard(tournament) {
             </a>
         </div>
     `;
+}
+
+async function loadSocialLinks() {
+    const socialLinks = await API.social.getAll();
+    
+    // Обновляем ссылки в header
+    if (socialLinks.twitch) {
+        const twitchBtn = document.querySelector('.social-btn.twitch');
+        if (twitchBtn) twitchBtn.href = socialLinks.twitch;
+    }
+    if (socialLinks.telegram) {
+        const telegramBtn = document.querySelector('.social-btn.telegram');
+        if (telegramBtn) telegramBtn.href = socialLinks.telegram;
+    }
+    if (socialLinks.contact) {
+        const contactBtn = document.querySelector('.btn-contact');
+        if (contactBtn) contactBtn.href = socialLinks.contact;
+    }
 }
 

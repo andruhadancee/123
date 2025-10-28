@@ -1,6 +1,7 @@
-// Админ-панель
+// Админ-панель с поддержкой API
 
 let currentEditingId = null;
+let currentEditingTeam = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     initAdminPanel();
@@ -89,23 +90,22 @@ function switchTab(tabName) {
     document.getElementById(`${tabName}-tab`).classList.add('active');
 }
 
-function loadAdminData() {
+async function loadAdminData() {
     console.log('📥 Загрузка данных в админку...');
-    // ВАЖНО: Сначала загружаем из localStorage!
-    loadTournamentsFromStorage();
-    // Потом отображаем
-    loadActiveTournaments();
-    loadPastTournaments();
-    loadTeamsAdmin();
-    loadDisciplinesList();
-    loadRegistrationLinksForm();
-    loadSocialLinksForm();
+    await loadActiveTournaments();
+    await loadPastTournaments();
+    await loadTeamsAdmin();
+    await loadDisciplinesList();
+    await loadRegistrationLinksForm();
+    await loadSocialLinksForm();
     console.log('✅ Админка загружена');
 }
 
-function loadActiveTournaments() {
+async function loadActiveTournaments() {
     const grid = document.getElementById('active-tournaments-grid');
-    const tournaments = getActiveTournaments();
+    grid.innerHTML = '<div class="loading">Загрузка...</div>';
+    
+    const tournaments = await API.tournaments.getAll('active');
     
     if (tournaments.length === 0) {
         grid.innerHTML = '<div class="empty-state"><p>Нет активных турниров</p></div>';
@@ -116,14 +116,18 @@ function loadActiveTournaments() {
     
     // Add event listeners for edit and delete buttons
     tournaments.forEach(t => {
-        document.getElementById(`edit-${t.id}`).addEventListener('click', () => openEditModal(t));
-        document.getElementById(`delete-${t.id}`).addEventListener('click', () => deleteTournamentConfirm(t.id));
+        const editBtn = document.getElementById(`edit-${t.id}`);
+        const deleteBtn = document.getElementById(`delete-${t.id}`);
+        if (editBtn) editBtn.addEventListener('click', () => openEditModal(t));
+        if (deleteBtn) deleteBtn.addEventListener('click', () => deleteTournamentConfirm(t.id));
     });
 }
 
-function loadPastTournaments() {
+async function loadPastTournaments() {
     const grid = document.getElementById('past-tournaments-grid');
-    const tournaments = getPastTournaments();
+    grid.innerHTML = '<div class="loading">Загрузка...</div>';
+    
+    const tournaments = await API.tournaments.getAll('finished');
     
     if (tournaments.length === 0) {
         grid.innerHTML = '<div class="empty-state"><p>Нет прошедших турниров</p></div>';
@@ -136,13 +140,8 @@ function loadPastTournaments() {
     tournaments.forEach(t => {
         const editBtn = document.getElementById(`edit-past-${t.id}`);
         const deleteBtn = document.getElementById(`delete-past-${t.id}`);
-        
-        if (editBtn) {
-            editBtn.addEventListener('click', () => openEditPastModal(t));
-        }
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', () => deletePastTournamentConfirm(t.id));
-        }
+        if (editBtn) editBtn.addEventListener('click', () => openEditPastModal(t));
+        if (deleteBtn) deleteBtn.addEventListener('click', () => deletePastTournamentConfirm(t.id));
     });
 }
 
@@ -168,11 +167,7 @@ function createAdminTournamentCard(tournament, isPast = false) {
                 </div>
                 <div class="info-item">
                     <span class="info-label">Команд</span>
-                    <span class="info-value">${tournament.teams || 0} / ${tournament.maxTeams}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Номер</span>
-                    <span class="info-value">#${tournament.number}</span>
+                    <span class="info-value">${tournament.teams || 0} / ${tournament.max_teams}</span>
                 </div>
                 ${isPast && tournament.winner ? `
                 <div class="info-item">
@@ -186,18 +181,18 @@ function createAdminTournamentCard(tournament, isPast = false) {
                 <button class="btn-edit" id="edit-${tournament.id}">Изменить</button>
                 <button class="btn-danger" id="delete-${tournament.id}">Удалить</button>
                 ` : `
-                    <button class="btn-edit" id="edit-past-${tournament.id}">Изменить</button>
-                    <button class="btn-danger" id="delete-past-${tournament.id}">Удалить</button>
+                <button class="btn-edit" id="edit-past-${tournament.id}">Изменить</button>
+                <button class="btn-danger" id="delete-past-${tournament.id}">Удалить</button>
                 `}
             </div>
         </div>
     `;
 }
 
-function loadRegistrationLinksForm() {
+async function loadRegistrationLinksForm() {
     const grid = document.getElementById('links-grid');
-    const disciplines = getDisciplines();
-    const links = JSON.parse(localStorage.getItem('wbcyber_registration_links') || '{}');
+    const disciplines = await API.disciplines.getAll();
+    const links = await API.links.getAll();
     
     grid.innerHTML = disciplines.map(discipline => `
         <div class="link-item">
@@ -211,7 +206,7 @@ function loadRegistrationLinksForm() {
     `).join('');
 }
 
-function saveRegistrationLinks() {
+async function saveRegistrationLinks() {
     console.log('💾 Сохранение ссылок на формы...');
     const links = {};
     document.querySelectorAll('.link-input').forEach(input => {
@@ -223,13 +218,13 @@ function saveRegistrationLinks() {
         }
     });
     
-    localStorage.setItem('wbcyber_registration_links', JSON.stringify(links));
-    console.log('✅ Ссылки сохранены в localStorage!');
-    
-    // Update registrationLinks in tournaments-data.js
-    Object.assign(registrationLinks, links);
-    
-    alert('Ссылки сохранены! Обновите главную страницу (Ctrl+Shift+R).');
+    try {
+        await API.links.save(links);
+        console.log('✅ Ссылки сохранены!');
+        alert('Ссылки сохранены!');
+    } catch (error) {
+        alert('Ошибка сохранения ссылок: ' + error.message);
+    }
 }
 
 function openAddModal() {
@@ -248,7 +243,7 @@ function openAddPastModal() {
     document.getElementById('modal-title').textContent = 'Добавить прошедший турнир';
     document.getElementById('tournament-form').reset();
     document.getElementById('tournament-id').value = '';
-    document.getElementById('tournament-status').value = 'past';
+    document.getElementById('tournament-status').value = 'finished';
     document.getElementById('winner-field').style.display = 'block';
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
@@ -277,10 +272,10 @@ function openEditPastModal(tournament) {
     }
     
     document.getElementById('tournament-prize').value = tournament.prize;
-    document.getElementById('tournament-max-teams').value = tournament.maxTeams;
-    document.getElementById('tournament-custom-link').value = tournament.customLink || '';
+    document.getElementById('tournament-max-teams').value = tournament.max_teams;
+    document.getElementById('tournament-custom-link').value = tournament.custom_link || '';
     document.getElementById('tournament-winner').value = tournament.winner || '';
-    document.getElementById('tournament-status').value = 'past';
+    document.getElementById('tournament-status').value = 'finished';
     document.getElementById('winner-field').style.display = 'block';
     
     document.getElementById('tournament-modal').classList.add('active');
@@ -310,10 +305,13 @@ function openEditModal(tournament) {
     }
     
     document.getElementById('tournament-prize').value = tournament.prize;
-    document.getElementById('tournament-max-teams').value = tournament.maxTeams;
-    document.getElementById('tournament-custom-link').value = tournament.customLink || '';
+    document.getElementById('tournament-max-teams').value = tournament.max_teams;
+    document.getElementById('tournament-custom-link').value = tournament.custom_link || '';
+    document.getElementById('tournament-status').value = 'active';
+    document.getElementById('winner-field').style.display = 'none';
     
     document.getElementById('tournament-modal').classList.add('active');
+    updateDisciplineDropdown();
 }
 
 function closeModal() {
@@ -321,7 +319,7 @@ function closeModal() {
     currentEditingId = null;
 }
 
-function handleFormSubmit(e) {
+async function handleFormSubmit(e) {
     e.preventDefault();
     
     const status = document.getElementById('tournament-status').value;
@@ -331,35 +329,32 @@ function handleFormSubmit(e) {
         date: formatDate(document.getElementById('tournament-date').value),
         prize: document.getElementById('tournament-prize').value,
         maxTeams: parseInt(document.getElementById('tournament-max-teams').value),
-        customLink: document.getElementById('tournament-custom-link').value,
-        winner: document.getElementById('tournament-winner').value
+        customLink: document.getElementById('tournament-custom-link').value || null,
+        winner: document.getElementById('tournament-winner').value || null,
+        status: status
     };
     
-    if (currentEditingId) {
-        // Проверяем, это активный или прошедший турнир
-        if (status === 'past') {
-            updatePastTournament(currentEditingId, formData);
+    try {
+        if (currentEditingId) {
+            formData.id = currentEditingId;
+            await API.tournaments.update(formData);
+            alert('Турнир обновлен!');
         } else {
-        updateTournament(currentEditingId, formData);
+            await API.tournaments.create(formData);
+            alert('Турнир добавлен!');
         }
-    } else {
-        if (status === 'past') {
-            addPastTournament(formData);
-    } else {
-        addTournament(formData);
+        
+        closeModal();
+        
+        // Обновляем отображение
+        if (status === 'finished') {
+            await loadPastTournaments();
+        } else {
+            await loadActiveTournaments();
         }
+    } catch (error) {
+        alert('Ошибка сохранения турнира: ' + error.message);
     }
-    
-    closeModal();
-    
-    // Перезагружаем данные и обновляем отображение
-    console.log('🔄 Обновление после изменения...');
-    loadTournamentsFromStorage();
-    loadActiveTournaments();
-    loadPastTournaments();
-    console.log('✅ Обновлено!');
-    
-    alert(currentEditingId ? 'Турнир обновлен! Обновите главную страницу.' : 'Турнир добавлен! Обновите главную страницу.');
 }
 
 function formatDate(dateString) {
@@ -376,41 +371,33 @@ function formatDate(dateString) {
     return `${day} ${month} ${year} г.`;
 }
 
-function deleteTournamentConfirm(tournamentId) {
+async function deleteTournamentConfirm(tournamentId) {
     if (confirm('Вы уверены, что хотите удалить этот турнир?')) {
-        console.log('🗑️ Удаление турнира...');
-        deleteTournament(tournamentId);
-        
-        // Перезагружаем данные из localStorage
-        loadTournamentsFromStorage();
-        
-        // Обновляем отображение
-        loadActiveTournaments();
-        
-        console.log('✅ Турнир удален!');
-        alert('Турнир удален! Обновите главную страницу (Ctrl+Shift+R).');
+        try {
+            await API.tournaments.delete(tournamentId);
+            alert('Турнир удален!');
+            await loadActiveTournaments();
+        } catch (error) {
+            alert('Ошибка удаления турнира: ' + error.message);
+        }
     }
 }
 
-function deletePastTournamentConfirm(tournamentId) {
+async function deletePastTournamentConfirm(tournamentId) {
     if (confirm('Вы уверены, что хотите удалить этот прошедший турнир?')) {
-        console.log('🗑️ Удаление прошедшего турнира...');
-        deletePastTournament(tournamentId);
-        
-        // Перезагружаем данные из localStorage
-        loadTournamentsFromStorage();
-        
-        // Обновляем отображение
-        loadPastTournaments();
-        
-        console.log('✅ Прошедший турнир удален!');
-        alert('Прошедший турнир удален! Обновите страницу архива (Ctrl+Shift+R).');
+        try {
+            await API.tournaments.delete(tournamentId);
+            alert('Прошедший турнир удален!');
+            await loadPastTournaments();
+        } catch (error) {
+            alert('Ошибка удаления турнира: ' + error.message);
+        }
     }
 }
 
 // Загрузка формы социальных ссылок
-function loadSocialLinksForm() {
-    const socialLinks = JSON.parse(localStorage.getItem('wbcyber_social_links') || '{}');
+async function loadSocialLinksForm() {
+    const socialLinks = await API.social.getAll();
     
     document.getElementById('twitch-link').value = socialLinks.twitch || '';
     document.getElementById('telegram-link').value = socialLinks.telegram || '';
@@ -418,7 +405,7 @@ function loadSocialLinksForm() {
 }
 
 // Сохранение социальных ссылок
-function saveSocialLinks() {
+async function saveSocialLinks() {
     console.log('💾 Сохранение социальных ссылок...');
     const socialLinks = {
         twitch: document.getElementById('twitch-link').value.trim(),
@@ -426,41 +413,19 @@ function saveSocialLinks() {
         contact: document.getElementById('contact-link').value.trim()
     };
     
-    console.log('  🔗 Twitch:', socialLinks.twitch || 'не указано');
-    console.log('  🔗 Telegram:', socialLinks.telegram || 'не указано');
-    console.log('  🔗 Contact:', socialLinks.contact || 'не указано');
-    
-    localStorage.setItem('wbcyber_social_links', JSON.stringify(socialLinks));
-    console.log('✅ Социальные ссылки сохранены в localStorage!');
-    
-    alert('Социальные ссылки сохранены! Обновите главную страницу (Ctrl+Shift+R).');
-}
-
-// Получение списка дисциплин
-function getDisciplines() {
-    const stored = localStorage.getItem('wbcyber_disciplines');
-    if (stored) {
-        return JSON.parse(stored);
+    try {
+        await API.social.save(socialLinks);
+        console.log('✅ Социальные ссылки сохранены!');
+        alert('Социальные ссылки сохранены!');
+    } catch (error) {
+        alert('Ошибка сохранения социальных ссылок: ' + error.message);
     }
-    // Дефолтные дисциплины
-    return ['CS 2', 'Dota 2', 'Valorant', 'Overwatch 2', 'League of Legends'];
-}
-
-// Сохранение дисциплин
-function saveDisciplines(disciplines) {
-    localStorage.setItem('wbcyber_disciplines', JSON.stringify(disciplines));
-    
-    // Обновляем dropdown в форме турнира
-    updateDisciplineDropdown();
-    
-    // Обновляем форму ссылок на регистрацию
-    loadRegistrationLinksForm();
 }
 
 // Загрузка списка дисциплин
-function loadDisciplinesList() {
+async function loadDisciplinesList() {
     const list = document.getElementById('disciplines-list');
-    const disciplines = getDisciplines();
+    const disciplines = await API.disciplines.getAll();
     
     list.innerHTML = disciplines.map(d => `
         <div class="discipline-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(107, 45, 143, 0.2); border-radius: 8px; margin-bottom: 10px;">
@@ -471,7 +436,7 @@ function loadDisciplinesList() {
 }
 
 // Добавление дисциплины
-function addDiscipline() {
+async function addDiscipline() {
     const input = document.getElementById('new-discipline-input');
     const newDiscipline = input.value.trim();
     
@@ -480,41 +445,38 @@ function addDiscipline() {
         return;
     }
     
-    const disciplines = getDisciplines();
-    
-    if (disciplines.includes(newDiscipline)) {
-        alert('Такая дисциплина уже существует!');
-        return;
+    try {
+        await API.disciplines.create(newDiscipline);
+        await loadDisciplinesList();
+        await loadRegistrationLinksForm();
+        input.value = '';
+        alert(`Дисциплина "${newDiscipline}" добавлена!`);
+    } catch (error) {
+        alert('Ошибка добавления дисциплины: ' + error.message);
     }
-    
-    disciplines.push(newDiscipline);
-    saveDisciplines(disciplines);
-    loadDisciplinesList();
-    
-    input.value = '';
-    alert(`Дисциплина "${newDiscipline}" добавлена!`);
 }
 
 // Удаление дисциплины
-function deleteDiscipline(discipline) {
+async function deleteDiscipline(discipline) {
     if (!confirm(`Вы уверены, что хотите удалить дисциплину "${discipline}"?`)) {
         return;
     }
     
-    let disciplines = getDisciplines();
-    disciplines = disciplines.filter(d => d !== discipline);
-    
-    saveDisciplines(disciplines);
-    loadDisciplinesList();
-    
-    alert(`Дисциплина "${discipline}" удалена!`);
+    try {
+        await API.disciplines.delete(discipline);
+        await loadDisciplinesList();
+        await loadRegistrationLinksForm();
+        alert(`Дисциплина "${discipline}" удалена!`);
+    } catch (error) {
+        alert('Ошибка удаления дисциплины: ' + error.message);
+    }
 }
 
 // Обновление dropdown дисциплин в форме турнира
-function updateDisciplineDropdown() {
+async function updateDisciplineDropdown() {
     const select = document.getElementById('tournament-discipline');
     const currentValue = select.value;
-    const disciplines = getDisciplines();
+    const disciplines = await API.disciplines.getAll();
     
     select.innerHTML = '<option value="">Выберите дисциплину</option>' +
         disciplines.map(d => `<option value="${d}">${d}</option>`).join('');
@@ -526,10 +488,10 @@ function updateDisciplineDropdown() {
 }
 
 // Загрузка команд в админке
-function loadTeamsAdmin() {
+async function loadTeamsAdmin() {
     const container = document.getElementById('teams-admin-container');
-    const allTeams = getAllRegisteredTeams();
-    const tournaments = getActiveTournaments();
+    const allTeams = await API.teams.getAll();
+    const tournaments = await API.tournaments.getAll();
     
     if (Object.keys(allTeams).length === 0) {
         container.innerHTML = '<div class="empty-state"><p>Пока нет зарегистрированных команд</p></div>';
@@ -543,17 +505,17 @@ function loadTeamsAdmin() {
         return `
             <div class="tournament-section" style="margin-bottom: 30px;">
                 <h3 style="margin-bottom: 15px;">${tournament ? tournament.title : `Турнир #${tournamentId}`}</h3>
-                ${teams.length > 0 ? teams.map((team, index) => `
+                ${teams.length > 0 ? teams.map((team) => `
                     <div class="discipline-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(107, 45, 143, 0.2); border-radius: 8px; margin-bottom: 10px;">
                         <div>
                             <div style="font-size: 16px; font-weight: 600; margin-bottom: 5px;">${team.name}</div>
                             <div style="font-size: 14px; color: var(--color-text-secondary);">
-                                👤 ${team.captain} | 👥 ${team.players} игроков | 📅 ${team.registrationDate}
+                                👤 ${team.captain} | 👥 ${team.players} игроков | 📅 ${team.registration_date}
                             </div>
                         </div>
                         <div style="display: flex; gap: 10px;">
-                            <button class="btn-edit" onclick="editTeam(${tournamentId}, ${index})">Изменить</button>
-                            <button class="btn-danger" onclick="deleteTeam(${tournamentId}, ${index})">Удалить</button>
+                            <button class="btn-edit" onclick="editTeam(${team.id})">Изменить</button>
+                            <button class="btn-danger" onclick="deleteTeam(${team.id})">Удалить</button>
                         </div>
                     </div>
                 `).join('') : '<p style="color: var(--color-text-secondary);">Нет команд</p>'}
@@ -563,71 +525,80 @@ function loadTeamsAdmin() {
 }
 
 // Удаление команды
-function deleteTeam(tournamentId, teamIndex) {
+async function deleteTeam(teamId) {
     if (!confirm('Вы уверены, что хотите удалить эту команду?')) {
         return;
     }
     
-    const stored = localStorage.getItem('wbcyber_tournaments');
-    if (stored) {
-        const data = JSON.parse(stored);
-        if (data.registeredTeams && data.registeredTeams[tournamentId]) {
-            data.registeredTeams[tournamentId].splice(teamIndex, 1);
-            localStorage.setItem('wbcyber_tournaments', JSON.stringify(data));
-            loadTournamentsFromStorage();
-            loadTeamsAdmin();
-            alert('Команда удалена!');
-        }
+    try {
+        await API.teams.delete(teamId);
+        await loadTeamsAdmin();
+        alert('Команда удалена!');
+    } catch (error) {
+        alert('Ошибка удаления команды: ' + error.message);
     }
 }
 
 // Редактирование команды
-function editTeam(tournamentId, teamIndex) {
-    const teams = getAllRegisteredTeams();
-    const team = teams[tournamentId][teamIndex];
+async function editTeam(teamId) {
+    const allTeams = await API.teams.getAll();
+    
+    // Находим команду по ID
+    let team = null;
+    for (const teams of Object.values(allTeams)) {
+        team = teams.find(t => t.id === teamId);
+        if (team) break;
+    }
+    
+    if (!team) {
+        alert('Команда не найдена');
+        return;
+    }
+    
+    currentEditingTeam = team;
     
     document.getElementById('team-modal-title').textContent = 'Редактировать команду';
-    document.getElementById('team-tournament-id').value = tournamentId;
-    document.getElementById('team-index').value = teamIndex;
-    document.getElementById('team-tournament').value = tournamentId;
+    document.getElementById('team-tournament-id').value = team.tournament_id;
+    document.getElementById('team-tournament').value = team.tournament_id;
     document.getElementById('team-name').value = team.name;
     document.getElementById('team-captain').value = team.captain;
     document.getElementById('team-players').value = team.players;
     
     // Конвертируем дату из DD.MM.YYYY в YYYY-MM-DD
-    const dateParts = team.registrationDate.split('.');
+    const dateParts = team.registration_date.split('.');
     if (dateParts.length === 3) {
         document.getElementById('team-date').value = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
     }
     
     document.getElementById('team-modal').classList.add('active');
-    loadTournamentDropdown();
+    await loadTournamentDropdown();
 }
 
 // Открыть модал добавления команды
-function openAddTeamModal() {
+async function openAddTeamModal() {
+    currentEditingTeam = null;
     document.getElementById('team-modal-title').textContent = 'Добавить команду';
     document.getElementById('team-form').reset();
     document.getElementById('team-tournament-id').value = '';
-    document.getElementById('team-index').value = '';
     
     // Установить текущую дату
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('team-date').value = today;
     
     document.getElementById('team-modal').classList.add('active');
-    loadTournamentDropdown();
+    await loadTournamentDropdown();
 }
 
 // Закрыть модал команды
 function closeTeamModal() {
     document.getElementById('team-modal').classList.remove('active');
+    currentEditingTeam = null;
 }
 
 // Загрузить турниры в dropdown
-function loadTournamentDropdown() {
+async function loadTournamentDropdown() {
     const select = document.getElementById('team-tournament');
-    const tournaments = getActiveTournaments();
+    const tournaments = await API.tournaments.getAll('active');
     const currentValue = select.value;
     
     select.innerHTML = '<option value="">Выберите турнир</option>' +
@@ -639,11 +610,10 @@ function loadTournamentDropdown() {
 }
 
 // Обработка формы команды
-function handleTeamFormSubmit(e) {
+async function handleTeamFormSubmit(e) {
     e.preventDefault();
     
     const tournamentId = document.getElementById('team-tournament').value;
-    const teamIndex = document.getElementById('team-index').value;
     
     // Конвертируем дату в DD.MM.YYYY
     const dateValue = document.getElementById('team-date').value;
@@ -651,37 +621,29 @@ function handleTeamFormSubmit(e) {
     const formattedDate = `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
     
     const teamData = {
+        tournamentId: parseInt(tournamentId),
         name: document.getElementById('team-name').value,
         captain: document.getElementById('team-captain').value,
         players: parseInt(document.getElementById('team-players').value),
         registrationDate: formattedDate
     };
     
-    const stored = localStorage.getItem('wbcyber_tournaments');
-    if (stored) {
-        const data = JSON.parse(stored);
-        
-        if (!data.registeredTeams) {
-            data.registeredTeams = {};
-        }
-        
-        if (!data.registeredTeams[tournamentId]) {
-            data.registeredTeams[tournamentId] = [];
-        }
-        
-        if (teamIndex !== '') {
+    try {
+        if (currentEditingTeam) {
             // Редактирование
-            data.registeredTeams[tournamentId][teamIndex] = teamData;
+            teamData.id = currentEditingTeam.id;
+            await API.teams.update(teamData);
+            alert('Команда обновлена!');
         } else {
             // Добавление
-            data.registeredTeams[tournamentId].push(teamData);
+            await API.teams.create(teamData);
+            alert('Команда добавлена!');
         }
         
-        localStorage.setItem('wbcyber_tournaments', JSON.stringify(data));
-        loadTournamentsFromStorage();
-        loadTeamsAdmin();
         closeTeamModal();
-        alert(teamIndex !== '' ? 'Команда обновлена!' : 'Команда добавлена!');
+        await loadTeamsAdmin();
+    } catch (error) {
+        alert('Ошибка сохранения команды: ' + error.message);
     }
 }
 

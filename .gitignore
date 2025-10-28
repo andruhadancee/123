@@ -1,14 +1,29 @@
+# Зависимости
 node_modules/
-.DS_Store
-*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Переменные окружения (НЕ коммитить!)
 .env
 .env.local
+.env.production
+.env.development
+
+# Временные файлы
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Vercel
 .vercel
 
-# Видео файлы (большие - не загружаем)
-*.mp4
-*.webm
-*.mov
-*.avi
-
-# Изображения фона нужны - НЕ игнорируем .png!
+# Локальные данные для разработки
+init-db.js

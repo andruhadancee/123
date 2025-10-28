@@ -1,15 +1,17 @@
-// Страница прошедших турниров
+// Страница прошедших турниров (с API)
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Сначала загружаем данные из localStorage
-    loadTournamentsFromStorage();
-    // Потом отображаем турниры
-    loadPastTournaments();
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🚀 Инициализация страницы архива...');
+    await loadPastTournaments();
+    await loadSocialLinks();
+    console.log('✅ Страница архива загружена');
 });
 
-function loadPastTournaments() {
+async function loadPastTournaments() {
     const grid = document.getElementById('archive-grid');
-    const tournaments = getPastTournaments();
+    grid.innerHTML = '<div class="loading">Загрузка архива...</div>';
+    
+    const tournaments = await API.tournaments.getAll('finished');
     
     if (tournaments.length === 0) {
         grid.innerHTML = `
@@ -46,7 +48,7 @@ function createPastTournamentCard(tournament) {
                 </div>
                 <div class="info-item">
                     <span class="info-label">Участников</span>
-                    <span class="info-value">${tournament.teams} команд</span>
+                    <span class="info-value">${tournament.teams || 0} команд</span>
                 </div>
                 ${tournament.winner ? `
                 <div class="info-item" style="grid-column: 1 / -1;">
@@ -57,5 +59,23 @@ function createPastTournamentCard(tournament) {
             </div>
         </div>
     `;
+}
+
+async function loadSocialLinks() {
+    const socialLinks = await API.social.getAll();
+    
+    // Обновляем ссылки в header
+    if (socialLinks.twitch) {
+        const twitchBtn = document.querySelector('.social-btn.twitch');
+        if (twitchBtn) twitchBtn.href = socialLinks.twitch;
+    }
+    if (socialLinks.telegram) {
+        const telegramBtn = document.querySelector('.social-btn.telegram');
+        if (telegramBtn) telegramBtn.href = socialLinks.telegram;
+    }
+    if (socialLinks.contact) {
+        const contactBtn = document.querySelector('.btn-contact');
+        if (contactBtn) contactBtn.href = socialLinks.contact;
+    }
 }
 

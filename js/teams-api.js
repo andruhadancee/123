@@ -1,16 +1,18 @@
-// Страница зарегистрированных команд
+// Страница зарегистрированных команд (с API)
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Сначала загружаем данные из localStorage
-    loadTournamentsFromStorage();
-    // Потом отображаем команды
-    loadRegisteredTeams();
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🚀 Инициализация страницы команд...');
+    await loadRegisteredTeams();
+    await loadSocialLinks();
+    console.log('✅ Страница команд загружена');
 });
 
-function loadRegisteredTeams() {
+async function loadRegisteredTeams() {
     const container = document.getElementById('teams-container');
-    const tournaments = getActiveTournaments();
-    const allTeams = getAllRegisteredTeams();
+    container.innerHTML = '<div class="loading">Загрузка команд...</div>';
+    
+    const tournaments = await API.tournaments.getAll('active');
+    const allTeams = await API.teams.getAll();
     
     if (tournaments.length === 0) {
         container.innerHTML = `
@@ -50,9 +52,27 @@ function createTeamCard(team) {
             <div class="team-info">
                 <span>👤 ${team.captain}</span>
                 <span>👥 ${team.players} игроков</span>
-                <span>📅 ${team.registrationDate}</span>
+                <span>📅 ${team.registration_date}</span>
             </div>
         </div>
     `;
+}
+
+async function loadSocialLinks() {
+    const socialLinks = await API.social.getAll();
+    
+    // Обновляем ссылки в header
+    if (socialLinks.twitch) {
+        const twitchBtn = document.querySelector('.social-btn.twitch');
+        if (twitchBtn) twitchBtn.href = socialLinks.twitch;
+    }
+    if (socialLinks.telegram) {
+        const telegramBtn = document.querySelector('.social-btn.telegram');
+        if (telegramBtn) telegramBtn.href = socialLinks.telegram;
+    }
+    if (socialLinks.contact) {
+        const contactBtn = document.querySelector('.btn-contact');
+        if (contactBtn) contactBtn.href = socialLinks.contact;
+    }
 }
 

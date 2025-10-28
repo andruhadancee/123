@@ -8,7 +8,7 @@ const pool = new Pool({
 
 module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     
     if (req.method === 'OPTIONS') {
@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
                 params = [tournamentId];
             }
             
-            query += ' ORDER BY registration_date DESC';
+            query += ' ORDER BY created_at DESC';
             
             const result = await pool.query(query, params);
             
@@ -65,6 +65,33 @@ module.exports = async (req, res) => {
             );
             
             return res.status(201).json(result.rows[0]);
+        }
+        
+        // PUT - обновить команду
+        if (req.method === 'PUT') {
+            const { id, tournamentId, name, captain, players, registrationDate } = req.body;
+            
+            const result = await pool.query(
+                `UPDATE registered_teams 
+                SET tournament_id = $1, name = $2, captain = $3, players = $4, registration_date = $5
+                WHERE id = $6
+                RETURNING *`,
+                [tournamentId, name, captain, players, registrationDate, id]
+            );
+            
+            if (result.rows.length === 0) {
+                return res.status(404).json({ error: 'Команда не найдена' });
+            }
+            
+            // Обновляем счётчик команд в турнире
+            await pool.query(
+                `UPDATE tournaments 
+                SET teams = (SELECT COUNT(*) FROM registered_teams WHERE tournament_id = $1)
+                WHERE id = $1`,
+                [tournamentId]
+            );
+            
+            return res.status(200).json(result.rows[0]);
         }
         
         // DELETE - удалить команду
