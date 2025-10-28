@@ -29,7 +29,6 @@ function createPastTournamentCard(tournament) {
         <div class="tournament-card">
             <div class="tournament-card-header">
                 <h2>${tournament.title}</h2>
-                <span class="tournament-number">#${tournament.number}</span>
             </div>
             
             <div class="tournament-info">

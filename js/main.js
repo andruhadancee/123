@@ -1,10 +1,12 @@
 // Главная страница - отображение активных турниров
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Сначала загружаем данные из localStorage
+    console.log('🚀 Инициализация главной страницы...');
+    // ВАЖНО: Сначала загружаем ВСЕ данные из localStorage
     loadTournamentsFromStorage();
     // Потом отображаем турниры
     loadActiveTournaments();
+    console.log('✅ Главная страница загружена');
 });
 
 function loadActiveTournaments() {
@@ -25,11 +27,13 @@ function loadActiveTournaments() {
 }
 
 function createTournamentCard(tournament) {
+    const regLink = tournament.registrationLink || '#';
+    console.log(`🎮 Карточка турнира "${tournament.title}": ${regLink}`);
+    
     return `
         <div class="tournament-card">
             <div class="tournament-card-header">
                 <h2>${tournament.title}</h2>
-                <span class="tournament-number">#${tournament.number}</span>
             </div>
             
             <div class="tournament-info">
@@ -51,7 +55,7 @@ function createTournamentCard(tournament) {
                 </div>
             </div>
             
-            <a href="${tournament.registrationLink}" target="_blank" class="btn-submit">
+            <a href="${regLink}" target="_blank" class="btn-submit" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
                 Подать заявку
             </a>
         </div>

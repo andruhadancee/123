@@ -80,6 +80,8 @@ function getAllRegisteredTeams() {
 
 // Функция для добавления турнира (для админ-панели)
 function addTournament(tournamentData) {
+    console.log('➕ Добавление турнира:', tournamentData);
+    
     const newId = Math.max(...tournamentsDB.active.map(t => t.id), 0) + 1;
     const newNumber = Math.max(...tournamentsDB.active.map(t => t.number), 0) + 1;
     
@@ -87,8 +89,12 @@ function addTournament(tournamentData) {
     let regLink = "#";
     if (tournamentData.customLink && tournamentData.customLink.trim()) {
         regLink = tournamentData.customLink.trim();
+        console.log(`✅ Используем customLink: ${regLink}`);
     } else if (registrationLinks[tournamentData.discipline]) {
         regLink = registrationLinks[tournamentData.discipline];
+        console.log(`✅ Используем ссылку дисциплины "${tournamentData.discipline}": ${regLink}`);
+    } else {
+        console.log(`⚠️ Нет ссылки для дисциплины "${tournamentData.discipline}"`);
     }
     
     const tournament = {
@@ -105,6 +111,7 @@ function addTournament(tournamentData) {
         status: "active"
     };
     
+    console.log('💾 Сохраняем турнир:', tournament);
     tournamentsDB.active.push(tournament);
     saveTournamentsToStorage();
     return tournament;
@@ -112,7 +119,11 @@ function addTournament(tournamentData) {
 
 // Функция для удаления турнира (для админ-панели)
 function deleteTournament(tournamentId) {
+    console.log(`🗑️ Удаление турнира ID: ${tournamentId}`);
+    const beforeCount = tournamentsDB.active.length;
     tournamentsDB.active = tournamentsDB.active.filter(t => t.id !== tournamentId);
+    const afterCount = tournamentsDB.active.length;
+    console.log(`✅ Турниров до: ${beforeCount}, после: ${afterCount}`);
     saveTournamentsToStorage();
 }
 
