@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Add discipline icons to registration links form + reduce spacing"
+git commit -m "Fix mobile nav buttons size (rollback to safe values)"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
