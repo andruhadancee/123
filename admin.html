@@ -48,7 +48,9 @@
         <div class="admin-tabs">
             <button class="tab-btn active" data-tab="active">Активные турниры</button>
             <button class="tab-btn" data-tab="past">Прошедшие турниры</button>
+            <button class="tab-btn" data-tab="disciplines">Дисциплины</button>
             <button class="tab-btn" data-tab="links">Ссылки на формы</button>
+            <button class="tab-btn" data-tab="social">Социальные кнопки</button>
         </div>
 
         <!-- Active Tournaments Tab -->
@@ -60,8 +62,40 @@
 
         <!-- Past Tournaments Tab -->
         <div class="tab-content" id="past-tab">
+            <div class="admin-header" style="margin-bottom: 20px;">
+                <button class="btn-primary" id="add-past-tournament-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Добавить прошедший турнир
+                </button>
+            </div>
             <div class="tournaments-admin-grid" id="past-tournaments-grid">
                 <!-- Past tournaments will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Disciplines Tab -->
+        <div class="tab-content" id="disciplines-tab">
+            <div class="links-container">
+                <h2>Управление дисциплинами</h2>
+                <p class="hint">Добавляйте или удаляйте игровые дисциплины для турниров</p>
+                
+                <div class="form-group" style="max-width: 500px; margin-bottom: 20px;">
+                    <label>Добавить новую дисциплину</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" 
+                               id="new-discipline-input" 
+                               placeholder="Название дисциплины (например, PUBG)"
+                               style="flex: 1;">
+                        <button class="btn-primary" id="add-discipline-btn">Добавить</button>
+                    </div>
+                </div>
+                
+                <div class="disciplines-list" id="disciplines-list">
+                    <!-- Disciplines will be loaded here -->
+                </div>
             </div>
         </div>
 
@@ -76,6 +110,40 @@
                 </div>
                 
                 <button class="btn-primary" id="save-links-btn">Сохранить ссылки</button>
+            </div>
+        </div>
+
+        <!-- Social Buttons Tab -->
+        <div class="tab-content" id="social-tab">
+            <div class="links-container">
+                <h2>Настройка социальных кнопок</h2>
+                <p class="hint">Укажите ссылки для кнопок в шапке сайта</p>
+                
+                <div class="links-grid">
+                    <div class="link-item">
+                        <label>Twitch</label>
+                        <input type="url" 
+                               class="social-input" 
+                               id="twitch-link" 
+                               placeholder="https://twitch.tv/your-channel">
+                    </div>
+                    <div class="link-item">
+                        <label>Telegram</label>
+                        <input type="url" 
+                               class="social-input" 
+                               id="telegram-link" 
+                               placeholder="https://t.me/your-channel">
+                    </div>
+                    <div class="link-item">
+                        <label>Связаться с нами</label>
+                        <input type="url" 
+                               class="social-input" 
+                               id="contact-link" 
+                               placeholder="https://t.me/your-contact или mailto:email@example.com">
+                    </div>
+                </div>
+                
+                <button class="btn-primary" id="save-social-btn">Сохранить ссылки</button>
             </div>
         </div>
     </main>
@@ -132,6 +200,13 @@
                     <input type="url" id="tournament-custom-link" placeholder="https://forms.gle/...">
                     <small>Если не указана, будет использована ссылка из настроек дисциплины</small>
                 </div>
+                
+                <div class="form-group" id="winner-field" style="display: none;">
+                    <label for="tournament-winner">Победитель (для прошедших турниров)</label>
+                    <input type="text" id="tournament-winner" placeholder="Название команды-победителя">
+                </div>
+                
+                <input type="hidden" id="tournament-status" value="active">
                 
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary" id="cancel-btn">Отмена</button>

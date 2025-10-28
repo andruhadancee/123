@@ -31,8 +31,9 @@ function setupEventListeners() {
         });
     });
     
-    // Add tournament button
+    // Add tournament buttons
     document.getElementById('add-tournament-btn').addEventListener('click', openAddModal);
+    document.getElementById('add-past-tournament-btn').addEventListener('click', openAddPastModal);
     
     // Modal
     document.getElementById('close-modal').addEventListener('click', closeModal);
@@ -46,6 +47,17 @@ function setupEventListeners() {
     
     // Save links
     document.getElementById('save-links-btn').addEventListener('click', saveRegistrationLinks);
+    
+    // Save social links
+    document.getElementById('save-social-btn').addEventListener('click', saveSocialLinks);
+    
+    // Add discipline
+    document.getElementById('add-discipline-btn').addEventListener('click', addDiscipline);
+    document.getElementById('new-discipline-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            addDiscipline();
+        }
+    });
     
     // Logout
     document.getElementById('logout-btn').addEventListener('click', function() {
@@ -71,7 +83,9 @@ function switchTab(tabName) {
 function loadAdminData() {
     loadActiveTournaments();
     loadPastTournaments();
+    loadDisciplinesList();
     loadRegistrationLinksForm();
+    loadSocialLinksForm();
 }
 
 function loadActiveTournaments() {
@@ -102,6 +116,14 @@ function loadPastTournaments() {
     }
     
     grid.innerHTML = tournaments.map(t => createAdminTournamentCard(t, true)).join('');
+    
+    // Add event listeners for delete buttons
+    tournaments.forEach(t => {
+        const deleteBtn = document.getElementById(`delete-past-${t.id}`);
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => deletePastTournamentConfirm(t.id));
+        }
+    });
 }
 
 function createAdminTournamentCard(tournament, isPast = false) {
@@ -132,20 +154,28 @@ function createAdminTournamentCard(tournament, isPast = false) {
                     <span class="info-label">Номер</span>
                     <span class="info-value">#${tournament.number}</span>
                 </div>
+                ${isPast && tournament.winner ? `
+                <div class="info-item">
+                    <span class="info-label">Победитель</span>
+                    <span class="info-value">${tournament.winner}</span>
+                </div>
+                ` : ''}
             </div>
-            ${!isPast ? `
             <div class="tournament-admin-actions">
-                <button class="btn-edit" id="edit-${tournament.id}">Изменить</button>
-                <button class="btn-danger" id="delete-${tournament.id}">Удалить</button>
+                ${!isPast ? `
+                    <button class="btn-edit" id="edit-${tournament.id}">Изменить</button>
+                    <button class="btn-danger" id="delete-${tournament.id}">Удалить</button>
+                ` : `
+                    <button class="btn-danger" id="delete-past-${tournament.id}">Удалить</button>
+                `}
             </div>
-            ` : ''}
         </div>
     `;
 }
 
 function loadRegistrationLinksForm() {
     const grid = document.getElementById('links-grid');
-    const disciplines = ['CS 2', 'Dota 2', 'Valorant', 'Overwatch 2', 'League of Legends'];
+    const disciplines = getDisciplines();
     const links = JSON.parse(localStorage.getItem('wbcyber_registration_links') || '{}');
     
     grid.innerHTML = disciplines.map(discipline => `
@@ -183,7 +213,21 @@ function openAddModal() {
     document.getElementById('modal-title').textContent = 'Добавить турнир';
     document.getElementById('tournament-form').reset();
     document.getElementById('tournament-id').value = '';
+    document.getElementById('tournament-status').value = 'active';
+    document.getElementById('winner-field').style.display = 'none';
     document.getElementById('tournament-modal').classList.add('active');
+    updateDisciplineDropdown();
+}
+
+function openAddPastModal() {
+    currentEditingId = null;
+    document.getElementById('modal-title').textContent = 'Добавить прошедший турнир';
+    document.getElementById('tournament-form').reset();
+    document.getElementById('tournament-id').value = '';
+    document.getElementById('tournament-status').value = 'past';
+    document.getElementById('winner-field').style.display = 'block';
+    document.getElementById('tournament-modal').classList.add('active');
+    updateDisciplineDropdown();
 }
 
 function openEditModal(tournament) {
@@ -223,23 +267,34 @@ function closeModal() {
 function handleFormSubmit(e) {
     e.preventDefault();
     
+    const status = document.getElementById('tournament-status').value;
     const formData = {
         title: document.getElementById('tournament-name').value,
         discipline: document.getElementById('tournament-discipline').value,
         date: formatDate(document.getElementById('tournament-date').value),
         prize: document.getElementById('tournament-prize').value,
         maxTeams: parseInt(document.getElementById('tournament-max-teams').value),
-        customLink: document.getElementById('tournament-custom-link').value
+        customLink: document.getElementById('tournament-custom-link').value,
+        winner: document.getElementById('tournament-winner').value
     };
     
     if (currentEditingId) {
         updateTournament(currentEditingId, formData);
     } else {
-        addTournament(formData);
+        if (status === 'past') {
+            addPastTournament(formData);
+        } else {
+            addTournament(formData);
+        }
     }
     
     closeModal();
+    
+    // Перезагружаем данные и обновляем отображение
+    loadTournamentsFromStorage();
     loadActiveTournaments();
+    loadPastTournaments();
+    
     alert(currentEditingId ? 'Турнир обновлен!' : 'Турнир добавлен!');
 }
 
@@ -260,8 +315,139 @@ function formatDate(dateString) {
 function deleteTournamentConfirm(tournamentId) {
     if (confirm('Вы уверены, что хотите удалить этот турнир?')) {
         deleteTournament(tournamentId);
+        
+        // Перезагружаем список турниров
         loadActiveTournaments();
-        alert('Турнир удален!');
+        
+        // Также обновляем данные в памяти
+        loadTournamentsFromStorage();
+        
+        alert('Турнир удален! Главная страница автоматически обновится.');
+    }
+}
+
+function deletePastTournamentConfirm(tournamentId) {
+    if (confirm('Вы уверены, что хотите удалить этот прошедший турнир?')) {
+        deletePastTournament(tournamentId);
+        
+        // Перезагружаем список
+        loadPastTournaments();
+        
+        // Обновляем данные в памяти
+        loadTournamentsFromStorage();
+        
+        alert('Прошедший турнир удален!');
+    }
+}
+
+// Загрузка формы социальных ссылок
+function loadSocialLinksForm() {
+    const socialLinks = JSON.parse(localStorage.getItem('wbcyber_social_links') || '{}');
+    
+    document.getElementById('twitch-link').value = socialLinks.twitch || '';
+    document.getElementById('telegram-link').value = socialLinks.telegram || '';
+    document.getElementById('contact-link').value = socialLinks.contact || '';
+}
+
+// Сохранение социальных ссылок
+function saveSocialLinks() {
+    const socialLinks = {
+        twitch: document.getElementById('twitch-link').value.trim(),
+        telegram: document.getElementById('telegram-link').value.trim(),
+        contact: document.getElementById('contact-link').value.trim()
+    };
+    
+    localStorage.setItem('wbcyber_social_links', JSON.stringify(socialLinks));
+    
+    alert('Социальные ссылки сохранены! Обновите главную страницу для просмотра изменений.');
+}
+
+// Получение списка дисциплин
+function getDisciplines() {
+    const stored = localStorage.getItem('wbcyber_disciplines');
+    if (stored) {
+        return JSON.parse(stored);
+    }
+    // Дефолтные дисциплины
+    return ['CS 2', 'Dota 2', 'Valorant', 'Overwatch 2', 'League of Legends'];
+}
+
+// Сохранение дисциплин
+function saveDisciplines(disciplines) {
+    localStorage.setItem('wbcyber_disciplines', JSON.stringify(disciplines));
+    
+    // Обновляем dropdown в форме турнира
+    updateDisciplineDropdown();
+    
+    // Обновляем форму ссылок на регистрацию
+    loadRegistrationLinksForm();
+}
+
+// Загрузка списка дисциплин
+function loadDisciplinesList() {
+    const list = document.getElementById('disciplines-list');
+    const disciplines = getDisciplines();
+    
+    list.innerHTML = disciplines.map(d => `
+        <div class="discipline-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(107, 45, 143, 0.2); border-radius: 8px; margin-bottom: 10px;">
+            <span style="font-size: 16px; font-weight: 500;">${d}</span>
+            <button class="btn-danger" onclick="deleteDiscipline('${d.replace(/'/g, "\\'")}')">Удалить</button>
+        </div>
+    `).join('');
+}
+
+// Добавление дисциплины
+function addDiscipline() {
+    const input = document.getElementById('new-discipline-input');
+    const newDiscipline = input.value.trim();
+    
+    if (!newDiscipline) {
+        alert('Введите название дисциплины!');
+        return;
+    }
+    
+    const disciplines = getDisciplines();
+    
+    if (disciplines.includes(newDiscipline)) {
+        alert('Такая дисциплина уже существует!');
+        return;
+    }
+    
+    disciplines.push(newDiscipline);
+    saveDisciplines(disciplines);
+    loadDisciplinesList();
+    
+    input.value = '';
+    alert(`Дисциплина "${newDiscipline}" добавлена!`);
+}
+
+// Удаление дисциплины
+function deleteDiscipline(discipline) {
+    if (!confirm(`Вы уверены, что хотите удалить дисциплину "${discipline}"?`)) {
+        return;
+    }
+    
+    let disciplines = getDisciplines();
+    disciplines = disciplines.filter(d => d !== discipline);
+    
+    saveDisciplines(disciplines);
+    loadDisciplinesList();
+    
+    alert(`Дисциплина "${discipline}" удалена!`);
+}
+
+// Обновление dropdown дисциплин в форме турнира
+function updateDisciplineDropdown() {
+    const select = document.getElementById('tournament-discipline');
+    const currentValue = select.value;
+    const disciplines = getDisciplines();
+    
+    select.innerHTML = '<option value="">Выберите дисциплину</option>' +
+        disciplines.map(d => `<option value="${d}">${d}</option>`).join('');
+    
+    // Восстанавливаем выбранное значение если оно есть
+    if (currentValue && disciplines.includes(currentValue)) {
+        select.value = currentValue;
     }
 }
 

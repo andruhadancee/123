@@ -88,6 +88,14 @@ function addTournament(tournamentData) {
     const newId = Math.max(...tournamentsDB.active.map(t => t.id), 0) + 1;
     const newNumber = Math.max(...tournamentsDB.active.map(t => t.number), 0) + 1;
     
+    // Приоритет: customLink > registrationLinks[discipline] > "#"
+    let regLink = "#";
+    if (tournamentData.customLink && tournamentData.customLink.trim()) {
+        regLink = tournamentData.customLink.trim();
+    } else if (registrationLinks[tournamentData.discipline]) {
+        regLink = registrationLinks[tournamentData.discipline];
+    }
+    
     const tournament = {
         id: newId,
         number: newNumber,
@@ -97,7 +105,8 @@ function addTournament(tournamentData) {
         prize: tournamentData.prize,
         teams: 0,
         maxTeams: tournamentData.maxTeams,
-        registrationLink: registrationLinks[tournamentData.discipline] || tournamentData.customLink || "#",
+        registrationLink: regLink,
+        customLink: tournamentData.customLink || "",
         status: "active"
     };
     
@@ -112,11 +121,52 @@ function deleteTournament(tournamentId) {
     saveTournamentsToStorage();
 }
 
+// Функция для добавления прошедшего турнира
+function addPastTournament(tournamentData) {
+    const newId = Math.max(...tournamentsDB.past.map(t => t.id), 0, 100) + 1;
+    const newNumber = Math.max(...tournamentsDB.past.map(t => t.number), 0) + 1;
+    
+    const tournament = {
+        id: newId,
+        number: newNumber,
+        title: tournamentData.title,
+        discipline: tournamentData.discipline,
+        date: tournamentData.date,
+        prize: tournamentData.prize,
+        teams: tournamentData.maxTeams, // Для прошедших турниров ставим максимум
+        maxTeams: tournamentData.maxTeams,
+        winner: tournamentData.winner || "Не указан",
+        status: "finished"
+    };
+    
+    tournamentsDB.past.push(tournament);
+    saveTournamentsToStorage();
+    return tournament;
+}
+
+// Функция для удаления прошедшего турнира
+function deletePastTournament(tournamentId) {
+    tournamentsDB.past = tournamentsDB.past.filter(t => t.id !== tournamentId);
+    saveTournamentsToStorage();
+}
+
 // Функция для обновления турнира (для админ-панели)
 function updateTournament(tournamentId, updateData) {
     const index = tournamentsDB.active.findIndex(t => t.id === tournamentId);
     if (index !== -1) {
-        tournamentsDB.active[index] = { ...tournamentsDB.active[index], ...updateData };
+        // Обновляем ссылку на регистрацию
+        let regLink = tournamentsDB.active[index].registrationLink;
+        if (updateData.customLink && updateData.customLink.trim()) {
+            regLink = updateData.customLink.trim();
+        } else if (updateData.discipline && registrationLinks[updateData.discipline]) {
+            regLink = registrationLinks[updateData.discipline];
+        }
+        
+        tournamentsDB.active[index] = { 
+            ...tournamentsDB.active[index], 
+            ...updateData,
+            registrationLink: regLink
+        };
         saveTournamentsToStorage();
         return tournamentsDB.active[index];
     }
@@ -136,6 +186,13 @@ function loadTournamentsFromStorage() {
         tournamentsDB.active = data.active || tournamentsDB.active;
         tournamentsDB.past = data.past || tournamentsDB.past;
         tournamentsDB.registeredTeams = data.registeredTeams || tournamentsDB.registeredTeams;
+    }
+    
+    // Загрузка ссылок на формы из localStorage
+    const storedLinks = localStorage.getItem('wbcyber_registration_links');
+    if (storedLinks) {
+        const links = JSON.parse(storedLinks);
+        Object.assign(registrationLinks, links);
     }
 }
 
