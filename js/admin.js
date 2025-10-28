@@ -90,12 +90,17 @@ function switchTab(tabName) {
 }
 
 function loadAdminData() {
+    console.log('📥 Загрузка данных в админку...');
+    // ВАЖНО: Сначала загружаем из localStorage!
+    loadTournamentsFromStorage();
+    // Потом отображаем
     loadActiveTournaments();
     loadPastTournaments();
     loadTeamsAdmin();
     loadDisciplinesList();
     loadRegistrationLinksForm();
     loadSocialLinksForm();
+    console.log('✅ Админка загружена');
 }
 
 function loadActiveTournaments() {
@@ -178,8 +183,8 @@ function createAdminTournamentCard(tournament, isPast = false) {
             </div>
             <div class="tournament-admin-actions">
                 ${!isPast ? `
-                    <button class="btn-edit" id="edit-${tournament.id}">Изменить</button>
-                    <button class="btn-danger" id="delete-${tournament.id}">Удалить</button>
+                <button class="btn-edit" id="edit-${tournament.id}">Изменить</button>
+                <button class="btn-danger" id="delete-${tournament.id}">Удалить</button>
                 ` : `
                     <button class="btn-edit" id="edit-past-${tournament.id}">Изменить</button>
                     <button class="btn-danger" id="delete-past-${tournament.id}">Удалить</button>
@@ -197,31 +202,34 @@ function loadRegistrationLinksForm() {
     grid.innerHTML = disciplines.map(discipline => `
         <div class="link-item">
             <label>${discipline}</label>
-            <input type="url" 
+            <input type="text" 
                    class="link-input" 
                    data-discipline="${discipline}" 
                    value="${links[discipline] || ''}" 
-                   placeholder="https://forms.gle/...">
+                   placeholder="Любая ссылка: https://..., mailto:..., tel:...">
         </div>
     `).join('');
 }
 
 function saveRegistrationLinks() {
+    console.log('💾 Сохранение ссылок на формы...');
     const links = {};
     document.querySelectorAll('.link-input').forEach(input => {
         const discipline = input.dataset.discipline;
         const url = input.value.trim();
         if (url) {
             links[discipline] = url;
+            console.log(`  📝 ${discipline}: ${url}`);
         }
     });
     
     localStorage.setItem('wbcyber_registration_links', JSON.stringify(links));
+    console.log('✅ Ссылки сохранены в localStorage!');
     
     // Update registrationLinks in tournaments-data.js
     Object.assign(registrationLinks, links);
     
-    alert('Ссылки сохранены!');
+    alert('Ссылки сохранены! Обновите главную страницу (Ctrl+Shift+R).');
 }
 
 function openAddModal() {
@@ -332,24 +340,26 @@ function handleFormSubmit(e) {
         if (status === 'past') {
             updatePastTournament(currentEditingId, formData);
         } else {
-            updateTournament(currentEditingId, formData);
+        updateTournament(currentEditingId, formData);
         }
     } else {
         if (status === 'past') {
             addPastTournament(formData);
-        } else {
-            addTournament(formData);
+    } else {
+        addTournament(formData);
         }
     }
     
     closeModal();
     
     // Перезагружаем данные и обновляем отображение
+    console.log('🔄 Обновление после изменения...');
     loadTournamentsFromStorage();
     loadActiveTournaments();
     loadPastTournaments();
+    console.log('✅ Обновлено!');
     
-    alert(currentEditingId ? 'Турнир обновлен!' : 'Турнир добавлен!');
+    alert(currentEditingId ? 'Турнир обновлен! Обновите главную страницу.' : 'Турнир добавлен! Обновите главную страницу.');
 }
 
 function formatDate(dateString) {
@@ -368,29 +378,33 @@ function formatDate(dateString) {
 
 function deleteTournamentConfirm(tournamentId) {
     if (confirm('Вы уверены, что хотите удалить этот турнир?')) {
+        console.log('🗑️ Удаление турнира...');
         deleteTournament(tournamentId);
         
-        // Перезагружаем список турниров
-        loadActiveTournaments();
-        
-        // Также обновляем данные в памяти
+        // Перезагружаем данные из localStorage
         loadTournamentsFromStorage();
         
-        alert('Турнир удален! Главная страница автоматически обновится.');
+        // Обновляем отображение
+        loadActiveTournaments();
+        
+        console.log('✅ Турнир удален!');
+        alert('Турнир удален! Обновите главную страницу (Ctrl+Shift+R).');
     }
 }
 
 function deletePastTournamentConfirm(tournamentId) {
     if (confirm('Вы уверены, что хотите удалить этот прошедший турнир?')) {
+        console.log('🗑️ Удаление прошедшего турнира...');
         deletePastTournament(tournamentId);
         
-        // Перезагружаем список
-        loadPastTournaments();
-        
-        // Обновляем данные в памяти
+        // Перезагружаем данные из localStorage
         loadTournamentsFromStorage();
         
-        alert('Прошедший турнир удален!');
+        // Обновляем отображение
+        loadPastTournaments();
+        
+        console.log('✅ Прошедший турнир удален!');
+        alert('Прошедший турнир удален! Обновите страницу архива (Ctrl+Shift+R).');
     }
 }
 
@@ -405,15 +419,21 @@ function loadSocialLinksForm() {
 
 // Сохранение социальных ссылок
 function saveSocialLinks() {
+    console.log('💾 Сохранение социальных ссылок...');
     const socialLinks = {
         twitch: document.getElementById('twitch-link').value.trim(),
         telegram: document.getElementById('telegram-link').value.trim(),
         contact: document.getElementById('contact-link').value.trim()
     };
     
-    localStorage.setItem('wbcyber_social_links', JSON.stringify(socialLinks));
+    console.log('  🔗 Twitch:', socialLinks.twitch || 'не указано');
+    console.log('  🔗 Telegram:', socialLinks.telegram || 'не указано');
+    console.log('  🔗 Contact:', socialLinks.contact || 'не указано');
     
-    alert('Социальные ссылки сохранены! Обновите главную страницу для просмотра изменений.');
+    localStorage.setItem('wbcyber_social_links', JSON.stringify(socialLinks));
+    console.log('✅ Социальные ссылки сохранены в localStorage!');
+    
+    alert('Социальные ссылки сохранены! Обновите главную страницу (Ctrl+Shift+R).');
 }
 
 // Получение списка дисциплин
