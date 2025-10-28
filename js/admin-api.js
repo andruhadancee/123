@@ -62,7 +62,11 @@ function setupEventListeners() {
     document.getElementById('save-social-btn').addEventListener('click', saveSocialLinks);
     
     // Add discipline (from disciplines tab)
+    const addDisciplineBtn = document.getElementById('add-discipline-btn');
     const newDisciplineInput = document.getElementById('new-discipline-input');
+    if (addDisciplineBtn) {
+        addDisciplineBtn.addEventListener('click', addDiscipline);
+    }
     if (newDisciplineInput) {
         newDisciplineInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
