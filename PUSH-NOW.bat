@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Fix team API to not require captain and date fields"
+git commit -m "Save and restore active admin tab on page reload"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

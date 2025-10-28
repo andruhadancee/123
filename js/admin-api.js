@@ -7,6 +7,13 @@ document.addEventListener('DOMContentLoaded', function() {
     initAdminPanel();
     loadAdminData();
     setupEventListeners();
+    
+    // Восстанавливаем последнюю активную вкладку
+    const savedTab = localStorage.getItem('adminActiveTab');
+    if (savedTab) {
+        switchTab(savedTab);
+    }
+    
     hideLoader();
 });
 
@@ -103,6 +110,9 @@ function switchTab(tabName) {
         content.classList.remove('active');
     });
     document.getElementById(`${tabName}-tab`).classList.add('active');
+    
+    // Сохраняем текущую вкладку в localStorage
+    localStorage.setItem('adminActiveTab', tabName);
 }
 
 async function loadAdminData() {
