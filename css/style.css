@@ -453,11 +453,10 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: rgba(10, 10, 20, 0.95);
-    backdrop-filter: blur(10px);
+    background: var(--color-bg-dark);
     z-index: 9999;
     opacity: 1;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
 }
 
 .loader-container.hidden {
@@ -466,80 +465,46 @@ main {
 }
 
 .loader {
-    width: 60px;
-    height: 60px;
-    position: relative;
+    display: flex;
+    gap: 12px;
 }
 
-.loader::before,
-.loader::after {
-    content: '';
-    position: absolute;
+.loader-dot {
+    width: 16px;
+    height: 16px;
+    background: var(--gradient-button);
     border-radius: 50%;
-    animation: pulse 1.5s ease-in-out infinite;
+    animation: bounce 1.4s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(217, 70, 170, 0.5);
 }
 
-.loader::before {
-    width: 60px;
-    height: 60px;
-    border: 3px solid var(--color-pink);
-    animation: pulse 1.5s ease-in-out infinite;
+.loader-dot:nth-child(1) {
+    animation-delay: 0s;
 }
 
-.loader::after {
-    width: 60px;
-    height: 60px;
-    border: 3px solid var(--color-purple-light);
-    animation: pulse 1.5s ease-in-out infinite 0.75s;
+.loader-dot:nth-child(2) {
+    animation-delay: 0.2s;
 }
 
-.loader-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 40px;
-    height: 40px;
-    margin: -20px 0 0 -20px;
-    border: 4px solid rgba(217, 70, 170, 0.2);
-    border-top-color: var(--color-pink);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+.loader-dot:nth-child(3) {
+    animation-delay: 0.4s;
 }
 
 .loader-text {
-    margin-top: 24px;
-    font-size: 16px;
+    margin-top: 32px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--color-text-primary);
     letter-spacing: 0.5px;
-    animation: fadeInOut 1.5s ease-in-out infinite;
 }
 
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.2);
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0.8) translateY(0);
         opacity: 0.5;
     }
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes fadeInOut {
-    0%, 100% {
-        opacity: 0.5;
-    }
-    50% {
+    40% {
+        transform: scale(1.2) translateY(-20px);
         opacity: 1;
     }
 }

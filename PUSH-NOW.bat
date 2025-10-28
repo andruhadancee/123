@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Add beautiful loader and improve mobile design"
+git commit -m "Replace loader with modern bouncing dots animation"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
