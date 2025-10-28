@@ -59,6 +59,15 @@ function setupEventListeners() {
         }
     });
     
+    // Team management
+    document.getElementById('add-team-btn').addEventListener('click', openAddTeamModal);
+    document.getElementById('close-team-modal').addEventListener('click', closeTeamModal);
+    document.getElementById('cancel-team-btn').addEventListener('click', closeTeamModal);
+    document.getElementById('team-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeTeamModal();
+    });
+    document.getElementById('team-form').addEventListener('submit', handleTeamFormSubmit);
+    
     // Logout
     document.getElementById('logout-btn').addEventListener('click', function() {
         localStorage.removeItem('wbcyber_admin');
@@ -522,7 +531,10 @@ function loadTeamsAdmin() {
                                 👤 ${team.captain} | 👥 ${team.players} игроков | 📅 ${team.registrationDate}
                             </div>
                         </div>
-                        <button class="btn-danger" onclick="deleteTeam(${tournamentId}, ${index})">Удалить</button>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-edit" onclick="editTeam(${tournamentId}, ${index})">Изменить</button>
+                            <button class="btn-danger" onclick="deleteTeam(${tournamentId}, ${index})">Удалить</button>
+                        </div>
                     </div>
                 `).join('') : '<p style="color: var(--color-text-secondary);">Нет команд</p>'}
             </div>
@@ -546,6 +558,110 @@ function deleteTeam(tournamentId, teamIndex) {
             loadTeamsAdmin();
             alert('Команда удалена!');
         }
+    }
+}
+
+// Редактирование команды
+function editTeam(tournamentId, teamIndex) {
+    const teams = getAllRegisteredTeams();
+    const team = teams[tournamentId][teamIndex];
+    
+    document.getElementById('team-modal-title').textContent = 'Редактировать команду';
+    document.getElementById('team-tournament-id').value = tournamentId;
+    document.getElementById('team-index').value = teamIndex;
+    document.getElementById('team-tournament').value = tournamentId;
+    document.getElementById('team-name').value = team.name;
+    document.getElementById('team-captain').value = team.captain;
+    document.getElementById('team-players').value = team.players;
+    
+    // Конвертируем дату из DD.MM.YYYY в YYYY-MM-DD
+    const dateParts = team.registrationDate.split('.');
+    if (dateParts.length === 3) {
+        document.getElementById('team-date').value = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+    }
+    
+    document.getElementById('team-modal').classList.add('active');
+    loadTournamentDropdown();
+}
+
+// Открыть модал добавления команды
+function openAddTeamModal() {
+    document.getElementById('team-modal-title').textContent = 'Добавить команду';
+    document.getElementById('team-form').reset();
+    document.getElementById('team-tournament-id').value = '';
+    document.getElementById('team-index').value = '';
+    
+    // Установить текущую дату
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('team-date').value = today;
+    
+    document.getElementById('team-modal').classList.add('active');
+    loadTournamentDropdown();
+}
+
+// Закрыть модал команды
+function closeTeamModal() {
+    document.getElementById('team-modal').classList.remove('active');
+}
+
+// Загрузить турниры в dropdown
+function loadTournamentDropdown() {
+    const select = document.getElementById('team-tournament');
+    const tournaments = getActiveTournaments();
+    const currentValue = select.value;
+    
+    select.innerHTML = '<option value="">Выберите турнир</option>' +
+        tournaments.map(t => `<option value="${t.id}">${t.title}</option>`).join('');
+    
+    if (currentValue) {
+        select.value = currentValue;
+    }
+}
+
+// Обработка формы команды
+function handleTeamFormSubmit(e) {
+    e.preventDefault();
+    
+    const tournamentId = document.getElementById('team-tournament').value;
+    const teamIndex = document.getElementById('team-index').value;
+    
+    // Конвертируем дату в DD.MM.YYYY
+    const dateValue = document.getElementById('team-date').value;
+    const date = new Date(dateValue);
+    const formattedDate = `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
+    
+    const teamData = {
+        name: document.getElementById('team-name').value,
+        captain: document.getElementById('team-captain').value,
+        players: parseInt(document.getElementById('team-players').value),
+        registrationDate: formattedDate
+    };
+    
+    const stored = localStorage.getItem('wbcyber_tournaments');
+    if (stored) {
+        const data = JSON.parse(stored);
+        
+        if (!data.registeredTeams) {
+            data.registeredTeams = {};
+        }
+        
+        if (!data.registeredTeams[tournamentId]) {
+            data.registeredTeams[tournamentId] = [];
+        }
+        
+        if (teamIndex !== '') {
+            // Редактирование
+            data.registeredTeams[tournamentId][teamIndex] = teamData;
+        } else {
+            // Добавление
+            data.registeredTeams[tournamentId].push(teamData);
+        }
+        
+        localStorage.setItem('wbcyber_tournaments', JSON.stringify(data));
+        loadTournamentsFromStorage();
+        loadTeamsAdmin();
+        closeTeamModal();
+        alert(teamIndex !== '' ? 'Команда обновлена!' : 'Команда добавлена!');
     }
 }
 

@@ -190,26 +190,40 @@ function saveTournamentsToStorage() {
 
 // Загрузка из localStorage
 function loadTournamentsFromStorage() {
+    console.log('🔄 Загрузка данных из localStorage...');
+    
     const stored = localStorage.getItem('wbcyber_tournaments');
     if (stored) {
         const data = JSON.parse(stored);
         tournamentsDB.active = data.active || tournamentsDB.active;
         tournamentsDB.past = data.past || tournamentsDB.past;
         tournamentsDB.registeredTeams = data.registeredTeams || tournamentsDB.registeredTeams;
+        console.log('✅ Турниры загружены:', tournamentsDB.active.length, 'активных');
+    } else {
+        console.log('⚠️ Нет сохраненных турниров');
     }
     
     // Загрузка ссылок на формы из localStorage - ВАЖНО!
     const storedLinks = localStorage.getItem('wbcyber_registration_links');
     if (storedLinks) {
         registrationLinks = JSON.parse(storedLinks);
+        console.log('✅ Ссылки на формы загружены:', Object.keys(registrationLinks));
+        
+        // Обновляем ссылки в уже существующих турнирах
+        tournamentsDB.active.forEach(tournament => {
+            // Если у турнира есть своя ссылка - используем её
+            if (tournament.customLink && tournament.customLink.trim()) {
+                tournament.registrationLink = tournament.customLink.trim();
+            }
+            // Иначе используем общую ссылку дисциплины
+            else if (tournament.discipline && registrationLinks[tournament.discipline]) {
+                tournament.registrationLink = registrationLinks[tournament.discipline];
+            }
+            console.log(`📝 Турнир "${tournament.title}": ${tournament.registrationLink}`);
+        });
+    } else {
+        console.log('⚠️ Нет сохраненных ссылок на формы');
     }
-    
-    // Обновляем ссылки в уже существующих турнирах
-    tournamentsDB.active.forEach(tournament => {
-        if (!tournament.customLink && tournament.discipline && registrationLinks[tournament.discipline]) {
-            tournament.registrationLink = registrationLinks[tournament.discipline];
-        }
-    });
 }
 
 // Инициализация при загрузке

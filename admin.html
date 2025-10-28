@@ -9,7 +9,9 @@
 </head>
 <body>
     <!-- Animated Background -->
-    <div class="animated-bg"></div>
+    <div class="animated-bg">
+        <div class="overlay"></div>
+    </div>
     
     <!-- Header -->
     <header>
@@ -80,7 +82,16 @@
         <!-- Teams Tab -->
         <div class="tab-content" id="teams-tab">
             <div class="links-container">
-                <h2>Зарегистрированные команды</h2>
+                <div class="admin-header" style="margin-bottom: 20px;">
+                    <h2>Зарегистрированные команды</h2>
+                    <button class="btn-primary" id="add-team-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Добавить команду
+                    </button>
+                </div>
                 <p class="hint">Управление командами по турнирам</p>
                 
                 <div id="teams-admin-container">
@@ -223,6 +234,55 @@
                 
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary" id="cancel-btn">Отмена</button>
+                    <button type="submit" class="btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Team Modal -->
+    <div class="modal" id="team-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="team-modal-title">Добавить команду</h2>
+                <button class="modal-close" id="close-team-modal">&times;</button>
+            </div>
+            
+            <form id="team-form">
+                <input type="hidden" id="team-tournament-id">
+                <input type="hidden" id="team-index">
+                
+                <div class="form-group">
+                    <label for="team-tournament">Турнир *</label>
+                    <select id="team-tournament" required>
+                        <option value="">Выберите турнир</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="team-name">Название команды *</label>
+                    <input type="text" id="team-name" placeholder="Team Spirit" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="team-captain">Капитан команды *</label>
+                    <input type="text" id="team-captain" placeholder="Иванов А." required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="team-players">Количество игроков *</label>
+                        <input type="number" id="team-players" placeholder="5" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="team-date">Дата регистрации *</label>
+                        <input type="date" id="team-date" required>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancel-team-btn">Отмена</button>
                     <button type="submit" class="btn-primary">Сохранить</button>
                 </div>
             </form>
