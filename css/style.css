@@ -530,12 +530,26 @@ main {
     padding: 2px;
 }
 
+/* Смайлик для дисциплин без логотипа */
+.discipline-icon-emoji {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: transparent;
+    padding: 0;
+}
+
 /* Иконки для мобильных устройств - чуть меньше */
 @media (max-width: 768px) {
     .discipline-icon {
         width: 20px;
         height: 20px;
         padding: 2px;
+    }
+    
+    .discipline-icon-emoji {
+        font-size: 16px;
     }
     
     .discipline-with-icon {

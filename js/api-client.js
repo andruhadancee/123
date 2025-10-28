@@ -251,28 +251,20 @@ const API = {
 // Функция для получения иконки дисциплины
 function getDisciplineIcon(discipline) {
     const icons = {
-        'Dota 2': 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/icons/dota2_logo_symbol.png',
-        'CS 2': 'https://avatars.githubusercontent.com/u/35037547?s=200&v=4',
-        'CS:GO': 'https://avatars.githubusercontent.com/u/35037547?s=200&v=4',
-        'Counter-Strike 2': 'https://avatars.githubusercontent.com/u/35037547?s=200&v=4',
-        'League of Legends': 'https://static.wikia.nocookie.net/leagueoflegends/images/1/12/League_of_Legends_logo.png',
-        'LoL': 'https://static.wikia.nocookie.net/leagueoflegends/images/1/12/League_of_Legends_logo.png',
-        'Valorant': 'https://logos-world.net/wp-content/uploads/2021/02/Valorant-Symbol.png',
-        'PUBG': 'https://seeklogo.com/images/P/pubg-playerunknown-s-battlegrounds-logo-60C2F68D77-seeklogo.com.png',
-        'Fortnite': 'https://static.wikia.nocookie.net/fortnite/images/8/82/Fortnite_logo.png',
-        'Apex Legends': 'https://logos-world.net/wp-content/uploads/2021/02/Apex-Legends-Emblem.png',
-        'Overwatch': 'https://logos-world.net/wp-content/uploads/2020/05/Overwatch-Logo.png',
-        'Rainbow Six Siege': 'https://logos-world.net/wp-content/uploads/2020/05/Rainbow-Six-Siege-Logo.png',
-        'Rocket League': 'https://logos-world.net/wp-content/uploads/2020/11/Rocket-League-Logo.png',
-        'FIFA': 'https://logos-world.net/wp-content/uploads/2020/06/FIFA-Logo.png',
-        'Mobile Legends': 'https://seeklogo.com/images/M/mobile-legends-bang-bang-logo-995B49B00A-seeklogo.com.png',
-        'Wild Rift': 'https://static.wikia.nocookie.net/leagueoflegends/images/9/90/League_of_Legends_Wild_Rift_logo.png',
-        'Clash Royale': 'https://seeklogo.com/images/C/clash-royale-logo-2C0D9F4A38-seeklogo.com.png',
-        'Brawl Stars': 'https://seeklogo.com/images/B/brawl-stars-logo-CF0C6B84E1-seeklogo.com.png'
+        'Dota 2': 'pngwing.com 1.png',
+        'CS 2': 'Group 29.png',
+        'CS:GO': 'Group 29.png',
+        'Counter-Strike 2': 'Group 29.png',
+        'Mobile Legends': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
+        'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png'
     };
     
-    const iconUrl = icons[discipline] || 'https://cdn-icons-png.flaticon.com/512/686/686589.png'; // По умолчанию геймпад
-    return `<img src="${iconUrl}" class="discipline-icon" alt="${discipline}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/686/686589.png'">`;
+    // Если есть логотип - используем картинку, иначе смайлик джойстика
+    if (icons[discipline]) {
+        return `<img src="${icons[discipline]}" class="discipline-icon" alt="${discipline}">`;
+    } else {
+        return `<span class="discipline-icon discipline-icon-emoji">🎮</span>`;
+    }
 }
 
 // Функция для обёртки дисциплины с иконкой
