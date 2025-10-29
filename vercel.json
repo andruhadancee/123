@@ -3,5 +3,25 @@
   "outputDirectory": ".",
   "installCommand": "npm install",
   "devCommand": null,
-  "framework": null
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/teams",
+      "destination": "/teams.html"
+    },
+    {
+      "source": "/archive",
+      "destination": "/archive.html"
+    },
+    {
+      "source": "/regulations",
+      "destination": "/regulations.html"
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
 }
