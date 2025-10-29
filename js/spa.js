@@ -52,39 +52,27 @@
     function initializePage(url) {
         console.log('Initializing page:', url);
         
-        // Убираем загрузчик через секунду
-        setTimeout(() => {
-            const loader = document.getElementById('loader');
-            if (loader) {
-                loader.style.display = 'none';
-            }
-        }, 500);
+        // НЕ показываем загрузчик
         
-        // Запускаем скрипты в зависимости от страницы
+        // Запускаем скрипты в зависимости от страницы сразу
         if (url.includes('index.html') || url === '' || !url || url.includes('/index')) {
             // Турниры
             console.log('Initializing tournaments page');
-            setTimeout(() => {
-                if (typeof window.initializeMainPage === 'function') {
-                    window.initializeMainPage();
-                }
-            }, 300);
+            if (typeof window.initializeMainPage === 'function') {
+                window.initializeMainPage();
+            }
         } else if (url.includes('teams.html') || url.includes('teams')) {
             // Команды
             console.log('Initializing teams page');
-            setTimeout(() => {
-                if (typeof window.initializeTeamsPage === 'function') {
-                    window.initializeTeamsPage();
-                }
-            }, 300);
+            if (typeof window.initializeTeamsPage === 'function') {
+                window.initializeTeamsPage();
+            }
         } else if (url.includes('archive.html') || url.includes('archive')) {
             // Архив
             console.log('Initializing archive page');
-            setTimeout(() => {
-                if (typeof window.initializeArchivePage === 'function') {
-                    window.initializeArchivePage();
-                }
-            }, 300);
+            if (typeof window.initializeArchivePage === 'function') {
+                window.initializeArchivePage();
+            }
         }
         
         // Scroll to top
@@ -100,12 +88,7 @@
             
             console.log('Navigation clicked:', url);
             
-            // Показываем загрузчик
-            const loader = document.getElementById('loader');
-            if (loader) {
-                loader.style.display = 'flex';
-            }
-            
+            // НЕ показываем загрузчик - как на Orchid
             loadPage(url);
         }
     });
