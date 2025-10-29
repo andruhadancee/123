@@ -1,8 +1,12 @@
 // Страница зарегистрированных команд (с API)
 
+let allTeamsData = {};
+let selectedDisciplineTeams = 'all';
+
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('🚀 Инициализация страницы команд...');
     await loadRegisteredTeams();
+    await loadDisciplineFilters();
     await loadSocialLinks();
     hideLoader();
     console.log('✅ Страница команд загружена');
@@ -20,7 +24,7 @@ async function loadRegisteredTeams() {
     const container = document.getElementById('teams-container');
     
     const tournaments = await API.tournaments.getAll('active');
-    const allTeams = await API.teams.getAll();
+    allTeamsData = await API.teams.getAll();
     
     if (tournaments.length === 0) {
         container.innerHTML = `
@@ -32,11 +36,73 @@ async function loadRegisteredTeams() {
         return;
     }
     
-    container.innerHTML = tournaments.map(tournament => {
-        const teams = allTeams[tournament.id] || [];
-        return createTournamentTeamsSection(tournament, teams);
+    displayFilteredTeams();
+}
+
+function displayFilteredTeams() {
+    const container = document.getElementById('teams-container');
+    
+    const tournaments = Object.values(allTeamsData).flat();
+    const uniqueTournaments = [...new Set(tournaments.map(t => t.tournament_id))];
+    
+    let filtered = uniqueTournaments;
+    if (selectedDisciplineTeams !== 'all') {
+        // Фильтруем по дисциплине
+        filtered = uniqueTournaments.filter(id => {
+            const tournamentTeams = tournaments.filter(t => t.tournament_id === id);
+            return tournamentTeams.some(t => t.discipline === selectedDisciplineTeams);
+        });
+    }
+    
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>Команд по выбранной дисциплине нет</h3>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = filtered.map(tournamentId => {
+        const tournament = allTeamsData[tournamentId]?.[0];
+        if (!tournament) return '';
+        return createTournamentTeamsSection(tournament, allTeamsData[tournamentId] || []);
     }).join('');
 }
+
+async function loadDisciplineFilters() {
+    const filtersContainer = document.getElementById('teams-discipline-filters');
+    if (!filtersContainer) return;
+    
+    const disciplines = await API.disciplines.getAll();
+    const availableDisciplines = [...new Set(Object.values(allTeamsData).flat().map(t => t.discipline))];
+    
+    filtersContainer.innerHTML = `
+        <button class="filter-btn active" data-discipline="all" onclick="filterTeamsByDiscipline('all')">
+            Все
+        </button>
+        ${availableDisciplines.map(d => `
+            <button class="filter-btn" data-discipline="${d}" onclick="filterTeamsByDiscipline('${d}')">
+                ${getDisciplineIcon(d)} ${d}
+            </button>
+        `).join('')}
+    `;
+}
+
+function filterTeamsByDiscipline(discipline) {
+    selectedDisciplineTeams = discipline;
+    
+    document.querySelectorAll('#teams-discipline-filters .filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.discipline === discipline) {
+            btn.classList.add('active');
+        }
+    });
+    
+    displayFilteredTeams();
+}
+
+window.filterTeamsByDiscipline = filterTeamsByDiscipline;
 
 function createTournamentTeamsSection(tournament, teams) {
     const teamsHTML = teams.length > 0 

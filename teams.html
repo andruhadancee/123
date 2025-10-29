@@ -20,6 +20,9 @@
 
     <!-- Animated Background -->
     <div class="animated-bg">
+        <div class="light-rays"></div>
+        <div class="animated-bg-wave"></div>
+        <div class="animated-bg-wave-2"></div>
         <div class="overlay"></div>
         <canvas id="particles-canvas"></canvas>
     </div>
@@ -77,6 +80,14 @@
 
     <!-- Main Content -->
     <main class="container">
+        <!-- Filters for Teams Page -->
+        <div class="filters-container">
+            <div class="filter-label">Фильтр по дисциплинам:</div>
+            <div class="filters" id="teams-discipline-filters">
+                <!-- Filter buttons will be added dynamically -->
+            </div>
+        </div>
+        
         <div class="teams-container" id="teams-container">
             <!-- Teams will be loaded here dynamically -->
         </div>
@@ -86,6 +97,8 @@
     <script src="js/api-client.js"></script>
     <!-- Particles -->
     <script src="js/particles.js"></script>
+    <!-- Animations -->
+    <script src="js/animations.js"></script>
     <!-- Regulations Script -->
     <script src="js/regulations.js"></script>
     <!-- Teams Script -->

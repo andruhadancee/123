@@ -533,34 +533,68 @@ main {
 }
 
 .team-card {
-    background: rgba(45, 27, 61, 0.4);
-    border: 1px solid rgba(139, 90, 191, 0.2);
-    border-radius: 12px;
-    padding: 14px 16px;
-    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(139, 90, 191, 0.08), rgba(107, 45, 143, 0.12));
+    border: 2px solid rgba(139, 90, 191, 0.25);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     word-wrap: break-word;
+    position: relative;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.team-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(139, 90, 191, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.team-card:hover::before {
+    left: 100%;
 }
 
 .team-card:hover {
-    border-color: var(--color-pink);
-    transform: translateY(-2px);
+    border-color: rgba(139, 90, 191, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.2);
 }
 
 .team-name {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
     color: var(--color-text-primary);
-    margin-bottom: 6px;
+    margin-bottom: 10px;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    letter-spacing: -0.3px;
 }
 
 .team-info {
     display: flex;
     gap: 12px;
     font-size: 15px;
-    color: var(--color-text-secondary);
+    color: var(--color-pink);
+    font-weight: 600;
+}
+
+.tournament-section {
+    margin-bottom: 40px;
+}
+
+.tournament-section h2 {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba(139, 90, 191, 0.3);
 }
 
 /* Empty State */
