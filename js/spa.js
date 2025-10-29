@@ -55,25 +55,27 @@
         // НЕ показываем загрузчик
         
         // Запускаем скрипты в зависимости от страницы сразу
-        if (url.includes('index.html') || url === '' || !url || url.includes('/index')) {
-            // Турниры
-            console.log('Initializing tournaments page');
-            if (typeof window.initializeMainPage === 'function') {
-                window.initializeMainPage();
+        setTimeout(() => {
+            if (url.includes('index.html') || url === '' || !url || url.includes('/index')) {
+                // Турниры
+                console.log('Initializing tournaments page');
+                if (typeof window.initializeMainPage === 'function') {
+                    window.initializeMainPage();
+                }
+            } else if (url.includes('teams.html') || url.includes('teams')) {
+                // Команды
+                console.log('Initializing teams page');
+                if (typeof window.initializeTeamsPage === 'function') {
+                    window.initializeTeamsPage();
+                }
+            } else if (url.includes('archive.html') || url.includes('archive')) {
+                // Архив
+                console.log('Initializing archive page');
+                if (typeof window.initializeArchivePage === 'function') {
+                    window.initializeArchivePage();
+                }
             }
-        } else if (url.includes('teams.html') || url.includes('teams')) {
-            // Команды
-            console.log('Initializing teams page');
-            if (typeof window.initializeTeamsPage === 'function') {
-                window.initializeTeamsPage();
-            }
-        } else if (url.includes('archive.html') || url.includes('archive')) {
-            // Архив
-            console.log('Initializing archive page');
-            if (typeof window.initializeArchivePage === 'function') {
-                window.initializeArchivePage();
-            }
-        }
+        }, 100);
         
         // Scroll to top
         window.scrollTo(0, 0);
@@ -93,20 +95,7 @@
         }
     });
     
-    // Проверяем при загрузке страницы, нужно ли запустить инициализацию
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentUrl = window.location.href;
-            if (!currentUrl.includes('#')) {
-                initializePage(currentUrl);
-            }
-        });
-    } else {
-        const currentUrl = window.location.href;
-        if (!currentUrl.includes('#')) {
-            initializePage(currentUrl);
-        }
-    }
+    // Не инициализируем при загрузке - пусть обычные скрипты работают
     
     console.log('✅ SPA Navigation loaded');
 })();
