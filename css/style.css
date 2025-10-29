@@ -1141,6 +1141,7 @@ main {
 .regulation-card {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 16px;
     padding: 24px;
     background: rgba(35, 35, 50, 0.7);
@@ -1149,6 +1150,14 @@ main {
     transition: all 0.3s ease;
     text-decoration: none;
     color: var(--color-text-primary);
+    position: relative;
+}
+
+.regulation-card > svg,
+.regulation-card > img {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
 }
 
 .regulation-card:hover {
@@ -1158,23 +1167,31 @@ main {
 }
 
 .regulation-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     flex: 1;
 }
 
 .regulation-info h3 {
     font-size: 20px;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin: 0;
+    text-align: center;
 }
 
 .regulation-badge {
-    display: inline-block;
-    padding: 4px 12px;
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
     background: rgba(139, 90, 191, 0.3);
     border-radius: 12px;
     font-size: 12px;
     font-weight: 600;
     color: var(--color-text-primary);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* ===== REGULATIONS MODAL ===== */
