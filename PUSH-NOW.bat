@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Make tournament cards slide up from much further below (50px)"
+git commit -m "Simplify card animation - smooth slide up, shorter delays"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
