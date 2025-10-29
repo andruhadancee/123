@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Update color palette: use pure black, add more contrast, modern look"
+git commit -m "Make discipline icons in filters bigger and more visible"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

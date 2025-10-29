@@ -1264,8 +1264,14 @@ main {
 }
 
 .filter-btn .discipline-icon {
-    width: 18px;
-    height: 18px;
+    width: 26px !important;
+    height: 26px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.filter-btn .discipline-icon-emoji {
+    font-size: 20px !important;
 }
 
 @media (max-width: 768px) {
@@ -1276,6 +1282,15 @@ main {
     .filter-btn {
         padding: 8px 16px;
         font-size: 13px;
+    }
+    
+    .filter-btn .discipline-icon {
+        width: 22px !important;
+        height: 22px !important;
+    }
+    
+    .filter-btn .discipline-icon-emoji {
+        font-size: 18px !important;
     }
 }
 
