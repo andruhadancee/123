@@ -302,7 +302,19 @@ function openEditPastModal(tournament) {
     document.getElementById('tournament-max-teams').value = tournament.max_teams;
     document.getElementById('tournament-custom-link').value = tournament.custom_link || '';
     document.getElementById('tournament-winner').value = tournament.winner || '';
-    document.getElementById('tournament-watch-url').value = tournament.watch_url || '';
+    
+    // Проверяем поле watch_url - может быть с подчеркиванием или camelCase
+    const watchUrlValue = tournament.watch_url || tournament.watchUrl || '';
+    document.getElementById('tournament-watch-url').value = watchUrlValue;
+    
+    console.log('📝 Загрузка турнира в форму для редактирования:', {
+        title: tournament.title,
+        watch_url: tournament.watch_url,
+        watchUrl: tournament.watchUrl,
+        loadedValue: watchUrlValue,
+        allTournamentData: tournament
+    });
+    
     document.getElementById('tournament-status').value = 'finished';
     document.getElementById('winner-field').style.display = 'block';
     document.getElementById('watch-url-field').style.display = 'block';
@@ -361,17 +373,29 @@ async function handleFormSubmit(e) {
         maxTeams: parseInt(document.getElementById('tournament-max-teams').value),
         customLink: document.getElementById('tournament-custom-link').value || null,
         winner: document.getElementById('tournament-winner').value || null,
-        watchUrl: document.getElementById('tournament-watch-url').value || null,
+        watchUrl: document.getElementById('tournament-watch-url').value.trim() || null,
         status: status
     };
+    
+    // Отладка
+    const watchUrlField = document.getElementById('tournament-watch-url');
+    console.log('💾 Сохранение турнира:', {
+        title: formData.title,
+        status: formData.status,
+        watchUrlFieldValue: watchUrlField ? watchUrlField.value : 'field not found',
+        watchUrlInFormData: formData.watchUrl,
+        allFormData: formData
+    });
     
     try {
         if (currentEditingId) {
             formData.id = currentEditingId;
-            await API.tournaments.update(formData);
+            const result = await API.tournaments.update(formData);
+            console.log('✅ Турнир обновлен, результат с сервера:', result);
             alert('Турнир обновлен!');
         } else {
-            await API.tournaments.create(formData);
+            const result = await API.tournaments.create(formData);
+            console.log('✅ Турнир создан, результат с сервера:', result);
             alert('Турнир добавлен!');
         }
         
