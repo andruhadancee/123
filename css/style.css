@@ -1459,16 +1459,10 @@ main {
 }
 
 .filter-btn.active {
-    animation: glowPulse 2s ease-in-out infinite;
-}
-
-@keyframes glowPulse {
-    0%, 100% {
-        box-shadow: 0 4px 12px rgba(139, 90, 191, 0.4);
-    }
-    50% {
-        box-shadow: 0 4px 20px rgba(139, 90, 191, 0.6), 0 0 30px rgba(139, 90, 191, 0.3);
-    }
+    background: var(--gradient-button);
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.4);
+    /* Убрал пульсацию - слишком яркая */
 }
 
 
