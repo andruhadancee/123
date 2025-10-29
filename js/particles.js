@@ -53,8 +53,8 @@ class ParticleSystem {
             const imgIndex = Math.floor(Math.random() * this.images.length);
             const img = this.images[imgIndex];
             
-            // Размер как у точки или чуть больше (2-6px)
-            const size = Math.random() * 4 + 2;
+            // Размер побольше чтобы было видно (5-12px)
+            const size = Math.random() * 7 + 5;
             
             this.particles.push({
                 img: img,
