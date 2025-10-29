@@ -639,14 +639,14 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #2a1a3d 0%, #4d2b5d 30%, #6b3d8f 60%, #3a2a4d 100%);
+    background: #0a0a0a;
     z-index: 9999;
     opacity: 1;
     transition: opacity 0.3s ease;
     overflow: hidden;
 }
 
-/* Animated background for loader */
+/* Градиентный дрейф для загрузчика (как на основном фоне) */
 .loader-container::before {
     content: '';
     position: absolute;
@@ -654,10 +654,11 @@ main {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, rgba(139, 90, 191, 0.25) 30%, rgba(107, 45, 143, 0.15) 60%, transparent 100%);
-    animation: loaderPulse 4s ease-in-out infinite;
+    background: radial-gradient(circle, rgba(139, 90, 191, 0.15) 0%, rgba(107, 45, 143, 0.1) 50%, transparent 100%);
+    animation: gradientFloat 20s ease-in-out infinite alternate;
 }
 
+/* Сетка для загрузчика (как на основном фоне) */
 .loader-container::after {
     content: '';
     position: absolute;
@@ -666,39 +667,60 @@ main {
     width: 100%;
     height: 100%;
     background-image: 
-        linear-gradient(rgba(168, 85, 247, 0.15) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(168, 85, 247, 0.15) 1px, transparent 1px);
-    background-size: 50px 50px;
-    opacity: 0.6;
-    animation: loaderGrid 20s linear infinite;
+        linear-gradient(rgba(139, 90, 191, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 90, 191, 0.06) 1px, transparent 1px);
+    background-size: 100px 100px;
+    animation: gridPulse 4s ease-in-out infinite;
+    pointer-events: none;
 }
 
-@keyframes loaderPulse {
-    0%, 100% {
-        opacity: 0.6;
-        transform: scale(1) translate(0, 0);
-    }
-    25% {
-        opacity: 0.8;
-        transform: scale(1.15) translate(-5%, -5%);
-    }
-    50% {
-        opacity: 0.9;
-        transform: scale(1.2) translate(0, 0);
-    }
-    75% {
-        opacity: 0.8;
-        transform: scale(1.15) translate(5%, 5%);
-    }
+/* Волны для загрузчика */
+.loader-container .loader-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 35vh;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(107, 33, 168, 0.2) 40%,
+        rgba(139, 90, 191, 0.3) 70%,
+        rgba(107, 33, 168, 0.35) 100%
+    );
+    animation: waveMove 8s ease-in-out infinite;
+    pointer-events: none;
 }
 
-@keyframes loaderGrid {
-    0% {
-        transform: translate(0, 0);
-    }
-    100% {
-        transform: translate(50px, 50px);
-    }
+.loader-container .loader-wave-2 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 30vh;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(107, 33, 168, 0.15) 50%,
+        rgba(139, 90, 191, 0.25) 100%
+    );
+    animation: waveMove 10s ease-in-out infinite reverse;
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+/* Световые лучи для загрузчика */
+.loader-container .loader-light-rays {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(30deg, transparent 40%, rgba(139, 90, 191, 0.1) 50%, transparent 60%),
+        linear-gradient(150deg, transparent 40%, rgba(107, 45, 143, 0.08) 50%, transparent 60%);
+    animation: lightRay 25s linear infinite;
+    pointer-events: none;
 }
 
 .loader-container.hidden {
