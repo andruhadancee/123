@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add -A
-git commit -m "Add regulation name field: allow multiple regulations per discipline"
+git commit -m "Add regulation name field + remove calendar button and grid background"
 git push
 
 echo ГОТОВО! Изменения запушены.

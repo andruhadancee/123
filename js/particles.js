@@ -1,4 +1,4 @@
-// Particle effects for animated background
+// Animated background with floating "чубрики" images
 
 class ParticleSystem {
     constructor(canvas) {
@@ -6,9 +6,13 @@ class ParticleSystem {
         this.ctx = canvas.getContext('2d');
         this.particles = [];
         this.animationId = null;
+        this.images = [];
+        this.imagesLoaded = 0;
+        this.totalImages = 4;
         
         this.resize();
         window.addEventListener('resize', () => this.resize());
+        this.loadImages();
     }
     
     resize() {
@@ -16,17 +20,52 @@ class ParticleSystem {
         this.canvas.height = window.innerHeight;
     }
     
+    loadImages() {
+        const imagePaths = [
+            'Group 2131328333.png',
+            'Group 2131328334.png',
+            'Group 2131328335.png',
+            'Group 2131328336.png'
+        ];
+        
+        imagePaths.forEach((path, index) => {
+            const img = new Image();
+            img.onload = () => {
+                this.imagesLoaded++;
+                if (this.imagesLoaded === this.totalImages) {
+                    this.init();
+                }
+            };
+            img.src = path;
+            this.images.push(img);
+        });
+    }
+    
     init() {
-        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 15000);
+        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 80000);
         
         for (let i = 0; i < particleCount; i++) {
+            const imgIndex = Math.floor(Math.random() * this.images.length);
+            const img = this.images[imgIndex];
+            
+            // Радиус вращения вокруг центра
+            const radius = Math.random() * Math.min(this.canvas.width, this.canvas.height) * 0.3 + 100;
+            const angle = Math.random() * Math.PI * 2;
+            
+            // Размер изображения
+            const size = Math.random() * 40 + 30;
+            
             this.particles.push({
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height,
-                radius: Math.random() * 2 + 1,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                color: Math.random() > 0.5 ? 'rgba(139, 90, 191, 0.5)' : 'rgba(107, 45, 143, 0.3)'
+                img: img,
+                centerX: Math.random() * this.canvas.width,
+                centerY: Math.random() * this.canvas.height,
+                radius: radius,
+                angle: angle,
+                speed: (Math.random() * 0.5 + 0.3) * (Math.random() > 0.5 ? 1 : -1), // Скорость вращения
+                size: size,
+                opacity: Math.random() * 0.4 + 0.3,
+                rotation: Math.random() * Math.PI * 2,
+                rotationSpeed: (Math.random() - 0.5) * 0.02
             });
         }
     }
@@ -34,42 +73,47 @@ class ParticleSystem {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        this.particles.forEach(p => {
-            this.ctx.beginPath();
-            this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            this.ctx.fillStyle = p.color;
-            this.ctx.fill();
-            
-            // Обновляем позицию
-            p.x += p.vx;
-            p.y += p.vy;
-            
-            // Отражение от краёв
-            if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
-            if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
-            
-            // Держим в границах
-            p.x = Math.max(0, Math.min(this.canvas.width, p.x));
-            p.y = Math.max(0, Math.min(this.canvas.height, p.y));
-        });
-        
-        // Рисуем линии между близкими частицами
-        for (let i = 0; i < this.particles.length; i++) {
-            for (let j = i + 1; j < this.particles.length; j++) {
-                const dx = this.particles[i].x - this.particles[j].x;
-                const dy = this.particles[i].y - this.particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < 100) {
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
-                    this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    this.ctx.strokeStyle = `rgba(139, 90, 191, ${0.2 * (1 - distance / 100)})`;
-                    this.ctx.lineWidth = 1;
-                    this.ctx.stroke();
-                }
-            }
+        if (this.imagesLoaded < this.totalImages) {
+            return; // Ждём загрузки всех изображений
         }
+        
+        this.particles.forEach(p => {
+            // Обновляем угол для кругового движения
+            p.angle += p.speed * 0.01;
+            
+            // Вычисляем позицию на круге
+            p.x = p.centerX + Math.cos(p.angle) * p.radius;
+            p.y = p.centerY + Math.sin(p.angle) * p.radius;
+            
+            // Обновляем вращение изображения
+            p.rotation += p.rotationSpeed;
+            
+            // Если выходит за границы, перемещаем центр
+            if (p.x < -100 || p.x > this.canvas.width + 100 || 
+                p.y < -100 || p.y > this.canvas.height + 100) {
+                p.centerX = Math.random() * this.canvas.width;
+                p.centerY = Math.random() * this.canvas.height;
+                p.angle = Math.random() * Math.PI * 2;
+            }
+            
+            // Сохраняем состояние контекста
+            this.ctx.save();
+            
+            // Перемещаем начало координат в центр изображения
+            this.ctx.translate(p.x, p.y);
+            
+            // Поворачиваем изображение
+            this.ctx.rotate(p.rotation);
+            
+            // Устанавливаем прозрачность
+            this.ctx.globalAlpha = p.opacity;
+            
+            // Рисуем изображение
+            this.ctx.drawImage(p.img, -p.size / 2, -p.size / 2, p.size, p.size);
+            
+            // Восстанавливаем состояние контекста
+            this.ctx.restore();
+        });
     }
     
     animate() {
@@ -78,7 +122,9 @@ class ParticleSystem {
     }
     
     start() {
-        this.init();
+        if (this.imagesLoaded === this.totalImages) {
+            this.init();
+        }
         this.animate();
     }
     
@@ -98,4 +144,3 @@ document.addEventListener('DOMContentLoaded', function() {
         particles.start();
     }
 });
-

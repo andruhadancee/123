@@ -111,33 +111,6 @@ body {
     background-repeat: no-repeat;
 }
 
-/* Усиленная сетка */
-.animated-bg::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        linear-gradient(rgba(139, 90, 191, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139, 90, 191, 0.06) 1px, transparent 1px);
-    background-size: 100px 100px;
-    animation: gridPulse 4s ease-in-out infinite;
-    pointer-events: none;
-}
-
-@keyframes gridPulse {
-    0%, 100% {
-        opacity: 0.4;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.6;
-        transform: scale(1.05);
-    }
-}
-
 /* Яркие волны внизу */
 .animated-bg-wave {
     position: absolute;
@@ -656,22 +629,6 @@ main {
     height: 200%;
     background: radial-gradient(circle, rgba(139, 90, 191, 0.15) 0%, rgba(107, 45, 143, 0.1) 50%, transparent 100%);
     animation: gradientFloat 20s ease-in-out infinite alternate;
-}
-
-/* Сетка для загрузчика (как на основном фоне) */
-.loader-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        linear-gradient(rgba(139, 90, 191, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139, 90, 191, 0.06) 1px, transparent 1px);
-    background-size: 100px 100px;
-    animation: gridPulse 4s ease-in-out infinite;
-    pointer-events: none;
 }
 
 /* Волны для загрузчика */
