@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WB Cyber Club - Прошедшие турниры</title>
+    <title>WB Cyber Club - Регламент</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/skeleton.css">
 </head>
@@ -15,7 +15,7 @@
             <div class="loader-dot"></div>
             <div class="loader-dot"></div>
         </div>
-        <div class="loader-text">Загрузка архива...</div>
+        <div class="loader-text">Загрузка регламента...</div>
     </div>
 
     <!-- Animated Background -->
@@ -37,8 +37,8 @@
             <nav>
                 <a href="index.html">Турниры</a>
                 <a href="teams.html">Команды</a>
-                <a href="archive.html" class="active">Прошедшие турниры</a>
-                <a href="regulations.html">Регламент</a>
+                <a href="archive.html">Прошедшие турниры</a>
+                <a href="regulations.html" class="active">Регламент</a>
             </nav>
             
             <div class="social-links">
@@ -62,26 +62,15 @@
         </div>
     </header>
 
-    <!-- Regulations Modal -->
-    <div class="modal" id="regulations-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Регламент турниров</h2>
-                <button class="modal-close" id="close-regulations-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Выберите дисциплину для просмотра регламента:</p>
-                <div id="regulations-buttons" class="regulations-buttons">
-                    <!-- Кнопки дисциплин будут добавлены динамически -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <main class="container">
-        <div class="tournaments-grid" id="archive-grid">
-            <!-- Past tournaments will be loaded here dynamically -->
+        <h1 style="margin-bottom: 32px; font-size: 32px; text-align: center;">Регламент турниров</h1>
+        <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: 48px;">
+            Выберите дисциплину для просмотра регламента
+        </p>
+        
+        <div class="regulations-grid" id="regulations-grid">
+            <!-- Regulations buttons will be loaded here -->
         </div>
     </main>
 
@@ -92,8 +81,7 @@
     <!-- Animations -->
     <script src="js/animations.js"></script>
     <!-- Regulations Script -->
-    <script src="js/regulations.js"></script>
-    <!-- Archive Script -->
-    <script src="js/archive-api.js"></script>
+    <script src="js/regulations-page.js"></script>
 </body>
 </html>
+

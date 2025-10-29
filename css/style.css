@@ -1090,6 +1090,52 @@ main {
     }
 }
 
+/* ===== REGULATIONS PAGE ===== */
+.regulations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.regulation-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    background: rgba(35, 35, 50, 0.7);
+    border: 2px solid rgba(139, 90, 191, 0.5);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--color-text-primary);
+}
+
+.regulation-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139, 90, 191, 0.8);
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
+}
+
+.regulation-info {
+    flex: 1;
+}
+
+.regulation-info h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.regulation-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(139, 90, 191, 0.3);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
 /* ===== REGULATIONS MODAL ===== */
 
 .modal {
