@@ -640,7 +640,7 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #2a1a3d 0%, #4d2b5d 40%, #3a2a4d 100%);
+    background: linear-gradient(135deg, #3d2a4d 0%, #5d3b7d 50%, #4d3a5d 100%);
     z-index: 9999;
     opacity: 1;
     transition: opacity 0.3s ease;
