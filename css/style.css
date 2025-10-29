@@ -640,10 +640,56 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: var(--color-bg-dark);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
     z-index: 9999;
     opacity: 1;
     transition: opacity 0.3s ease;
+}
+
+/* Animated background for loader */
+.loader-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(139, 90, 191, 0.1) 0%, transparent 70%);
+    animation: loaderPulse 3s ease-in-out infinite;
+}
+
+.loader-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(139, 90, 191, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 90, 191, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: loaderGrid 20s linear infinite;
+}
+
+@keyframes loaderPulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+@keyframes loaderGrid {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(50px, 50px);
+    }
 }
 
 .loader-container.hidden {
@@ -686,6 +732,13 @@ main {
     color: var(--color-text-primary);
     letter-spacing: 0.5px;
     text-align: center;
+    position: relative;
+    z-index: 10;
+}
+
+.loader {
+    position: relative;
+    z-index: 10;
 }
 
 @keyframes bounce {
