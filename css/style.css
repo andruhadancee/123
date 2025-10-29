@@ -492,9 +492,9 @@ main {
 }
 
 .tournament-section {
-    background: var(--gradient-card);
+    background: rgba(25, 25, 40, 0.6);
     backdrop-filter: blur(10px);
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(139, 90, 191, 0.3);
     border-radius: 12px;
     padding: 24px;
 }
@@ -538,8 +538,8 @@ main {
 }
 
 .team-card {
-    background: rgba(15, 15, 15, 0.8);
-    border: 2px solid rgba(139, 90, 191, 0.4);
+    background: rgba(35, 35, 50, 0.7);
+    border: 2px solid rgba(139, 90, 191, 0.5);
     border-radius: 16px;
     padding: 20px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -547,7 +547,7 @@ main {
     word-wrap: break-word;
     position: relative;
     backdrop-filter: blur(10px);
-    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.15);
+    box-shadow: 0 4px 16px rgba(139, 90, 191, 0.25);
 }
 
 .team-card::before {
@@ -566,9 +566,10 @@ main {
 }
 
 .team-card:hover {
-    border-color: rgba(139, 90, 191, 0.5);
+    background: rgba(45, 45, 60, 0.8);
+    border-color: rgba(139, 90, 191, 0.7);
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.2);
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.35);
 }
 
 .team-name {
