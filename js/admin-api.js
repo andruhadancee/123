@@ -673,7 +673,7 @@ async function loadRegulationsList() {
         list.innerHTML = regulations.map(r => `
             <div class="regulation-item" data-id="${r.id}">
                 <div class="regulation-info">
-                    <h3>${r.discipline_name}</h3>
+                    <h3>${r.discipline_name}${r.regulation_name ? ` - ${r.regulation_name}` : ''}</h3>
                     <a href="${r.pdf_url}" target="_blank" class="regulation-link">Открыть PDF</a>
                 </div>
                 <div class="regulation-actions">
@@ -702,6 +702,7 @@ function openAddRegulationModal() {
     document.getElementById('regulation-modal-title').textContent = 'Добавить регламент';
     document.getElementById('regulation-form').reset();
     document.getElementById('regulation-id').value = '';
+    document.getElementById('regulation-name').value = '';
     document.getElementById('regulation-modal').classList.add('active');
     loadDisciplinesForRegulation();
 }
@@ -724,16 +725,25 @@ async function handleRegulationFormSubmit(e) {
     
     const disciplineName = document.getElementById('regulation-discipline').value;
     const pdfUrl = document.getElementById('regulation-pdf-url').value;
+    const regulationName = document.getElementById('regulation-name').value;
     
     try {
         if (document.getElementById('regulation-id').value) {
             // Редактирование
             const id = document.getElementById('regulation-id').value;
-            await API.regulations.update(id, { pdf_url: pdfUrl, discipline_name: disciplineName });
+            await API.regulations.update(id, { 
+                pdf_url: pdfUrl, 
+                discipline_name: disciplineName,
+                regulation_name: regulationName || null
+            });
             alert('Регламент обновлён!');
         } else {
             // Добавление
-            await API.regulations.create({ discipline_name: disciplineName, pdf_url: pdfUrl });
+            await API.regulations.create({ 
+                discipline_name: disciplineName, 
+                pdf_url: pdfUrl,
+                regulation_name: regulationName || null
+            });
             alert('Регламент добавлен!');
         }
         
@@ -757,6 +767,7 @@ async function editRegulation(id) {
         document.getElementById('regulation-modal-title').textContent = 'Редактировать регламент';
         document.getElementById('regulation-id').value = regulation.id;
         document.getElementById('regulation-pdf-url').value = regulation.pdf_url;
+        document.getElementById('regulation-name').value = regulation.regulation_name || '';
         
         await loadDisciplinesForRegulation();
         document.getElementById('regulation-discipline').value = regulation.discipline_name;

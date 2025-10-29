@@ -37,7 +37,7 @@ async function loadRegulations() {
         <a href="${reg.pdf_url}" target="_blank" class="regulation-card">
             ${getDisciplineIcon(reg.discipline_name)} 
             <div class="regulation-info">
-                <h3>${reg.discipline_name}</h3>
+                <h3>${reg.discipline_name}${reg.regulation_name ? `<br><span style="font-size: 0.85em; opacity: 0.8; font-weight: 400;">${reg.regulation_name}</span>` : ''}</h3>
                 <span class="regulation-badge">PDF</span>
             </div>
         </a>
