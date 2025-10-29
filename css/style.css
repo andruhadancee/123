@@ -640,7 +640,7 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d1b3d 30%, #1a1a1a 100%);
     z-index: 9999;
     opacity: 1;
     transition: opacity 0.3s ease;
@@ -654,7 +654,7 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(139, 90, 191, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle at 50% 50%, rgba(139, 90, 191, 0.15) 0%, rgba(139, 90, 191, 0.05) 50%, transparent 70%);
     animation: loaderPulse 3s ease-in-out infinite;
 }
 
@@ -666,8 +666,8 @@ main {
     width: 100%;
     height: 100%;
     background-image: 
-        linear-gradient(rgba(139, 90, 191, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139, 90, 191, 0.05) 1px, transparent 1px);
+        linear-gradient(rgba(139, 90, 191, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 90, 191, 0.08) 1px, transparent 1px);
     background-size: 50px 50px;
     animation: loaderGrid 20s linear infinite;
 }
