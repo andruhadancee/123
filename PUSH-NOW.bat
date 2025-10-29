@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Add advanced animations: 3D effects, glows, gradient animation, scroll reveals"
+git commit -m "Reduce card hover effects intensity - less eye strain"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

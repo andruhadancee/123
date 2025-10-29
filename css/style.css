@@ -1268,34 +1268,11 @@ main {
 }
 
 .tournament-card:hover {
-    transform: translateY(-6px) scale(1.02) perspective(1000px) rotateY(2deg);
-    box-shadow: 0 16px 40px rgba(139, 90, 191, 0.4);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
 }
 
-/* Добавляем свечение при наведении */
-.tournament-card {
-    position: relative;
-}
-
-.tournament-card::after {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, rgba(139, 90, 191, 0.3), rgba(107, 45, 143, 0.3));
-    border-radius: 18px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    z-index: -1;
-}
-
-.tournament-card:hover::after {
-    opacity: 1;
-    box-shadow: 0 0 30px rgba(139, 90, 191, 0.5);
-}
+/* Убираем яркое свечение */
 
 .btn-submit {
     position: relative;
