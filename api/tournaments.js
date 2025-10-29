@@ -37,14 +37,14 @@ module.exports = async (req, res) => {
         
         // POST - создать турнир
         if (req.method === 'POST') {
-            const { title, discipline, date, prize, maxTeams, customLink, status, winner } = req.body;
+            const { title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl } = req.body;
             
             const result = await pool.query(
                 `INSERT INTO tournaments 
-                (title, discipline, date, prize, max_teams, custom_link, status, winner, teams)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 0)
+                (title, discipline, date, prize, max_teams, custom_link, status, winner, teams, watch_url)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 0, $9)
                 RETURNING *`,
-                [title, discipline, date, prize, maxTeams, customLink || null, status || 'active', winner || null]
+                [title, discipline, date, prize, maxTeams, customLink || null, status || 'active', winner || null, watchUrl || null]
             );
             
             return res.status(201).json(result.rows[0]);
@@ -52,15 +52,15 @@ module.exports = async (req, res) => {
         
         // PUT - обновить турнир
         if (req.method === 'PUT') {
-            const { id, title, discipline, date, prize, maxTeams, customLink, status, winner } = req.body;
+            const { id, title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl } = req.body;
             
             const result = await pool.query(
                 `UPDATE tournaments 
                 SET title = $1, discipline = $2, date = $3, prize = $4, 
-                    max_teams = $5, custom_link = $6, status = $7, winner = $8, updated_at = CURRENT_TIMESTAMP
-                WHERE id = $9
+                    max_teams = $5, custom_link = $6, status = $7, winner = $8, watch_url = $9, updated_at = CURRENT_TIMESTAMP
+                WHERE id = $10
                 RETURNING *`,
-                [title, discipline, date, prize, maxTeams, customLink || null, status, winner || null, id]
+                [title, discipline, date, prize, maxTeams, customLink || null, status, winner || null, watchUrl || null, id]
             );
             
             if (result.rows.length === 0) {

@@ -259,6 +259,7 @@ function openAddModal() {
     document.getElementById('tournament-id').value = '';
     document.getElementById('tournament-status').value = 'active';
     document.getElementById('winner-field').style.display = 'none';
+    document.getElementById('watch-url-field').style.display = 'none';
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
 }
@@ -270,6 +271,7 @@ function openAddPastModal() {
     document.getElementById('tournament-id').value = '';
     document.getElementById('tournament-status').value = 'finished';
     document.getElementById('winner-field').style.display = 'block';
+    document.getElementById('watch-url-field').style.display = 'block';
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
 }
@@ -300,8 +302,10 @@ function openEditPastModal(tournament) {
     document.getElementById('tournament-max-teams').value = tournament.max_teams;
     document.getElementById('tournament-custom-link').value = tournament.custom_link || '';
     document.getElementById('tournament-winner').value = tournament.winner || '';
+    document.getElementById('tournament-watch-url').value = tournament.watch_url || '';
     document.getElementById('tournament-status').value = 'finished';
     document.getElementById('winner-field').style.display = 'block';
+    document.getElementById('watch-url-field').style.display = 'block';
     
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();

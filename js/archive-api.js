@@ -1,9 +1,13 @@
 // Страница прошедших турниров (с API)
 
+let allPastTournaments = [];
+let selectedDiscipline = 'all';
+
 // Функция инициализации страницы
 async function initializeArchivePage() {
     console.log('🚀 Инициализация страницы архива...');
     await loadPastTournaments();
+    await loadDisciplineFilters();
     await loadSocialLinks();
     hideLoader();
     console.log('✅ Страница архива загружена');
@@ -24,22 +28,66 @@ function hideLoader() {
 }
 
 async function loadPastTournaments() {
+    allPastTournaments = await API.tournaments.getAll('finished');
+    displayFilteredTournaments();
+}
+
+function displayFilteredTournaments() {
     const grid = document.getElementById('archive-grid');
     
-    const tournaments = await API.tournaments.getAll('finished');
+    let filtered = allPastTournaments;
+    if (selectedDiscipline !== 'all') {
+        filtered = allPastTournaments.filter(t => t.discipline === selectedDiscipline);
+    }
     
-    if (tournaments.length === 0) {
+    if (filtered.length === 0) {
         grid.innerHTML = `
             <div class="empty-state">
-                <h3>Прошедших турниров пока нет</h3>
-                <p>История турниров появится здесь после их завершения</p>
+                <h3>${selectedDiscipline === 'all' ? 'Прошедших турниров пока нет' : 'Турниров по выбранной дисциплине нет'}</h3>
+                <p>${selectedDiscipline === 'all' ? 'История турниров появится здесь после их завершения' : 'Попробуйте выбрать другую дисциплину'}</p>
             </div>
         `;
         return;
     }
     
-    grid.innerHTML = tournaments.map(tournament => createPastTournamentCard(tournament)).join('');
+    grid.innerHTML = filtered.map(tournament => createPastTournamentCard(tournament)).join('');
 }
+
+async function loadDisciplineFilters() {
+    const filtersContainer = document.getElementById('discipline-filters');
+    if (!filtersContainer) return;
+    
+    const disciplines = await API.disciplines.getAll();
+    const disciplinesSet = new Set(allPastTournaments.map(t => t.discipline));
+    const availableDisciplines = [...new Set(disciplines.filter(d => disciplinesSet.has(d)))];
+    
+    filtersContainer.innerHTML = `
+        <button class="filter-btn active" data-discipline="all" onclick="filterArchiveByDiscipline('all')">
+            Все
+        </button>
+        ${availableDisciplines.map(d => `
+            <button class="filter-btn" data-discipline="${d}" onclick="filterArchiveByDiscipline('${d}')">
+                ${getDisciplineIcon(d)} ${d}
+            </button>
+        `).join('')}
+    `;
+}
+
+function filterArchiveByDiscipline(discipline) {
+    selectedDiscipline = discipline;
+    
+    // Update active state
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.discipline === discipline) {
+            btn.classList.add('active');
+        }
+    });
+    
+    displayFilteredTournaments();
+}
+
+window.filterArchiveByDiscipline = filterArchiveByDiscipline;
 
 function createPastTournamentCard(tournament) {
     return `
@@ -72,6 +120,12 @@ function createPastTournamentCard(tournament) {
                 </div>
                 ` : ''}
             </div>
+            
+            ${tournament.watch_url ? `
+            <a href="${tournament.watch_url}" target="_blank" class="btn-submit" style="margin-top: 16px; text-align: center; display: block; text-decoration: none;">
+                Смотреть
+            </a>
+            ` : ''}
         </div>
     `;
 }

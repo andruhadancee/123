@@ -16,6 +16,7 @@
 <body>
     <!-- Loader -->
     <div class="loader-container" id="loader">
+        <canvas id="loader-particles-canvas"></canvas>
         <div class="loader-light-rays"></div>
         <div class="loader-wave"></div>
         <div class="loader-wave-2"></div>
@@ -272,6 +273,12 @@
                     <input type="text" id="tournament-winner" placeholder="Название команды-победителя">
                 </div>
                 
+                <div class="form-group" id="watch-url-field" style="display: none;">
+                    <label for="tournament-watch-url">Ссылка "Смотреть" (для прошедших турниров)</label>
+                    <input type="text" id="tournament-watch-url" placeholder="https://youtube.com/..., https://twitch.tv/...">
+                    <small>Ссылка на запись или трансляцию турнира</small>
+                </div>
+                
                 <input type="hidden" id="tournament-status" value="active">
                 
                 <div class="modal-footer">
@@ -365,6 +372,8 @@
 
     <!-- API Client -->
     <script src="js/api-client.js"></script>
+    <!-- Loader Particles -->
+    <script src="js/loader-particles.js"></script>
     <!-- Particles -->
     <script src="js/particles.js"></script>
     <!-- Animations -->

@@ -15,6 +15,7 @@
 <body>
     <!-- Loader -->
     <div class="loader-container" id="loader">
+        <canvas id="loader-particles-canvas"></canvas>
         <div class="loader-light-rays"></div>
         <div class="loader-wave"></div>
         <div class="loader-wave-2"></div>
@@ -88,6 +89,14 @@
 
     <!-- Main Content -->
     <main class="container">
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="filter-label">Фильтр по дисциплинам:</div>
+            <div class="filters" id="discipline-filters">
+                <!-- Filter buttons will be added dynamically -->
+            </div>
+        </div>
+        
         <div class="tournaments-grid" id="archive-grid">
             <!-- Past tournaments will be loaded here dynamically -->
         </div>
@@ -95,6 +104,8 @@
 
     <!-- API Client -->
     <script src="js/api-client.js"></script>
+    <!-- Loader Particles -->
+    <script src="js/loader-particles.js"></script>
     <!-- Particles -->
     <script src="js/particles.js"></script>
     <!-- Animations -->
