@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Make loader screen brighter with purple gradient and visible effects"
+git commit -m "Make loader screen MUCH brighter - purple gradient background"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

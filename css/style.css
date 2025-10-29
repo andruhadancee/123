@@ -640,7 +640,7 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d1b3d 30%, #1a1a1a 100%);
+    background: linear-gradient(135deg, #2a1a3d 0%, #4d2b5d 40%, #3a2a4d 100%);
     z-index: 9999;
     opacity: 1;
     transition: opacity 0.3s ease;
@@ -654,7 +654,7 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 50% 50%, rgba(139, 90, 191, 0.15) 0%, rgba(139, 90, 191, 0.05) 50%, transparent 70%);
+    background: radial-gradient(circle at 50% 50%, rgba(139, 90, 191, 0.25) 0%, rgba(139, 90, 191, 0.15) 40%, rgba(139, 90, 191, 0.05) 70%, transparent 100%);
     animation: loaderPulse 3s ease-in-out infinite;
 }
 
