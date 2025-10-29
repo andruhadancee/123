@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Fix teams page loading order and make background slightly lighter"
+git commit -m "Make background slightly lighter (0a0a0a)"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
