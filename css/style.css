@@ -538,8 +538,8 @@ main {
 }
 
 .team-card {
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(139, 90, 191, 0.3);
+    background: rgba(15, 15, 15, 0.8);
+    border: 2px solid rgba(139, 90, 191, 0.4);
     border-radius: 16px;
     padding: 20px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -547,7 +547,7 @@ main {
     word-wrap: break-word;
     position: relative;
     backdrop-filter: blur(10px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.15);
 }
 
 .team-card::before {

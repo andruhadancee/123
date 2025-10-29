@@ -6,9 +6,30 @@ let selectedDisciplineTeams = 'all';
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('🚀 Инициализация страницы команд...');
     
-    // Сначала загружаем все данные
+    // Сначала загружаем турниры
     const tournaments = await API.tournaments.getAll('active');
+    console.log('Tournaments loaded:', tournaments);
+    
+    // Затем загружаем команды
     allTeamsData = await API.teams.getAll();
+    console.log('Teams data loaded:', allTeamsData);
+    
+    // Добавляем информацию о дисциплине к командам
+    if (tournaments && allTeamsData) {
+        Object.keys(allTeamsData).forEach(tournamentId => {
+            const tournament = tournaments.find(t => t.id == tournamentId);
+            if (tournament && allTeamsData[tournamentId]) {
+                allTeamsData[tournamentId].forEach(team => {
+                    if (!team.discipline && tournament.discipline) {
+                        team.discipline = tournament.discipline;
+                    }
+                    if (!team.title && tournament.title) {
+                        team.title = tournament.title;
+                    }
+                });
+            }
+        });
+    }
     
     // Теперь загружаем фильтры дисциплин
     await loadDisciplineFilters();
@@ -37,15 +58,15 @@ function hideLoader() {
 function displayFilteredTeams() {
     const container = document.getElementById('teams-container');
     
-    const tournaments = Object.values(allTeamsData).flat();
-    const uniqueTournaments = [...new Set(tournaments.map(t => t.tournament_id))];
+    // Получаем все турниры с командами
+    const tournamentIds = Object.keys(allTeamsData);
     
-    let filtered = uniqueTournaments;
+    let filtered = tournamentIds;
     if (selectedDisciplineTeams !== 'all') {
         // Фильтруем по дисциплине
-        filtered = uniqueTournaments.filter(id => {
-            const tournamentTeams = tournaments.filter(t => t.tournament_id === id);
-            return tournamentTeams.some(t => t.discipline === selectedDisciplineTeams);
+        filtered = tournamentIds.filter(id => {
+            const teams = allTeamsData[id] || [];
+            return teams.some(t => t.discipline === selectedDisciplineTeams);
         });
     }
     
@@ -59,9 +80,10 @@ function displayFilteredTeams() {
     }
     
     container.innerHTML = filtered.map(tournamentId => {
-        const tournament = allTeamsData[tournamentId]?.[0];
+        const teams = allTeamsData[tournamentId] || [];
+        const tournament = teams[0]; // Берем первый объект команды как источник данных о турнире
         if (!tournament) return '';
-        return createTournamentTeamsSection(tournament, allTeamsData[tournamentId] || []);
+        return createTournamentTeamsSection(tournament, teams);
     }).join('');
 }
 
