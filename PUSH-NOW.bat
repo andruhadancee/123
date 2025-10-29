@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Remove blinking filter animation - too bright"
+git commit -m "Update color palette: use pure black, add more contrast, modern look"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
