@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Add SPA navigation like Orchid - no page reload"
+git commit -m "Fix SPA: initialize content after page load"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:

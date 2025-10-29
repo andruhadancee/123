@@ -5,6 +5,7 @@
     // Загружаем страницу через AJAX
     async function loadPage(url) {
         try {
+            console.log('Loading page:', url);
             const response = await fetch(url);
             if (!response.ok) throw new Error('Failed to load page');
             
@@ -16,6 +17,7 @@
             const mainContent = doc.querySelector('main');
             if (mainContent) {
                 document.querySelector('main').innerHTML = mainContent.innerHTML;
+                console.log('Main content updated');
             }
             
             // Обновляем title
@@ -38,10 +40,9 @@
     function updateNavigation(url) {
         document.querySelectorAll('nav a').forEach(link => {
             link.classList.remove('active');
-            if (link.dataset.page === url || 
-                (url.includes('index.html') && link.href.includes('index.html')) ||
-                (url.includes('teams.html') && link.href.includes('teams.html')) ||
-                (url.includes('archive.html') && link.href.includes('archive.html'))) {
+            const linkPage = link.dataset.page || link.getAttribute('href');
+            if (linkPage === url || 
+                (url.includes('index.html') && linkPage && (linkPage.includes('index.html') || linkPage === '#'))) {
                 link.classList.add('active');
             }
         });
@@ -49,25 +50,43 @@
     
     // Инициализация страницы
     function initializePage(url) {
-        // Убираем загрузчик
-        const loader = document.getElementById('loader');
-        if (loader) {
-            loader.style.display = 'none';
-        }
+        console.log('Initializing page:', url);
+        
+        // Убираем загрузчик через секунду
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+        }, 500);
         
         // Запускаем скрипты в зависимости от страницы
-        if (url.includes('index.html') || url === '') {
+        if (url.includes('index.html') || url === '' || !url || url.includes('/index')) {
             // Турниры
-            if (typeof loadTournaments === 'function') {
-                loadTournaments();
+            console.log('Initializing tournaments page');
+            if (typeof window.loadTournaments === 'function') {
+                window.loadTournaments();
             }
-        } else if (url.includes('teams.html')) {
+            // Trigger the main-api.js load
+            if (typeof loadTournamentsData === 'function') {
+                loadTournamentsData();
+            }
+        } else if (url.includes('teams.html') || url.includes('teams')) {
             // Команды
-            // Код в teams-api.js уже загрузится
-        } else if (url.includes('archive.html')) {
+            console.log('Initializing teams page');
+            // Load teams API
+            if (typeof window.loadRegisteredTeams === 'function') {
+                window.loadRegisteredTeams();
+            }
+        } else if (url.includes('archive.html') || url.includes('archive')) {
             // Архив
-            if (typeof loadArchive === 'function') {
-                loadArchive();
+            console.log('Initializing archive page');
+            if (typeof window.loadArchive === 'function') {
+                window.loadArchive();
+            }
+            // Trigger the archive-api.js load
+            if (typeof loadArchiveTournaments === 'function') {
+                loadArchiveTournaments();
             }
         }
         
@@ -82,16 +101,32 @@
             e.preventDefault();
             const url = link.dataset.page;
             
-            // Показываем загрузчик на мгновение
+            console.log('Navigation clicked:', url);
+            
+            // Показываем загрузчик
             const loader = document.getElementById('loader');
             if (loader) {
                 loader.style.display = 'flex';
-                setTimeout(() => loadPage(url), 100);
-            } else {
-                loadPage(url);
             }
+            
+            loadPage(url);
         }
     });
+    
+    // Проверяем при загрузке страницы, нужно ли запустить инициализацию
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUrl = window.location.href;
+            if (!currentUrl.includes('#')) {
+                initializePage(currentUrl);
+            }
+        });
+    } else {
+        const currentUrl = window.location.href;
+        if (!currentUrl.includes('#')) {
+            initializePage(currentUrl);
+        }
+    }
     
     console.log('✅ SPA Navigation loaded');
 })();
