@@ -58,7 +58,7 @@ body {
     overflow: hidden;
 }
 
-/* Слабый градиентный дрейф */
+/* Усиленный градиентный дрейф */
 .animated-bg::before {
     content: '';
     position: absolute;
@@ -66,7 +66,7 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(139, 90, 191, 0.05) 0%, rgba(107, 45, 143, 0.03) 50%, transparent 100%);
+    background: radial-gradient(circle, rgba(139, 90, 191, 0.15) 0%, rgba(107, 45, 143, 0.1) 50%, transparent 100%);
     animation: gradientFloat 20s ease-in-out infinite alternate;
 }
 
@@ -111,7 +111,7 @@ body {
     background-repeat: no-repeat;
 }
 
-/* Ещё более слабая сетка */
+/* Усиленная сетка */
 .animated-bg::after {
     content: '';
     position: absolute;
@@ -120,8 +120,8 @@ body {
     width: 100%;
     height: 100%;
     background-image: 
-        linear-gradient(rgba(139, 90, 191, 0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(139, 90, 191, 0.015) 1px, transparent 1px);
+        linear-gradient(rgba(139, 90, 191, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 90, 191, 0.06) 1px, transparent 1px);
     background-size: 100px 100px;
     animation: gridPulse 4s ease-in-out infinite;
     pointer-events: none;
@@ -129,17 +129,35 @@ body {
 
 @keyframes gridPulse {
     0%, 100% {
-        opacity: 0.1;
+        opacity: 0.4;
         transform: scale(1);
     }
     50% {
-        opacity: 0.2;
-        transform: scale(1.02);
+        opacity: 0.6;
+        transform: scale(1.05);
     }
 }
 
-/* Слабые волны внизу - не зеркалят */
+/* Яркие волны внизу */
 .animated-bg-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 35vh;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(107, 33, 168, 0.2) 40%,
+        rgba(139, 90, 191, 0.3) 70%,
+        rgba(107, 33, 168, 0.35) 100%
+    );
+    animation: waveMove 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Второй слой волн */
+.animated-bg-wave-2 {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -148,26 +166,8 @@ body {
     background: linear-gradient(
         180deg,
         transparent 0%,
-        rgba(107, 33, 168, 0.08) 40%,
-        rgba(139, 90, 191, 0.12) 70%,
-        rgba(107, 33, 168, 0.15) 100%
-    );
-    animation: waveMove 8s ease-in-out infinite;
-    pointer-events: none;
-}
-
-/* Второй слой волн - ещё слабее */
-.animated-bg-wave-2 {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 200%;
-    height: 25vh;
-    background: linear-gradient(
-        180deg,
-        transparent 0%,
-        rgba(107, 33, 168, 0.05) 50%,
-        rgba(139, 90, 191, 0.08) 100%
+        rgba(107, 33, 168, 0.15) 50%,
+        rgba(139, 90, 191, 0.25) 100%
     );
     animation: waveMove 10s ease-in-out infinite reverse;
     opacity: 0.9;
@@ -1219,7 +1219,7 @@ main {
 .filters-container {
     margin-bottom: 32px;
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(139, 90, 191, 0.2);
+    border-bottom: none;
 }
 
 .filter-label {
@@ -1480,9 +1480,9 @@ main {
 }
 
 .filter-btn.active {
-    background: rgba(139, 90, 191, 0.2);
-    border-color: rgba(139, 90, 191, 0.5);
-    box-shadow: 0 2px 8px rgba(139, 90, 191, 0.2);
+    background: rgba(139, 90, 191, 0.25);
+    border-color: rgba(139, 90, 191, 0.6);
+    box-shadow: 0 2px 8px rgba(139, 90, 191, 0.3);
 }
 
 
