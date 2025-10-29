@@ -5,9 +5,21 @@ let selectedDisciplineTeams = 'all';
 
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('🚀 Инициализация страницы команд...');
-    await loadRegisteredTeams();
+    
+    // Сначала загружаем все данные
+    const tournaments = await API.tournaments.getAll('active');
+    allTeamsData = await API.teams.getAll();
+    
+    // Теперь загружаем фильтры дисциплин
     await loadDisciplineFilters();
+    
+    // И загружаем социальные ссылки
     await loadSocialLinks();
+    
+    // Показываем команды
+    displayFilteredTeams();
+    
+    // Скрываем загрузчик
     hideLoader();
     console.log('✅ Страница команд загружена');
 });
@@ -20,24 +32,7 @@ function hideLoader() {
     }
 }
 
-async function loadRegisteredTeams() {
-    const container = document.getElementById('teams-container');
-    
-    const tournaments = await API.tournaments.getAll('active');
-    allTeamsData = await API.teams.getAll();
-    
-    if (tournaments.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <h3>Активных турниров пока нет</h3>
-                <p>Зарегистрированные команды появятся здесь после создания турниров</p>
-            </div>
-        `;
-        return;
-    }
-    
-    displayFilteredTeams();
-}
+// Убираем эту функцию, т.к. теперь всё загружается в DOMContentLoaded
 
 function displayFilteredTeams() {
     const container = document.getElementById('teams-container');
