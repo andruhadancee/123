@@ -59,6 +59,8 @@ function displayFilteredTournaments() {
     
     API.links.getAll().then(links => {
         grid.innerHTML = filtered.map(tournament => createTournamentCard(tournament, links)).join('');
+        // Переинициализируем таймеры после отрисовки
+        setTimeout(initTimers, 100);
     });
 }
 
@@ -150,8 +152,13 @@ function createTournamentCard(tournament, links) {
 
 // Инициализация таймеров после отображения
 function initTimers() {
-    document.querySelectorAll('.timer-container').forEach(container => {
+    console.log('⏰ Инициализация таймеров...');
+    const containers = document.querySelectorAll('.timer-container');
+    console.log(`Найдено ${containers.length} таймеров`);
+    
+    containers.forEach(container => {
         const dateText = container.getAttribute('data-date');
+        console.log(`Таймер ${container.id}: дата = ${dateText}`);
         if (dateText) {
             initCountdown(container.id, dateText);
         }
@@ -214,12 +221,16 @@ function initCountdown(timerId, dateString) {
             const dashesFormat = dateString.match(/(\d{1,2})-(\d{1,2})-(\d{4})/);
             const russianFormat = dateString.match(/(\d{1,2})\s+(января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)\s+(\d{4})/i);
             
+            console.log(`Парсинг даты: "${dateString}"`);
+            
             if (dotsFormat) {
                 const [, day, month, year] = dotsFormat;
                 targetDate = new Date(year, parseInt(month) - 1, parseInt(day));
+                console.log('Формат с точками:', day, month, year);
             } else if (dashesFormat) {
                 const [, day, month, year] = dashesFormat;
                 targetDate = new Date(year, parseInt(month) - 1, parseInt(day));
+                console.log('Формат с тире:', day, month, year);
             } else if (russianFormat) {
                 const [, day, monthName, year] = russianFormat;
                 const months = {
@@ -227,17 +238,23 @@ function initCountdown(timerId, dateString) {
                     'июля': 6, 'августа': 7, 'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
                 };
                 targetDate = new Date(year, months[monthName.toLowerCase()], parseInt(day));
+                console.log('Русский формат:', day, monthName, year);
             } else {
-                // Пробуем стандартный парсинг
+                console.log('Не удалось распарсить дату, пробуем стандартный парсинг');
                 targetDate = new Date(dateString);
                 if (isNaN(targetDate.getTime())) {
+                    console.log('Невалидная дата');
                     container.innerHTML = '';
                     return;
                 }
             }
             
+            console.log('Целевая дата:', targetDate);
+            
             const now = new Date();
             const diff = targetDate - now;
+            
+            console.log('Разница:', diff);
             
             if (diff <= 0) {
                 container.innerHTML = '<div class="timer-badge timer-ended">Турнир начался</div>';
@@ -248,6 +265,8 @@ function initCountdown(timerId, dateString) {
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             
+            console.log(`Таймер: ${days}д ${hours}ч ${minutes}м`);
+            
             container.innerHTML = `
                 <div class="timer-badge">
                     <span class="timer-label">До начала:</span>
@@ -257,6 +276,7 @@ function initCountdown(timerId, dateString) {
                 </div>
             `;
         } catch (error) {
+            console.error('Ошибка таймера:', error);
             container.innerHTML = '';
         }
     }
