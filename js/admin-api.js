@@ -3,6 +3,14 @@
 let currentEditingId = null;
 let currentEditingTeam = null;
 
+// Для фильтрации
+let allActiveTournaments = [];
+let allPastTournaments = [];
+let allTeamsData = [];
+let selectedActiveDiscipline = 'all';
+let selectedPastDiscipline = 'all';
+let selectedTeamsDiscipline = 'all';
+
 document.addEventListener('DOMContentLoaded', function() {
     initAdminPanel();
     loadAdminData();
@@ -124,20 +132,30 @@ async function loadAdminData() {
 }
 
 async function loadActiveTournaments() {
+    allActiveTournaments = await API.tournaments.getAll('active');
+    await loadActiveDisciplineFilters();
+    displayFilteredActiveTournaments();
+}
+
+function displayFilteredActiveTournaments() {
     const grid = document.getElementById('active-tournaments-grid');
-    grid.innerHTML = '<div class="loading">Загрузка...</div>';
     
-    const tournaments = await API.tournaments.getAll('active');
+    let filtered = allActiveTournaments;
+    if (selectedActiveDiscipline !== 'all') {
+        filtered = allActiveTournaments.filter(t => t.discipline === selectedActiveDiscipline);
+    }
     
-    if (tournaments.length === 0) {
-        grid.innerHTML = '<div class="empty-state"><p>Нет активных турниров</p></div>';
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div class="empty-state"><p>' + 
+            (selectedActiveDiscipline === 'all' ? 'Нет активных турниров' : 'Турниров по выбранной дисциплине нет') + 
+            '</p></div>';
         return;
     }
     
-    grid.innerHTML = tournaments.map(t => createAdminTournamentCard(t)).join('');
+    grid.innerHTML = filtered.map(t => createAdminTournamentCard(t)).join('');
     
     // Add event listeners for edit and delete buttons
-    tournaments.forEach(t => {
+    filtered.forEach(t => {
         const editBtn = document.getElementById(`edit-${t.id}`);
         const deleteBtn = document.getElementById(`delete-${t.id}`);
         if (editBtn) editBtn.addEventListener('click', () => openEditModal(t));
@@ -145,27 +163,107 @@ async function loadActiveTournaments() {
     });
 }
 
+async function loadActiveDisciplineFilters() {
+    const filtersContainer = document.getElementById('active-discipline-filters');
+    if (!filtersContainer) return;
+    
+    const disciplines = await API.disciplines.getAll();
+    const disciplinesSet = new Set(allActiveTournaments.map(t => t.discipline));
+    const availableDisciplines = [...new Set(disciplines.filter(d => disciplinesSet.has(d)))];
+    
+    filtersContainer.innerHTML = `
+        <button class="filter-btn ${selectedActiveDiscipline === 'all' ? 'active' : ''}" data-discipline="all" onclick="filterActiveTournamentsByDiscipline('all')">
+            Все
+        </button>
+        ${availableDisciplines.map(d => `
+            <button class="filter-btn ${selectedActiveDiscipline === d ? 'active' : ''}" data-discipline="${d}" onclick="filterActiveTournamentsByDiscipline('${d}')">
+                ${getDisciplineIcon(d)} ${d}
+            </button>
+        `).join('')}
+    `;
+}
+
+function filterActiveTournamentsByDiscipline(discipline) {
+    selectedActiveDiscipline = discipline;
+    
+    document.querySelectorAll('#active-discipline-filters .filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.discipline === discipline) {
+            btn.classList.add('active');
+        }
+    });
+    
+    displayFilteredActiveTournaments();
+}
+
+window.filterActiveTournamentsByDiscipline = filterActiveTournamentsByDiscipline;
+
 async function loadPastTournaments() {
+    allPastTournaments = await API.tournaments.getAll('finished');
+    await loadPastDisciplineFilters();
+    displayFilteredPastTournaments();
+}
+
+function displayFilteredPastTournaments() {
     const grid = document.getElementById('past-tournaments-grid');
-    grid.innerHTML = '<div class="loading">Загрузка...</div>';
     
-    const tournaments = await API.tournaments.getAll('finished');
+    let filtered = allPastTournaments;
+    if (selectedPastDiscipline !== 'all') {
+        filtered = allPastTournaments.filter(t => t.discipline === selectedPastDiscipline);
+    }
     
-    if (tournaments.length === 0) {
-        grid.innerHTML = '<div class="empty-state"><p>Нет прошедших турниров</p></div>';
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div class="empty-state"><p>' + 
+            (selectedPastDiscipline === 'all' ? 'Нет прошедших турниров' : 'Турниров по выбранной дисциплине нет') + 
+            '</p></div>';
         return;
     }
     
-    grid.innerHTML = tournaments.map(t => createAdminTournamentCard(t, true)).join('');
+    grid.innerHTML = filtered.map(t => createAdminTournamentCard(t, true)).join('');
     
     // Add event listeners for edit and delete buttons
-    tournaments.forEach(t => {
+    filtered.forEach(t => {
         const editBtn = document.getElementById(`edit-past-${t.id}`);
         const deleteBtn = document.getElementById(`delete-past-${t.id}`);
         if (editBtn) editBtn.addEventListener('click', () => openEditPastModal(t));
         if (deleteBtn) deleteBtn.addEventListener('click', () => deletePastTournamentConfirm(t.id));
     });
 }
+
+async function loadPastDisciplineFilters() {
+    const filtersContainer = document.getElementById('past-discipline-filters');
+    if (!filtersContainer) return;
+    
+    const disciplines = await API.disciplines.getAll();
+    const disciplinesSet = new Set(allPastTournaments.map(t => t.discipline));
+    const availableDisciplines = [...new Set(disciplines.filter(d => disciplinesSet.has(d)))];
+    
+    filtersContainer.innerHTML = `
+        <button class="filter-btn ${selectedPastDiscipline === 'all' ? 'active' : ''}" data-discipline="all" onclick="filterPastTournamentsByDiscipline('all')">
+            Все
+        </button>
+        ${availableDisciplines.map(d => `
+            <button class="filter-btn ${selectedPastDiscipline === d ? 'active' : ''}" data-discipline="${d}" onclick="filterPastTournamentsByDiscipline('${d}')">
+                ${getDisciplineIcon(d)} ${d}
+            </button>
+        `).join('')}
+    `;
+}
+
+function filterPastTournamentsByDiscipline(discipline) {
+    selectedPastDiscipline = discipline;
+    
+    document.querySelectorAll('#past-discipline-filters .filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.discipline === discipline) {
+            btn.classList.add('active');
+        }
+    });
+    
+    displayFilteredPastTournaments();
+}
+
+window.filterPastTournamentsByDiscipline = filterPastTournamentsByDiscipline;
 
 function createAdminTournamentCard(tournament, isPast = false) {
     return `
@@ -528,25 +626,52 @@ async function updateDisciplineDropdown() {
 
 // Загрузка команд в админке
 async function loadTeamsAdmin() {
-    const container = document.getElementById('teams-admin-container');
+    allTeamsData = [];
     const allTeams = await API.teams.getAll();
     const tournaments = await API.tournaments.getAll();
     
-    if (Object.keys(allTeams).length === 0) {
-        container.innerHTML = '<div class="empty-state"><p>Пока нет зарегистрированных команд</p></div>';
+    // Сохраняем все данные для фильтрации
+    Object.keys(allTeams).forEach(tournamentId => {
+        const tournament = tournaments.find(t => t.id == tournamentId);
+        if (tournament) {
+            allTeamsData.push({
+                tournament: tournament,
+                teams: allTeams[tournamentId] || []
+            });
+        }
+    });
+    
+    await loadTeamsDisciplineFilters();
+    displayFilteredTeamsAdmin();
+}
+
+function displayFilteredTeamsAdmin() {
+    const container = document.getElementById('teams-admin-container');
+    
+    let filtered = allTeamsData;
+    
+    // Фильтруем по дисциплине
+    if (selectedTeamsDiscipline !== 'all') {
+        filtered = allTeamsData.filter(data => 
+            data.tournament.discipline === selectedTeamsDiscipline
+        );
+    }
+    
+    if (filtered.length === 0 || filtered.every(data => data.teams.length === 0)) {
+        container.innerHTML = '<div class="empty-state"><p>' + 
+            (selectedTeamsDiscipline === 'all' ? 'Пока нет зарегистрированных команд' : 'Команд по выбранной дисциплине нет') + 
+            '</p></div>';
         return;
     }
     
-    container.innerHTML = Object.keys(allTeams).map(tournamentId => {
-        const tournament = tournaments.find(t => t.id == tournamentId);
-        const teams = allTeams[tournamentId] || [];
-        
+    container.innerHTML = filtered.map(({tournament, teams}) => {
         return `
             <div class="tournament-section" style="margin-bottom: 30px;">
-                <h3 style="margin-bottom: 15px;">${tournament ? tournament.title : `Турнир #${tournamentId}`}</h3>
+                <h3 style="margin-bottom: 15px;">${tournament.title} - ${formatDisciplineWithIcon(tournament.discipline)}</h3>
                 ${teams.length > 0 ? teams.map((team) => `
                     <div class="discipline-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(107, 45, 143, 0.2); border-radius: 8px; margin-bottom: 10px;">
                         <div>
+
                             <div style="font-size: 16px; font-weight: 600; margin-bottom: 5px;">${team.name}</div>
                             <div style="font-size: 14px; color: var(--color-text-secondary);">
                                 👥 ${team.players} игроков
@@ -562,6 +687,41 @@ async function loadTeamsAdmin() {
         `;
     }).join('');
 }
+
+async function loadTeamsDisciplineFilters() {
+    const filtersContainer = document.getElementById('teams-discipline-filters');
+    if (!filtersContainer) return;
+    
+    const disciplines = await API.disciplines.getAll();
+    const disciplinesSet = new Set(allTeamsData.map(data => data.tournament.discipline).filter(d => d));
+    const availableDisciplines = [...new Set(disciplines.filter(d => disciplinesSet.has(d)))];
+    
+    filtersContainer.innerHTML = `
+        <button class="filter-btn ${selectedTeamsDiscipline === 'all' ? 'active' : ''}" data-discipline="all" onclick="filterTeamsAdminByDiscipline('all')">
+            Все
+        </button>
+        ${availableDisciplines.map(d => `
+            <button class="filter-btn ${selectedTeamsDiscipline === d ? 'active' : ''}" data-discipline="${d}" onclick="filterTeamsAdminByDiscipline('${d}')">
+                ${getDisciplineIcon(d)} ${d}
+            </button>
+        `).join('')}
+    `;
+}
+
+function filterTeamsAdminByDiscipline(discipline) {
+    selectedTeamsDiscipline = discipline;
+    
+    document.querySelectorAll('#teams-discipline-filters .filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.discipline === discipline) {
+            btn.classList.add('active');
+        }
+    });
+    
+    displayFilteredTeamsAdmin();
+}
+
+window.filterTeamsAdminByDiscipline = filterTeamsAdminByDiscipline;
 
 // Удаление команды
 async function deleteTeam(teamId) {

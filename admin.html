@@ -74,6 +74,13 @@
                     Добавить турнир
                 </button>
             </div>
+            <!-- Filters for Active Tournaments -->
+            <div class="filters-container">
+                <div class="filter-label">Фильтр по дисциплинам:</div>
+                <div class="filters" id="active-discipline-filters">
+                    <!-- Filter buttons will be added dynamically -->
+                </div>
+            </div>
             <div class="tournaments-admin-grid" id="active-tournaments-grid">
                 <!-- Active tournaments will be loaded here -->
             </div>
@@ -89,6 +96,13 @@
                     </svg>
                     Добавить прошедший турнир
                 </button>
+            </div>
+            <!-- Filters for Past Tournaments -->
+            <div class="filters-container">
+                <div class="filter-label">Фильтр по дисциплинам:</div>
+                <div class="filters" id="past-discipline-filters">
+                    <!-- Filter buttons will be added dynamically -->
+                </div>
             </div>
             <div class="tournaments-admin-grid" id="past-tournaments-grid">
                 <!-- Past tournaments will be loaded here -->
@@ -109,6 +123,13 @@
                     </button>
                 </div>
                 <p class="hint">Управление командами по турнирам</p>
+                <!-- Filters for Teams -->
+                <div class="filters-container" style="margin-top: 20px;">
+                    <div class="filter-label">Фильтр по дисциплинам:</div>
+                    <div class="filters" id="teams-discipline-filters">
+                        <!-- Filter buttons will be added dynamically -->
+                    </div>
+                </div>
                 
                 <div id="teams-admin-container">
                     <!-- Teams will be loaded here -->
