@@ -2,100 +2,62 @@
 (function() {
     'use strict';
     
-    // Загружаем страницу через AJAX
-    async function loadPage(url) {
-        try {
-            console.log('Loading page:', url);
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Failed to load page');
-            
-            const html = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            
-            // Обновляем только основной контент
-            const mainContent = doc.querySelector('main');
-            if (mainContent) {
-                document.querySelector('main').innerHTML = mainContent.innerHTML;
-                console.log('Main content updated');
-            }
-            
-            // Обновляем title
-            document.title = doc.title;
-            
-            // Обновляем активную кнопку в навигации
-            updateNavigation(url);
-            
-            // Запускаем инициализацию страницы
-            initializePage(url);
-            
-        } catch (error) {
-            console.error('Error loading page:', error);
-            // Если AJAX не работает, перезагружаем страницу
-            window.location.href = url;
-        }
-    }
-    
-    // Обновляем навигацию
-    function updateNavigation(url) {
-        document.querySelectorAll('nav a').forEach(link => {
-            link.classList.remove('active');
-            const linkPage = link.dataset.page || link.getAttribute('href');
-            if (linkPage === url || 
-                (url.includes('index.html') && linkPage && (linkPage.includes('index.html') || linkPage === '#'))) {
-                link.classList.add('active');
-            }
-        });
-    }
-    
-    // Инициализация страницы
-    function initializePage(url) {
+    // Инициализация страницы при навигации
+    async function initializePage(url) {
         console.log('Initializing page:', url);
         
-        // НЕ показываем загрузчик
-        
-        // Запускаем скрипты в зависимости от страницы сразу
-        setTimeout(() => {
-            if (url.includes('index.html') || url === '' || !url || url.includes('/index')) {
-                // Турниры
-                console.log('Initializing tournaments page');
-                if (typeof window.initializeMainPage === 'function') {
-                    window.initializeMainPage();
-                }
-            } else if (url.includes('teams.html') || url.includes('teams')) {
-                // Команды
-                console.log('Initializing teams page');
-                if (typeof window.initializeTeamsPage === 'function') {
-                    window.initializeTeamsPage();
-                }
-            } else if (url.includes('archive.html') || url.includes('archive')) {
-                // Архив
-                console.log('Initializing archive page');
-                if (typeof window.initializeArchivePage === 'function') {
-                    window.initializeArchivePage();
-                }
+        // Запускаем скрипты в зависимости от страницы
+        if (url.includes('index.html') || url === '' || !url || url.includes('/index')) {
+            // Турниры
+            if (typeof window.initializeMainPage === 'function') {
+                window.initializeMainPage();
             }
-        }, 100);
+        } else if (url.includes('teams.html') || url.includes('teams')) {
+            // Команды
+            if (typeof window.initializeTeamsPage === 'function') {
+                window.initializeTeamsPage();
+            }
+        } else if (url.includes('archive.html') || url.includes('archive')) {
+            // Архив
+            if (typeof window.initializeArchivePage === 'function') {
+                window.initializeArchivePage();
+            }
+        }
         
         // Scroll to top
         window.scrollTo(0, 0);
     }
     
-    // Event listeners для навигации
+    // Event listeners для навигации - просто переключаем URL
     document.addEventListener('click', function(e) {
         const link = e.target.closest('nav a');
         if (link && link.dataset.page) {
             e.preventDefault();
             const url = link.dataset.page;
             
-            console.log('Navigation clicked:', url);
+            // Обновляем URL через History API
+            window.history.pushState({}, '', url);
             
-            // НЕ показываем загрузчик - как на Orchid
-            loadPage(url);
+            // Обновляем активную кнопку
+            document.querySelectorAll('nav a').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            
+            // Запускаем инициализацию
+            initializePage(url);
         }
     });
     
-    // Не инициализируем при загрузке - пусть обычные скрипты работают
+    // Обработка browser back/forward buttons
+    window.addEventListener('popstate', function(e) {
+        const url = window.location.pathname;
+        document.querySelectorAll('nav a').forEach(link => {
+            link.classList.remove('active');
+            if (link.dataset.page === url) {
+                link.classList.add('active');
+            }
+        });
+        initializePage(url);
+    });
     
     console.log('✅ SPA Navigation loaded');
 })();
