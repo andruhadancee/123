@@ -47,16 +47,7 @@ async function loadPastTournaments() {
     clearArchiveCache();
     allPastTournaments = await API.tournaments.getAll('finished');
     
-    // Отладка - посмотрим, что приходит из API
-    console.log('📦 Все прошедшие турниры загружены:', allPastTournaments.length);
-    allPastTournaments.forEach((t, idx) => {
-        console.log(`🔍 Турнир ${idx + 1}:`, {
-            title: t.title,
-            watch_url: t.watch_url,
-            watchUrl: t.watchUrl,
-            all_fields: Object.keys(t)
-        });
-    });
+    // Турниры загружены
     
     displayFilteredTournaments();
 }
@@ -120,18 +111,17 @@ window.filterArchiveByDiscipline = filterArchiveByDiscipline;
 
 function createPastTournamentCard(tournament) {
     // Проверяем оба варианта названия поля (watch_url и watchUrl)
-    const watchUrl = tournament.watch_url || tournament.watchUrl || null;
+    let watchUrl = tournament.watch_url || tournament.watchUrl || null;
     
-    // Отладка
-    console.log('🎯 Создание карточки турнира:', tournament.title, {
-        watch_url: tournament.watch_url,
-        watchUrl: tournament.watchUrl,
-        final_watchUrl: watchUrl,
-        all_keys: Object.keys(tournament)
-    });
+    // Преобразуем пустую строку в null
+    if (watchUrl === '' || (typeof watchUrl === 'string' && watchUrl.trim() === '')) {
+        watchUrl = null;
+    }
     
-    // Проверяем также пустую строку
-    const hasWatchUrl = watchUrl && watchUrl.trim() !== '';
+    // Отладка убрана - кнопка работает
+    
+    // Проверяем наличие валидной ссылки
+    const hasWatchUrl = watchUrl && typeof watchUrl === 'string' && watchUrl.trim() !== '';
     
     return `
         <div class="tournament-card">
@@ -164,11 +154,15 @@ function createPastTournamentCard(tournament) {
                 ` : ''}
             </div>
             
-            ${hasWatchUrl ? `
-            <a href="${watchUrl.trim()}" target="_blank" class="btn-submit" style="margin-top: 16px; text-align: center; display: block; text-decoration: none;">
-                Смотреть
-            </a>
-            ` : ''}
+            <div class="tournament-watch-button-container" style="margin-top: 16px; min-height: 42px; display: flex; align-items: center; justify-content: center;">
+                ${hasWatchUrl ? `
+                <a href="${watchUrl.trim()}" target="_blank" class="btn-submit" style="text-align: center; display: block; text-decoration: none; width: 100%;">
+                    Смотреть
+                </a>
+                ` : `
+                <span style="display: none;"></span>
+                `}
+            </div>
         </div>
     `;
 }

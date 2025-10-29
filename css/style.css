@@ -702,25 +702,37 @@ main {
     justify-content: center;
 }
 
-.loader-dot {
-    width: 16px;
-    height: 16px;
-    background: var(--gradient-button);
-    border-radius: 50%;
-    animation: bounce 0.8s ease-in-out infinite;
-    box-shadow: 0 0 20px rgba(139, 90, 191, 0.5);
+.loader-gamepad {
+    font-size: 24px;
+    display: inline-block;
+    animation: rotateGamepad 1s linear infinite;
+    filter: drop-shadow(0 0 8px rgba(139, 90, 191, 0.6));
 }
 
-.loader-dot:nth-child(1) {
+.loader-gamepad:nth-child(1) {
     animation-delay: 0s;
 }
 
-.loader-dot:nth-child(2) {
-    animation-delay: 0.15s;
+.loader-gamepad:nth-child(2) {
+    animation-delay: 0.2s;
 }
 
-.loader-dot:nth-child(3) {
-    animation-delay: 0.3s;
+.loader-gamepad:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes rotateGamepad {
+    0% {
+        transform: rotate(0deg);
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(360deg);
+        opacity: 0.6;
+    }
 }
 
 .loader-text {
