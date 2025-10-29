@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Simplify SPA: use History API, no AJAX"
+git commit -m "Remove broken SPA navigation - revert to normal navigation"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
