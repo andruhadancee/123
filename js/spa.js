@@ -62,32 +62,39 @@
         
         // Запускаем скрипты в зависимости от страницы
         if (url.includes('index.html') || url === '' || !url || url.includes('/index')) {
-            // Турниры
+            // Турниры - используем функции из main-api.js
             console.log('Initializing tournaments page');
-            if (typeof window.loadTournaments === 'function') {
-                window.loadTournaments();
-            }
-            // Trigger the main-api.js load
-            if (typeof loadTournamentsData === 'function') {
-                loadTournamentsData();
-            }
+            // Инициализируем через небольшой таймаут, чтобы DOM успел обновиться
+            setTimeout(() => {
+                // Проверяем наличие кнопки фильтров
+                const filterContainer = document.getElementById('discipline-filters');
+                if (filterContainer) {
+                    loadDisciplineFilters();
+                }
+                
+                // Загружаем турниры
+                if (typeof loadTournamentsData === 'function') {
+                    loadTournamentsData();
+                }
+            }, 300);
         } else if (url.includes('teams.html') || url.includes('teams')) {
-            // Команды
+            // Команды - используем функции из teams-api.js
             console.log('Initializing teams page');
-            // Load teams API
-            if (typeof window.loadRegisteredTeams === 'function') {
-                window.loadRegisteredTeams();
-            }
+            setTimeout(() => {
+                // Загружаем команды
+                if (typeof loadRegisteredTeams === 'function') {
+                    loadRegisteredTeams();
+                }
+            }, 300);
         } else if (url.includes('archive.html') || url.includes('archive')) {
-            // Архив
+            // Архив - используем функции из archive-api.js
             console.log('Initializing archive page');
-            if (typeof window.loadArchive === 'function') {
-                window.loadArchive();
-            }
-            // Trigger the archive-api.js load
-            if (typeof loadArchiveTournaments === 'function') {
-                loadArchiveTournaments();
-            }
+            setTimeout(() => {
+                // Загружаем архив
+                if (typeof loadArchiveTournaments === 'function') {
+                    loadArchiveTournaments();
+                }
+            }, 300);
         }
         
         // Scroll to top
