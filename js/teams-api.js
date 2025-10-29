@@ -75,17 +75,23 @@ async function loadDisciplineFilters() {
     if (!filtersContainer) return;
     
     const disciplines = await API.disciplines.getAll();
-    const availableDisciplines = [...new Set(Object.values(allTeamsData).flat().map(t => t.discipline))];
+    // Получаем доступные дисциплины из команд
+    const availableDisciplines = [...new Set(Object.values(allTeamsData).flat().map(t => t.discipline).filter(d => d))];
+    
+    console.log('Available disciplines:', availableDisciplines);
     
     filtersContainer.innerHTML = `
         <button class="filter-btn active" data-discipline="all" onclick="filterTeamsByDiscipline('all')">
             Все
         </button>
-        ${availableDisciplines.map(d => `
+        ${availableDisciplines.map(d => {
+            const icon = window.getDisciplineIcon ? window.getDisciplineIcon(d) : '';
+            return `
             <button class="filter-btn" data-discipline="${d}" onclick="filterTeamsByDiscipline('${d}')">
-                ${getDisciplineIcon(d)} ${d}
+                ${icon} ${d}
             </button>
-        `).join('')}
+        `;
+        }).join('')}
     `;
 }
 
@@ -109,12 +115,14 @@ function createTournamentTeamsSection(tournament, teams) {
         ? teams.map(team => createTeamCard(team, tournament)).join('')
         : '<div class="empty-state"><p>Команды еще не зарегистрировались</p></div>';
     
+    const disciplineIcon = window.getDisciplineIcon ? window.getDisciplineIcon(tournament.discipline) : '';
+    
     return `
         <div class="tournament-section">
             <h2>
                 <span class="tournament-discipline-line">
-                    <span class="tournament-header-icon">${getDisciplineIcon(tournament.discipline)}</span>
-                    <span class="tournament-header-discipline">${tournament.discipline}</span>
+                    <span class="tournament-header-icon">${disciplineIcon}</span>
+                    <span class="tournament-header-discipline">${tournament.discipline || tournament.title}</span>
                 </span>
                 <span class="tournament-title-line">${tournament.title}</span>
             </h2>

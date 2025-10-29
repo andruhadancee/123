@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Remove purple line under filters and brighten animations"
+git commit -m "Fix discipline icons displaying as undefined on teams page"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
