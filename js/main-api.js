@@ -3,14 +3,21 @@
 let allTournaments = [];
 let selectedDiscipline = 'all';
 
-document.addEventListener('DOMContentLoaded', async function() {
+// Функция инициализации страницы
+async function initializeMainPage() {
     console.log('🚀 Инициализация главной страницы...');
     await loadActiveTournaments();
     await loadSocialLinks();
     await loadDisciplineFilters();
     hideLoader();
     console.log('✅ Главная страница загружена');
-});
+}
+
+// Запускаем при загрузке страницы
+document.addEventListener('DOMContentLoaded', initializeMainPage);
+
+// Экспортируем для SPA
+window.initializeMainPage = initializeMainPage;
 
 function hideLoader() {
     const loader = document.getElementById('loader');

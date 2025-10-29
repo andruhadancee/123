@@ -62,37 +62,27 @@
         
         // Запускаем скрипты в зависимости от страницы
         if (url.includes('index.html') || url === '' || !url || url.includes('/index')) {
-            // Турниры - используем функции из main-api.js
+            // Турниры
             console.log('Initializing tournaments page');
-            // Инициализируем через небольшой таймаут, чтобы DOM успел обновиться
             setTimeout(() => {
-                // Проверяем наличие кнопки фильтров
-                const filterContainer = document.getElementById('discipline-filters');
-                if (filterContainer) {
-                    loadDisciplineFilters();
-                }
-                
-                // Загружаем турниры
-                if (typeof loadTournamentsData === 'function') {
-                    loadTournamentsData();
+                if (typeof window.initializeMainPage === 'function') {
+                    window.initializeMainPage();
                 }
             }, 300);
         } else if (url.includes('teams.html') || url.includes('teams')) {
-            // Команды - используем функции из teams-api.js
+            // Команды
             console.log('Initializing teams page');
             setTimeout(() => {
-                // Загружаем команды
-                if (typeof loadRegisteredTeams === 'function') {
-                    loadRegisteredTeams();
+                if (typeof window.initializeTeamsPage === 'function') {
+                    window.initializeTeamsPage();
                 }
             }, 300);
         } else if (url.includes('archive.html') || url.includes('archive')) {
-            // Архив - используем функции из archive-api.js
+            // Архив
             console.log('Initializing archive page');
             setTimeout(() => {
-                // Загружаем архив
-                if (typeof loadArchiveTournaments === 'function') {
-                    loadArchiveTournaments();
+                if (typeof window.initializeArchivePage === 'function') {
+                    window.initializeArchivePage();
                 }
             }, 300);
         }

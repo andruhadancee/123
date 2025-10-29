@@ -3,7 +3,8 @@
 let allTeamsData = {};
 let selectedDisciplineTeams = 'all';
 
-document.addEventListener('DOMContentLoaded', async function() {
+// Функция инициализации страницы
+async function initializeTeamsPage() {
     console.log('🚀 Инициализация страницы команд...');
     
     // Сначала загружаем турниры
@@ -43,7 +44,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Скрываем загрузчик
     hideLoader();
     console.log('✅ Страница команд загружена');
-});
+}
+
+// Запускаем при загрузке страницы
+document.addEventListener('DOMContentLoaded', initializeTeamsPage);
+
+// Экспортируем для SPA
+window.initializeTeamsPage = initializeTeamsPage;
 
 function hideLoader() {
     const loader = document.getElementById('loader');

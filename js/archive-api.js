@@ -1,12 +1,19 @@
 // Страница прошедших турниров (с API)
 
-document.addEventListener('DOMContentLoaded', async function() {
+// Функция инициализации страницы
+async function initializeArchivePage() {
     console.log('🚀 Инициализация страницы архива...');
     await loadPastTournaments();
     await loadSocialLinks();
     hideLoader();
     console.log('✅ Страница архива загружена');
-});
+}
+
+// Запускаем при загрузке страницы
+document.addEventListener('DOMContentLoaded', initializeArchivePage);
+
+// Экспортируем для SPA
+window.initializeArchivePage = initializeArchivePage;
 
 function hideLoader() {
     const loader = document.getElementById('loader');
