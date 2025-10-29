@@ -1209,19 +1209,43 @@ main {
 
 .tournament-card {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    animation: cardFadeIn 0.5s ease-out;
+    animation: cardFadeIn 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.tournament-card.show {
+    opacity: 1;
 }
 
 @keyframes cardFadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(20px) rotateX(10deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0deg);
+    }
+}
+
+/* Плавное появление карточек при скролле */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
+
+.tournament-card:nth-child(1) { animation-delay: 0.1s; }
+.tournament-card:nth-child(2) { animation-delay: 0.2s; }
+.tournament-card:nth-child(3) { animation-delay: 0.3s; }
+.tournament-card:nth-child(4) { animation-delay: 0.4s; }
+.tournament-card:nth-child(5) { animation-delay: 0.5s; }
+.tournament-card:nth-child(6) { animation-delay: 0.6s; }
 
 .tournament-card {
     position: relative;
@@ -1244,13 +1268,40 @@ main {
 }
 
 .tournament-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
+    transform: translateY(-6px) scale(1.02) perspective(1000px) rotateY(2deg);
+    box-shadow: 0 16px 40px rgba(139, 90, 191, 0.4);
+}
+
+/* Добавляем свечение при наведении */
+.tournament-card {
+    position: relative;
+}
+
+.tournament-card::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, rgba(139, 90, 191, 0.3), rgba(107, 45, 143, 0.3));
+    border-radius: 18px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.tournament-card:hover::after {
+    opacity: 1;
+    box-shadow: 0 0 30px rgba(139, 90, 191, 0.5);
 }
 
 .btn-submit {
     position: relative;
     overflow: hidden;
+    background-size: 200% auto;
+    transition: all 0.3s ease;
 }
 
 .btn-submit::before {
@@ -1266,6 +1317,28 @@ main {
 
 .btn-submit:hover::before {
     left: 100%;
+}
+
+.btn-submit:hover {
+    background-position: right center;
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Анимированный градиент для кнопки */
+.btn-submit {
+    background: linear-gradient(135deg, #8b5abf 0%, #9d6fd4 50%, #b17ee0 100%);
+    background-size: 200% auto;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
 }
 
 /* ===== FILTER BUTTON ANIMATIONS ===== */
@@ -1291,6 +1364,19 @@ main {
 .filter-btn:active::before {
     width: 300px;
     height: 300px;
+}
+
+.filter-btn.active {
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(139, 90, 191, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(139, 90, 191, 0.6), 0 0 30px rgba(139, 90, 191, 0.3);
+    }
 }
 
 

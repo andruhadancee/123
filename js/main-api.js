@@ -61,6 +61,12 @@ function displayFilteredTournaments() {
         grid.innerHTML = filtered.map(tournament => createTournamentCard(tournament, links)).join('');
         // Переинициализируем таймеры после отрисовки
         setTimeout(initTimers, 100);
+        // Переинициализируем анимации
+        setTimeout(() => {
+            if (window.initScrollAnimations) {
+                initScrollAnimations();
+            }
+        }, 150);
     });
 }
 
