@@ -1346,23 +1346,17 @@ main {
 /* ===== TOURNAMENT CARD ANIMATIONS ===== */
 
 .tournament-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    animation: cardFadeIn 0.6s ease-out forwards;
-    opacity: 0;
-}
-
-.tournament-card.show {
-    opacity: 1;
+    animation: cardFadeIn 0.5s ease-out forwards;
 }
 
 @keyframes cardFadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px) rotateX(10deg);
+        transform: translateY(15px);
     }
     to {
         opacity: 1;
-        transform: translateY(0) rotateX(0deg);
+        transform: translateY(0);
     }
 }
 
@@ -1397,8 +1391,8 @@ main {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(139, 90, 191, 0.1), transparent);
-    transition: left 0.5s;
+    background: linear-gradient(90deg, transparent, rgba(139, 90, 191, 0.08), transparent);
+    transition: left 0.6s;
 }
 
 .tournament-card:hover::before {
@@ -1406,8 +1400,8 @@ main {
 }
 
 .tournament-card:hover {
-    transform: translateY(-4px) scale(1.01);
-    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.25);
 }
 
 /* Убираем яркое свечение */

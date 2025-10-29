@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Remove broken SPA navigation - revert to normal navigation"
+git commit -m "Fix tournament card animation - smoother and cleaner"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
