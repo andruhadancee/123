@@ -1392,13 +1392,13 @@ main {
 /* ===== TOURNAMENT CARD ANIMATIONS ===== */
 
 .tournament-card {
-    animation: cardFadeIn 0.6s ease-out forwards;
+    animation: cardFadeIn 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
 }
 
 @keyframes cardFadeIn {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(50px);
     }
     to {
         opacity: 1;
