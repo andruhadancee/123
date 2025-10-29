@@ -44,7 +44,7 @@ body {
     min-height: 100vh;
 }
 
-/* ===== КРАСИВЫЙ ФОН С ВОЛНАМИ ===== */
+/* ===== КРАСИВЫЙ ФОН С ВОЛНАМИ И ЭФФЕКТАМИ ===== */
 .animated-bg {
     position: fixed;
     top: 0;
@@ -52,6 +52,37 @@ body {
     width: 100%;
     height: 100%;
     z-index: -2;
+    overflow: hidden;
+}
+
+/* Градиентный дрейф */
+.animated-bg::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(139, 90, 191, 0.15) 0%, rgba(107, 45, 143, 0.1) 50%, transparent 100%);
+    animation: gradientFloat 20s ease-in-out infinite alternate;
+}
+
+@keyframes gradientFloat {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        transform: translate(-10%, 10%) scale(1.1);
+    }
+    50% {
+        transform: translate(-20%, -10%) scale(0.9);
+    }
+    75% {
+        transform: translate(10%, 20%) scale(1.05);
+    }
+    100% {
+        transform: translate(20%, -5%) scale(1);
+    }
 }
 
 #particles-canvas {
@@ -77,9 +108,35 @@ body {
     background-repeat: no-repeat;
 }
 
-/* Волновой эффект - ТЕМНЫЙ ФИОЛЕТОВЫЙ только снизу */
-.animated-bg::before {
+/* Сетка нейро-силуэты */
+.animated-bg::after {
     content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(139, 90, 191, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(139, 90, 191, 0.03) 1px, transparent 1px);
+    background-size: 100px 100px;
+    animation: gridPulse 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes gridPulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.05);
+    }
+}
+
+/* Волны внизу */
+.animated-bg-wave {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -93,11 +150,11 @@ body {
         rgba(126, 34, 206, 0.6) 100%
     );
     animation: waveMove 8s ease-in-out infinite;
+    pointer-events: none;
 }
 
 /* Второй слой волн для глубины */
-.animated-bg::after {
-    content: '';
+.animated-bg-wave-2 {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -111,6 +168,30 @@ body {
     );
     animation: waveMove 10s ease-in-out infinite reverse;
     opacity: 0.8;
+    pointer-events: none;
+}
+
+/* Световые лучи */
+.light-rays {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(30deg, transparent 40%, rgba(139, 90, 191, 0.1) 50%, transparent 60%),
+        linear-gradient(150deg, transparent 40%, rgba(107, 45, 143, 0.08) 50%, transparent 60%);
+    animation: lightRay 25s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes lightRay {
+    0% {
+        transform: translateX(-100%) translateY(0);
+    }
+    100% {
+        transform: translateX(100%) translateY(0);
+    }
 }
 
 @keyframes waveMove {

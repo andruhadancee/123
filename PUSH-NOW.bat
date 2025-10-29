@@ -3,7 +3,7 @@ chcp 65001 >nul
 cd /d "%~dp0"
 
 git add .
-git commit -m "Reduce card hover effects intensity - less eye strain"
+git commit -m "Add stunning background effects: gradient float, grid pattern, light rays, waves"
 git push
 
 echo ГОТОВО! Теперь иди в Vercel Settings и поставь:
