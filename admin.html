@@ -50,13 +50,6 @@
     <main class="container">
         <div class="admin-header">
             <h1 class="page-title">Админ-панель</h1>
-            <button class="btn-primary" id="add-tournament-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                Добавить турнир
-            </button>
         </div>
 
         <!-- Tabs -->
@@ -72,6 +65,15 @@
 
         <!-- Active Tournaments Tab -->
         <div class="tab-content active" id="active-tab">
+            <div style="margin-bottom: 20px;">
+                <button class="btn-primary" id="add-tournament-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Добавить турнир
+                </button>
+            </div>
             <div class="tournaments-admin-grid" id="active-tournaments-grid">
                 <!-- Active tournaments will be loaded here -->
             </div>

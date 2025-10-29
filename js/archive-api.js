@@ -3,6 +3,21 @@
 let allPastTournaments = [];
 let selectedDiscipline = 'all';
 
+// Функция очистки кеша (берем из API client)
+function clearArchiveCache() {
+    try {
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.startsWith('cache_tournaments')) {
+                localStorage.removeItem(key);
+            }
+        });
+        console.log('🗑️ Кеш архива очищен');
+    } catch (error) {
+        console.warn('Не удалось очистить кеш:', error);
+    }
+}
+
 // Функция инициализации страницы
 async function initializeArchivePage() {
     console.log('🚀 Инициализация страницы архива...');
@@ -28,7 +43,21 @@ function hideLoader() {
 }
 
 async function loadPastTournaments() {
+    // Очищаем кеш для получения свежих данных
+    clearArchiveCache();
     allPastTournaments = await API.tournaments.getAll('finished');
+    
+    // Отладка - посмотрим, что приходит из API
+    console.log('📦 Все прошедшие турниры загружены:', allPastTournaments.length);
+    allPastTournaments.forEach((t, idx) => {
+        console.log(`🔍 Турнир ${idx + 1}:`, {
+            title: t.title,
+            watch_url: t.watch_url,
+            watchUrl: t.watchUrl,
+            all_fields: Object.keys(t)
+        });
+    });
+    
     displayFilteredTournaments();
 }
 
@@ -90,6 +119,20 @@ function filterArchiveByDiscipline(discipline) {
 window.filterArchiveByDiscipline = filterArchiveByDiscipline;
 
 function createPastTournamentCard(tournament) {
+    // Проверяем оба варианта названия поля (watch_url и watchUrl)
+    const watchUrl = tournament.watch_url || tournament.watchUrl || null;
+    
+    // Отладка
+    console.log('🎯 Создание карточки турнира:', tournament.title, {
+        watch_url: tournament.watch_url,
+        watchUrl: tournament.watchUrl,
+        final_watchUrl: watchUrl,
+        all_keys: Object.keys(tournament)
+    });
+    
+    // Проверяем также пустую строку
+    const hasWatchUrl = watchUrl && watchUrl.trim() !== '';
+    
     return `
         <div class="tournament-card">
             <div class="tournament-card-header">
@@ -121,8 +164,8 @@ function createPastTournamentCard(tournament) {
                 ` : ''}
             </div>
             
-            ${tournament.watch_url ? `
-            <a href="${tournament.watch_url}" target="_blank" class="btn-submit" style="margin-top: 16px; text-align: center; display: block; text-decoration: none;">
+            ${hasWatchUrl ? `
+            <a href="${watchUrl.trim()}" target="_blank" class="btn-submit" style="margin-top: 16px; text-align: center; display: block; text-decoration: none;">
                 Смотреть
             </a>
             ` : ''}

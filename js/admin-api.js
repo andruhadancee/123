@@ -338,6 +338,7 @@ function openEditModal(tournament) {
     document.getElementById('tournament-custom-link').value = tournament.custom_link || '';
     document.getElementById('tournament-status').value = 'active';
     document.getElementById('winner-field').style.display = 'none';
+    document.getElementById('watch-url-field').style.display = 'none';
     
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
@@ -360,6 +361,7 @@ async function handleFormSubmit(e) {
         maxTeams: parseInt(document.getElementById('tournament-max-teams').value),
         customLink: document.getElementById('tournament-custom-link').value || null,
         winner: document.getElementById('tournament-winner').value || null,
+        watchUrl: document.getElementById('tournament-watch-url').value || null,
         status: status
     };
     

@@ -32,7 +32,11 @@ class LoaderParticleSystem {
             const img = new Image();
             img.onload = () => {
                 this.imagesLoaded++;
-                if (this.imagesLoaded === this.totalImages && this.particles.length === 0) {
+                // Если частицы уже созданы, привязываем изображения
+                if (this.particles.length > 0 && this.imagesLoaded === this.totalImages) {
+                    this.assignImagesToParticles();
+                } else if (this.imagesLoaded === this.totalImages && this.particles.length === 0) {
+                    // Если частицы ещё не созданы, создаём их
                     this.init();
                 }
             };
@@ -42,48 +46,51 @@ class LoaderParticleSystem {
     }
     
     init() {
-        // Создаём частицы только после загрузки всех изображений
-        if (this.imagesLoaded < this.totalImages) {
-            return;
-        }
-        
+        // Создаём частицы сразу, даже без изображений
         const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 15000);
         
         for (let i = 0; i < particleCount; i++) {
-            const imgIndex = Math.floor(Math.random() * this.images.length);
-            const img = this.images[imgIndex];
-            
             // Размер чуть больше для лучшей видимости (7-15px)
             const size = Math.random() * 8 + 7;
             
             this.particles.push({
-                img: img,
+                img: null, // Будет установлено после загрузки
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
                 vx: (Math.random() - 0.5) * 0.5,
                 vy: (Math.random() - 0.5) * 0.5,
                 size: size,
-                opacity: Math.random() * 0.3 + 0.4, // Прозрачность как у точек
+                opacity: Math.random() * 0.3 + 0.4,
                 rotation: Math.random() * Math.PI * 2,
                 rotationSpeed: (Math.random() - 0.5) * 0.01
             });
         }
+        
+        // После загрузки всех изображений привязываем их к частицам
+        if (this.imagesLoaded === this.totalImages) {
+            this.assignImagesToParticles();
+        }
+    }
+    
+    assignImagesToParticles() {
+        // Привязываем изображения к частицам после загрузки
+        this.particles.forEach(p => {
+            if (!p.img) {
+                const imgIndex = Math.floor(Math.random() * this.images.length);
+                p.img = this.images[imgIndex];
+            }
+        });
     }
     
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Ждём загрузки изображений
-        if (this.imagesLoaded < this.totalImages) {
-            return;
-        }
-        
-        // Если частицы ещё не созданы, создаём их
+        // Если частицы ещё не созданы, создаём их сразу
         if (this.particles.length === 0) {
             this.init();
         }
         
-        // Рисуем маленькие изображения вместо точек
+        // Рисуем частицы (с изображениями или временно как точки)
         this.particles.forEach(p => {
             // Обновляем позицию (такая же логика как у точек)
             p.x += p.vx;
@@ -112,12 +119,25 @@ class LoaderParticleSystem {
             // Устанавливаем прозрачность
             this.ctx.globalAlpha = p.opacity;
             
-            // Рисуем маленькое изображение вместо точки
-            this.ctx.drawImage(p.img, -p.size / 2, -p.size / 2, p.size, p.size);
+            // Если изображение загружено, рисуем его, иначе временно рисуем точку
+            if (p.img && p.img.complete) {
+                this.ctx.drawImage(p.img, -p.size / 2, -p.size / 2, p.size, p.size);
+            } else {
+                // Временно рисуем точку до загрузки изображения
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                this.ctx.fillStyle = `rgba(139, 90, 191, ${p.opacity})`;
+                this.ctx.fill();
+            }
             
             // Восстанавливаем состояние
             this.ctx.restore();
         });
+        
+        // Если изображения загрузились, привязываем их
+        if (this.imagesLoaded === this.totalImages) {
+            this.assignImagesToParticles();
+        }
         
         // Рисуем линии между близкими частицами (как было)
         for (let i = 0; i < this.particles.length; i++) {
