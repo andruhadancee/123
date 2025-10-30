@@ -18,6 +18,10 @@
       "destination": "/archive.html"
     },
     {
+      "source": "/calendar",
+      "destination": "/calendar.html"
+    },
+    {
       "source": "/regulations",
       "destination": "/regulations.html"
     }

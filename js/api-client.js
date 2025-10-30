@@ -57,6 +57,44 @@ function clearCache(pattern) {
 }
 
 const API = {
+    // Календарь
+    calendar: {
+        async getAll(month = null) {
+            try {
+                let url = `${API_BASE_URL}/api/calendar`;
+                if (month) url += `?month=${encodeURIComponent(month)}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Ошибка загрузки календаря');
+                return await response.json();
+            } catch (error) {
+                console.error('❌ Ошибка получения календаря:', error);
+                return [];
+            }
+        },
+        async create(eventData) {
+            const resp = await fetch(`${API_BASE_URL}/api/calendar`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(eventData)
+            });
+            if (!resp.ok) throw new Error('Ошибка создания события');
+            return await resp.json();
+        },
+        async update(eventData) {
+            const resp = await fetch(`${API_BASE_URL}/api/calendar`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(eventData)
+            });
+            if (!resp.ok) throw new Error('Ошибка обновления события');
+            return await resp.json();
+        },
+        async delete(id) {
+            const resp = await fetch(`${API_BASE_URL}/api/calendar?id=${id}`, { method: 'DELETE' });
+            if (!resp.ok) throw new Error('Ошибка удаления события');
+            return await resp.json();
+        }
+    },
     // Турниры
     tournaments: {
         // Получить все турниры (можно фильтровать по статусу)

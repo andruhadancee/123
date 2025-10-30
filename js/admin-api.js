@@ -131,6 +131,135 @@ async function loadAdminData() {
     console.log('✅ Админка загружена');
 }
 
+// ===== КАЛЕНДАРЬ (АДМИН) =====
+async function loadCalendarAdmin() {
+    const container = document.getElementById('calendar-admin-list');
+    if (!container) return;
+    const now = new Date();
+    const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    const events = await API.calendar.getAll(month);
+    if (!events || events.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>Событий нет</p></div>';
+        return;
+    }
+    container.innerHTML = events.map(e => `
+        <div class="tournament-card" style="margin-bottom:12px;">
+            <div class="tournament-card-header">
+                <h2>${e.title}</h2>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-edit" onclick="editCalendarEvent(${e.id})">Изменить</button>
+                    <button class="btn-danger" onclick="deleteCalendarEvent(${e.id})">Удалить</button>
+                </div>
+            </div>
+            <div class="info-value" style="margin-bottom:6px;">${e.description || ''}</div>
+            <div class="info-label">Дата: ${e.event_date}</div>
+            ${e.image_url ? `<img src="${e.image_url}" style="max-width:100%; border-radius:8px; margin-top:8px;">` : ''}
+        </div>
+    `).join('');
+}
+
+async function deleteCalendarEvent(id) {
+    if (!confirm('Удалить событие?')) return;
+    await API.calendar.delete(id);
+    await loadCalendarAdmin();
+}
+
+let editingCalendarId = null;
+
+function openCalendarModal(event) {
+    const modal = document.getElementById('calendar-event-modal');
+    const titleEl = document.getElementById('calendar-event-title');
+    const idEl = document.getElementById('calendar-event-id');
+    const t = document.getElementById('calendar-title');
+    const d = document.getElementById('calendar-date');
+    const desc = document.getElementById('calendar-description');
+    const img = document.getElementById('calendar-image');
+
+    if (event) {
+        editingCalendarId = event.id;
+        titleEl.textContent = 'Изменить событие';
+        idEl.value = event.id;
+        t.value = event.title || '';
+        d.value = (event.event_date || '').slice(0,10);
+        desc.value = event.description || '';
+        img.value = event.image_url || '';
+    } else {
+        editingCalendarId = null;
+        titleEl.textContent = 'Добавить событие';
+        idEl.value = '';
+        t.value = '';
+        d.value = '';
+        desc.value = '';
+        img.value = '';
+    }
+    modal.classList.add('active');
+}
+
+function closeCalendarModal(){
+    document.getElementById('calendar-event-modal').classList.remove('active');
+}
+
+async function editCalendarEvent(id) {
+    // Получаем событие из списка на странице
+    const container = document.getElementById('calendar-admin-list');
+    if (!container) return;
+    const month = new Date();
+    const key = `${month.getFullYear()}-${String(month.getMonth()+1).padStart(2,'0')}`;
+    const events = await API.calendar.getAll(key);
+    const e = events.find(x => x.id === id);
+    if (!e) return;
+    openCalendarModal(e);
+}
+
+async function createCalendarEvent() {
+    openCalendarModal(null);
+}
+
+window.editCalendarEvent = editCalendarEvent;
+window.deleteCalendarEvent = deleteCalendarEvent;
+window.createCalendarEvent = createCalendarEvent;
+
+// Подключаем кнопку добавления в админке
+document.addEventListener('click', (e) => {
+    if (e.target && e.target.id === 'add-calendar-event-btn') {
+        createCalendarEvent();
+    }
+});
+
+// Подгружаем календарь при переключении вкладки
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.tab-btn');
+    if (btn && btn.dataset.tab === 'calendar') {
+        setTimeout(loadCalendarAdmin, 0);
+    }
+});
+
+// Обработка формы модалки календаря
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('calendar-event-form');
+    const cancelBtn = document.getElementById('cancel-calendar-event');
+    const closeBtn = document.getElementById('close-calendar-event-modal');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('calendar-title').value.trim();
+            const eventDate = document.getElementById('calendar-date').value;
+            const description = document.getElementById('calendar-description').value.trim();
+            const imageUrl = document.getElementById('calendar-image').value.trim();
+            if (!title || !eventDate) return;
+            if (editingCalendarId) {
+                await API.calendar.update({ id: editingCalendarId, title, description, eventDate, imageUrl });
+            } else {
+                await API.calendar.create({ title, description, eventDate, imageUrl });
+            }
+            closeCalendarModal();
+            await loadCalendarAdmin();
+        });
+    }
+    if (cancelBtn) cancelBtn.addEventListener('click', closeCalendarModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeCalendarModal);
+});
+
 async function loadActiveTournaments() {
     allActiveTournaments = await API.tournaments.getAll('active');
     await loadActiveDisciplineFilters();

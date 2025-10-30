@@ -98,6 +98,15 @@ body {
     pointer-events: none;
 }
 
+/* ===== КАЛЕНДАРЬ ===== */
+.calendar-day-active {
+    box-shadow: 0 0 0 2px rgba(139, 90, 191, 0.5) inset, 0 8px 24px rgba(139, 90, 191, 0.25);
+    transition: box-shadow .2s ease;
+}
+.calendar-day-active:hover {
+    box-shadow: 0 0 0 2px rgba(139, 90, 191, 0.8) inset, 0 12px 32px rgba(139, 90, 191, 0.35);
+}
+
 .animated-bg-container {
     position: fixed;
     top: 0;
