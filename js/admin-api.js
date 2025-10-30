@@ -239,23 +239,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('calendar-event-form');
     const cancelBtn = document.getElementById('cancel-calendar-event');
     const closeBtn = document.getElementById('close-calendar-event-modal');
-    if (form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = document.getElementById('calendar-title').value.trim();
-            const eventDate = document.getElementById('calendar-date').value;
-            const description = document.getElementById('calendar-description').value.trim();
-            const imageUrl = document.getElementById('calendar-image').value.trim();
-            if (!title || !eventDate) return;
-            if (editingCalendarId) {
-                await API.calendar.update({ id: editingCalendarId, title, description, eventDate, imageUrl });
-            } else {
-                await API.calendar.create({ title, description, eventDate, imageUrl });
-            }
-            closeCalendarModal();
-            await loadCalendarAdmin();
-        });
+    async function handleCalendarFormSubmit(e){
+        e.preventDefault();
+        const title = document.getElementById('calendar-title').value.trim();
+        const eventDate = document.getElementById('calendar-date').value;
+        const description = document.getElementById('calendar-description').value.trim();
+        const imageUrl = document.getElementById('calendar-image').value.trim();
+        if (!title || !eventDate) return;
+        if (editingCalendarId) {
+            await API.calendar.update({ id: editingCalendarId, title, description, eventDate, imageUrl });
+        } else {
+            await API.calendar.create({ title, description, eventDate, imageUrl });
+        }
+        closeCalendarModal();
+        await loadCalendarAdmin();
     }
+    if (form) form.addEventListener('submit', handleCalendarFormSubmit);
+    // Подстраховка, если листенер не повесился: делегирование по id формы
+    document.addEventListener('submit', (e) => {
+        const formEl = e.target;
+        if (formEl && formEl.id === 'calendar-event-form') {
+            handleCalendarFormSubmit(e);
+        }
+    });
     if (cancelBtn) cancelBtn.addEventListener('click', closeCalendarModal);
     if (closeBtn) closeBtn.addEventListener('click', closeCalendarModal);
 });
