@@ -137,9 +137,11 @@ body {
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 140px); /* фиксированная ширина кубиков на десктопе */
+    /* Кубик автоматически подстраивается под ширину окна: 
+       берем минимальную из 140px и (100vw - отступы - промежутки)/7 */
+    grid-template-columns: repeat(7, minmax(110px, 1fr));
     gap: 12px;
-    width: max-content; /* ширина по содержимому */
+    width: min(calc(100vw - 80px), 980px); /* ограничиваем общую ширину и добавляем поля */
     margin: 0 auto; /* центрируем сетку */
 }
 
