@@ -1124,8 +1124,8 @@ main {
     /* Header */
     header {
         padding: 10px 0;
-        backdrop-filter: blur(20px);
-        background: rgba(10, 10, 20, 0.8);
+        backdrop-filter: none;
+        background: transparent;
     }
     
     .logo-image {
