@@ -15,7 +15,7 @@ class ParticleSystem {
     // Мобильные коэффициенты: на телефоне делаем плотность и скорость как на десктопе
     this.isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
     // Мобильный буст; на ПК оставляем исходные параметры
-    this.countBoost = this.isMobile ? 2.6 : 1;
+    this.countBoost = this.isMobile ? 2.2 : 1; // чуть меньше частиц на телефоне
     this.speedBoost = this.isMobile ? 4.2 : 1;
     this.loadImages();
     }
@@ -49,7 +49,7 @@ class ParticleSystem {
     
     init() {
         // Создаём частицы (на мобиле делаем плотнее)
-        const baseDiv = this.isMobile ? 13000 : 15000;
+        const baseDiv = this.isMobile ? 14000 : 15000; // немного реже на телефоне
         const particleCount = Math.floor((this.canvas.width * this.canvas.height) / baseDiv * this.countBoost);
         
         for (let i = 0; i < particleCount; i++) {

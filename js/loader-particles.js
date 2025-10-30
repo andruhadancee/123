@@ -14,7 +14,7 @@ class LoaderParticleSystem {
         window.addEventListener('resize', () => this.resize());
         // Мобильные коэффициенты
         this.isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-        this.countBoost = this.isMobile ? 2.6 : 1;
+        this.countBoost = this.isMobile ? 2.2 : 1; // чуть меньше частиц на телефоне
         this.speedBoost = this.isMobile ? 4.2 : 1;
         this.loadImages();
     }
@@ -51,7 +51,7 @@ class LoaderParticleSystem {
     
     init() {
         // Создаём частицы (на мобиле плотнее)
-        const baseDiv = this.isMobile ? 13000 : 15000;
+        const baseDiv = this.isMobile ? 14000 : 15000; // немного реже на телефоне
         const particleCount = Math.floor((this.canvas.width * this.canvas.height) / baseDiv * this.countBoost);
         
         for (let i = 0; i < particleCount; i++) {
