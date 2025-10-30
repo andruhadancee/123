@@ -30,6 +30,7 @@
         const year = current.getFullYear();
         title.textContent = current.toLocaleString('ru-RU', { month:'long', year:'numeric' });
 
+        grid.classList.add('calendar-grid');
         grid.innerHTML = '';
         const weekdays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
         weekdays.forEach(w => {
@@ -50,35 +51,38 @@
             grid.appendChild(empty);
         }
 
+        function fmtLocal(y,m,d){
+            return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        }
+
         for(let day=1; day<=daysInMonth; day++){
             const cell = document.createElement('div');
-            cell.style.padding = '12px';
-            cell.style.border = '1px solid rgba(139,90,191,0.2)';
-            cell.style.borderRadius = '10px';
-            cell.style.background = 'rgba(45,27,61,0.25)';
-            cell.style.cursor = 'pointer';
-            cell.style.transition = 'transform .2s';
-            cell.onmouseenter = ()=> cell.style.transform = 'translateY(-2px)';
-            cell.onmouseleave = ()=> cell.style.transform = 'none';
+            cell.className = 'calendar-cell';
 
             const date = new Date(year, month, day);
-            const dateStr = date.toISOString().slice(0,10);
+            const dateStr = fmtLocal(year, month, day); // локальная дата, без сдвига часового пояса
             const dayEvents = events.filter(e => (e.event_date || e.eventDate).slice(0,10) === dateStr);
 
             const head = document.createElement('div');
             head.textContent = String(day);
-            head.style.fontWeight = '700';
-            head.style.marginBottom = '6px';
+            head.className = 'calendar-day-number';
             cell.appendChild(head);
 
             if (dayEvents.length > 0){
-                const dot = document.createElement('div');
-                dot.textContent = `${dayEvents.length} событ.`;
-                dot.style.fontSize = '12px';
-                dot.style.color = 'var(--color-pink)';
-                dot.style.fontWeight = '700';
-                cell.appendChild(dot);
-                cell.classList.add('calendar-day-active');
+                const badge = document.createElement('div');
+                badge.className = 'calendar-badge';
+                badge.textContent = dayEvents.length;
+                cell.appendChild(badge);
+                cell.classList.add('calendar-has-events');
+
+                // превью
+                const pop = document.createElement('div');
+                pop.className = 'calendar-popover';
+                pop.innerHTML = `
+                    <div class="calendar-popover-title">События:</div>
+                    ${dayEvents.slice(0,3).map(e => `<div class="calendar-popover-item">• ${e.title}</div>`).join('')}
+                `;
+                cell.appendChild(pop);
             }
 
             cell.onclick = () => openDay(dayEvents, dateStr);
