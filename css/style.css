@@ -139,9 +139,9 @@ body {
     display: grid;
     /* Кубик автоматически подстраивается под ширину окна: 
        берем минимальную из 140px и (100vw - отступы - промежутки)/7 */
-    grid-template-columns: repeat(7, minmax(110px, 1fr));
+    grid-template-columns: repeat(7, minmax(90px, 1fr));
     gap: 12px;
-    width: min(calc(100vw - 80px), 980px); /* ограничиваем общую ширину и добавляем поля */
+    width: min(calc(100vw - 80px), 900px); /* ограничиваем общую ширину и добавляем поля */
     margin: 0 auto; /* центрируем сетку */
 }
 
