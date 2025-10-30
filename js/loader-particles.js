@@ -157,7 +157,7 @@ class LoaderParticleSystem {
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
                     const alpha = (this.isMobile ? 0.16 : 0.26) * (1 - distance / maxDist);
                     this.ctx.strokeStyle = `rgba(139, 90, 191, ${alpha})`;
-                    this.ctx.lineWidth = this.isMobile ? 0.8 : 1.1;
+                    this.ctx.lineWidth = this.isMobile ? 1.0 : 1.1; // моб: чуть толще
                     this.ctx.stroke();
                 }
             }
