@@ -149,6 +149,19 @@ body {
   .calendar-cell { min-height: 56px; padding: 10px; }
 }
 
+/* Мобильные улучшения календаря и модалки */
+@media (max-width: 600px) {
+  .calendar-grid { gap: 6px; }
+  .calendar-cell { min-height: 50px; padding: 8px; border-radius: 12px; }
+  .calendar-day-number { font-size: 14px; }
+  .calendar-badge { top: 6px; right: 6px; padding: 2px 6px; font-size: 11px; }
+  .calendar-popover { display: none; }
+
+  .modal { padding: 80px 12px 12px; }
+  .modal-content { max-width: 92vw; border-radius: 16px; }
+  .calendar-event-img { height: 180px; }
+}
+
 .calendar-popover {
     position: absolute;
     left: 12px;
@@ -1329,6 +1342,11 @@ main {
     max-height: calc(100vh - 160px); /* Учитываем верхний отступ */
     overflow-y: auto;
     animation: modalSlideIn 0.3s ease-out;
+}
+
+/* Блокируем прокрутку фона, когда открыта модалка */
+body.modal-open {
+    overflow: hidden;
 }
 
 @keyframes modalSlideIn {

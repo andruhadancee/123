@@ -109,10 +109,15 @@
                 </div>`;
         }
         modal.classList.add('active');
+        document.body.classList.add('modal-open');
     }
-
-    modalClose.addEventListener('click', ()=> modal.classList.remove('active'));
-    window.addEventListener('keydown', e=>{ if(e.key==='Escape') modal.classList.remove('active'); });
+    function closeModal(){
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+    modalClose.addEventListener('click', closeModal);
+    window.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+    modal.addEventListener('click', (e)=>{ if (e.target === modal) closeModal(); });
     prevBtn.addEventListener('click', ()=>{ current.setMonth(current.getMonth()-1); load(); });
     nextBtn.addEventListener('click', ()=>{ current.setMonth(current.getMonth()+1); load(); });
 
