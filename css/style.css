@@ -104,6 +104,8 @@ body {
     gap: 12px;
     align-items: center;
     margin-bottom: 16px;
+    padding: 8px 0 12px;
+    border-bottom: 1px solid rgba(139,90,191,.25);
 }
 
 .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
@@ -180,7 +182,7 @@ body {
 
 /* Календарь: модалка событий */
 .calendar-modal-title { font-size: 22px; font-weight: 800; }
-.calendar-events-wrap { max-height: 70vh; overflow-y: auto; padding-right: 4px; }
+.calendar-events-wrap { padding-right: 0; }
 .calendar-event-card {
     background: rgba(25,25,40,.85);
     border: 1px solid rgba(139,90,191,.35);

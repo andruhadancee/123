@@ -20,6 +20,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const savedTab = localStorage.getItem('adminActiveTab');
     if (savedTab) {
         switchTab(savedTab);
+        // Если сразу открыта вкладка календаря — принудительно подгружаем
+        if (savedTab === 'calendar') {
+            setTimeout(loadCalendarAdmin, 0);
+        }
     }
     
     hideLoader();
