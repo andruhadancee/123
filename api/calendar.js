@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
             let query = 'SELECT * FROM calendar_events';
             const params = [];
             if (month) {
-                query += ' WHERE to_char(event_date, "YYYY-MM") = $1';
+                query += " WHERE to_char(event_date, 'YYYY-MM') = $1";
                 params.push(month);
             }
             query += ' ORDER BY event_date ASC, created_at DESC';
