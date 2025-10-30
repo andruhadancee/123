@@ -47,7 +47,7 @@
 
         for(let i=0;i<startOffset;i++){
             const empty = document.createElement('div');
-            empty.style.opacity = '0.3';
+            empty.className = 'calendar-cell calendar-empty';
             grid.appendChild(empty);
         }
 
@@ -91,18 +91,22 @@
     }
 
     function openDay(dayEvents, dateStr){
+        eventTitle.className = 'calendar-modal-title';
         if (!dayEvents || dayEvents.length === 0){
             eventTitle.textContent = `Событий нет — ${dateStr}`;
             eventBody.innerHTML = '<p style="color:var(--color-text-secondary)">На этот день пока ничего не запланировано.</p>';
         } else {
             eventTitle.textContent = `События — ${dateStr}`;
-            eventBody.innerHTML = dayEvents.map(e => `
-                <div class="tournament-card" style="margin-bottom:12px;">
-                    <div class="tournament-card-header"><h2>${e.title}</h2></div>
-                    <div class="info-value" style="margin-bottom:6px;">${e.description || ''}</div>
-                    ${e.image_url ? `<img src="${e.image_url}" style="max-width:100%; border-radius:8px;">` : ''}
-                </div>
-            `).join('');
+            eventBody.innerHTML = `
+                <div class="calendar-events-wrap">
+                    ${dayEvents.map(e => `
+                        <div class="calendar-event-card">
+                            <h3>${e.title}</h3>
+                            <div class="calendar-event-desc">${e.description || ''}</div>
+                            ${e.image_url ? `<img class=\"calendar-event-img\" src=\"${e.image_url}\" alt=\"${e.title}\">` : ''}
+                        </div>
+                    `).join('')}
+                </div>`;
         }
         modal.classList.add('active');
     }

@@ -128,6 +128,8 @@ async function loadAdminData() {
     await loadRegistrationLinksForm();
     await loadSocialLinksForm();
     await loadRegulationsList();
+    // Загружаем календарь сразу (иначе после перезагрузки на вкладке календаря список пуст)
+    await loadCalendarAdmin();
     console.log('✅ Админка загружена');
 }
 
