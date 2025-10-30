@@ -14,8 +14,8 @@ class LoaderParticleSystem {
         window.addEventListener('resize', () => this.resize());
         // Мобильные коэффициенты
         this.isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-        this.countBoost = this.isMobile ? 1.8 : 1;
-        this.speedBoost = this.isMobile ? 3.6 : 1;
+        this.countBoost = this.isMobile ? 2.6 : 1.2;
+        this.speedBoost = this.isMobile ? 4.2 : 1.1;
         this.loadImages();
     }
     
@@ -50,8 +50,8 @@ class LoaderParticleSystem {
     }
     
     init() {
-        // Создаём частицы сразу, даже без изображений
-        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 15000 * this.countBoost);
+        // Создаём частицы сразу, даже без изображений (чуть выше плотность)
+        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 13000 * this.countBoost);
         
         for (let i = 0; i < particleCount; i++) {
             // Размер чуть больше для лучшей видимости (7-15px)
@@ -143,19 +143,19 @@ class LoaderParticleSystem {
             this.assignImagesToParticles();
         }
         
-        // Рисуем линии между близкими частицами (как было)
+        // Больше линий между частицами
         for (let i = 0; i < this.particles.length; i++) {
             for (let j = i + 1; j < this.particles.length; j++) {
                 const dx = this.particles[i].x - this.particles[j].x;
                 const dy = this.particles[i].y - this.particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < 100) {
+                const maxDist = 140;
+                if (distance < maxDist) {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    this.ctx.strokeStyle = `rgba(139, 90, 191, ${0.2 * (1 - distance / 100)})`;
-                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeStyle = `rgba(139, 90, 191, ${0.28 * (1 - distance / maxDist)})`;
+                    this.ctx.lineWidth = 1.1;
                     this.ctx.stroke();
                 }
             }
