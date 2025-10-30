@@ -192,8 +192,10 @@ body {
   /* Убираем переливающийся градиент на телефонах, как на ПК */
   .animated-bg::before,
   .loader-container::before {
-    content: none !important;
+    display: none !important;
+    background: none !important;
     animation: none !important;
+    opacity: 0 !important;
   }
   .calendar-grid { gap: 6px; grid-template-columns: repeat(7, minmax(36px, 1fr)); width: 100%; margin-top: 12px; }
   .calendar-cell { min-height: 50px; padding: 8px; border-radius: 12px; }
