@@ -188,11 +188,11 @@ body {
 }
 
 /* Мобильные улучшения календаря и модалки */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   /* Убираем переливающийся градиент на телефонах, как на ПК */
   .animated-bg::before,
   .loader-container::before {
-    display: none !important;
+    content: none !important;
     animation: none !important;
   }
   .calendar-grid { gap: 6px; grid-template-columns: repeat(7, minmax(36px, 1fr)); width: 100%; margin-top: 12px; }

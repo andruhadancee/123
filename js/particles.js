@@ -14,9 +14,9 @@ class ParticleSystem {
     window.addEventListener('resize', () => this.resize());
     // Мобильные коэффициенты: на телефоне делаем плотность и скорость как на десктопе
     this.isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    // Больше частиц и немного быстрее анимация и на ПК, и на телефоне
-    this.countBoost = this.isMobile ? 2.6 : 1.2;
-    this.speedBoost = this.isMobile ? 4.2 : 1.1;
+    // Мобильный буст; на ПК оставляем исходные параметры
+    this.countBoost = this.isMobile ? 2.6 : 1;
+    this.speedBoost = this.isMobile ? 4.2 : 1;
     this.loadImages();
     }
     
@@ -48,8 +48,9 @@ class ParticleSystem {
     }
     
     init() {
-        // Создаём частицы сразу, даже без изображений (чуть выше плотность)
-        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 13000 * this.countBoost);
+        // Создаём частицы (на мобиле делаем плотнее)
+        const baseDiv = this.isMobile ? 13000 : 15000;
+        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / baseDiv * this.countBoost);
         
         for (let i = 0; i < particleCount; i++) {
             // Размер чуть больше для лучшей видимости (7-15px)
@@ -141,19 +142,20 @@ class ParticleSystem {
             this.assignImagesToParticles();
         }
         
-        // Рисуем больше линий между частицами
+        // Рисуем линии между частицами (на мобиле чуть больше)
         for (let i = 0; i < this.particles.length; i++) {
             for (let j = i + 1; j < this.particles.length; j++) {
                 const dx = this.particles[i].x - this.particles[j].x;
                 const dy = this.particles[i].y - this.particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                const maxDist = 140;
+                const maxDist = this.isMobile ? 140 : 100;
                 if (distance < maxDist) {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    this.ctx.strokeStyle = `rgba(139, 90, 191, ${0.28 * (1 - distance / maxDist)})`;
-                    this.ctx.lineWidth = 1.1;
+                    const alpha = (this.isMobile ? 0.28 : 0.2) * (1 - distance / maxDist);
+                    this.ctx.strokeStyle = `rgba(139, 90, 191, ${alpha})`;
+                    this.ctx.lineWidth = this.isMobile ? 1.1 : 1;
                     this.ctx.stroke();
                 }
             }
