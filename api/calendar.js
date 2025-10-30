@@ -6,6 +6,20 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
+async function ensureTable() {
+    await pool.query(`
+        CREATE TABLE IF NOT EXISTS calendar_events (
+            id SERIAL PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            description TEXT,
+            event_date DATE NOT NULL,
+            image_url TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    `);
+}
+
 module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -13,6 +27,7 @@ module.exports = async (req, res) => {
     if (req.method === 'OPTIONS') return res.status(200).end();
 
     try {
+        await ensureTable();
         if (req.method === 'GET') {
             const { month } = req.query; // YYYY-MM
             let query = 'SELECT * FROM calendar_events';
