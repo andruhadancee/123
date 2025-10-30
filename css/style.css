@@ -1310,9 +1310,9 @@ main {
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px);
     z-index: 5000; /* Поверх шапки и кнопок */
-    align-items: center;
+    align-items: flex-start; /* Не перекрываем кнопки навигации контентом */
     justify-content: center;
-    padding: 20px;
+    padding: 100px 20px 20px; /* Отступ сверху под навигацию */
 }
 
 .modal.active {
@@ -1326,7 +1326,7 @@ main {
     border-radius: var(--border-radius);
     max-width: 600px;
     width: 100%;
-    max-height: 90vh;
+    max-height: calc(100vh - 160px); /* Учитываем верхний отступ */
     overflow-y: auto;
     animation: modalSlideIn 0.3s ease-out;
 }
