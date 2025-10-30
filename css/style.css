@@ -189,35 +189,36 @@ body {
 
 /* Мобильные улучшения календаря и модалки */
 @media (max-width: 768px) {
-  /* Убираем переливающийся градиент на телефонах, как на ПК */
-  .animated-bg::before,
-  .loader-container::before,
+  /* Убираем только АНИМИРОВАННЫЕ градиенты и эффекты (волны, световые лучи) */
   .loader-container .loader-wave,
   .loader-container .loader-wave-2,
   .animated-bg .animated-bg-wave,
   .animated-bg .animated-bg-wave-2,
-  .animated-bg > .overlay {
+  .animated-bg > .overlay,
+  .light-rays,
+  .loader-container .loader-light-rays {
     display: none !important;
     visibility: hidden !important;
     background: none !important;
     background-image: none !important;
     animation: none !important;
     opacity: 0 !important;
-    content: none !important;
-    transform: none !important;
     pointer-events: none !important;
   }
   
-  /* Отключаем анимацию градиента на мобилках */
-  @keyframes gradientFloat {
-    0%, 100% { opacity: 0; transform: scale(0); }
-  }
-  
-  /* Убеждаемся что сам animated-bg не имеет градиента */
-  .animated-bg,
-  .loader-container {
-    background: transparent !important;
-    background-image: none !important;
+  /* Оставляем статичный градиент как на ПК, но БЕЗ анимации */
+  .animated-bg::before,
+  .loader-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(139, 90, 191, 0.15) 0%, rgba(107, 45, 143, 0.1) 50%, transparent 100%);
+    /* УБИРАЕМ только анимацию, сам градиент оставляем */
+    animation: none !important;
+    transform: translate(0, 0) scale(1) !important;
   }
   .calendar-grid { gap: 6px; grid-template-columns: repeat(7, minmax(36px, 1fr)); width: 100%; margin-top: 12px; }
   .calendar-cell { min-height: 50px; padding: 8px; border-radius: 12px; }
