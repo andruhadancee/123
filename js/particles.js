@@ -10,9 +10,13 @@ class ParticleSystem {
         this.imagesLoaded = 0;
         this.totalImages = 4;
         
-        this.resize();
-        window.addEventListener('resize', () => this.resize());
-        this.loadImages();
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+    // Мобильные коэффициенты: на телефоне делаем плотность и скорость как на десктопе
+    this.isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    this.countBoost = this.isMobile ? 1.8 : 1; // больше частиц на мобиле
+    this.speedBoost = this.isMobile ? 1.6 : 1; // ускоряем движение на мобиле
+    this.loadImages();
     }
     
     resize() {
@@ -44,7 +48,7 @@ class ParticleSystem {
     
     init() {
         // Создаём частицы сразу, даже без изображений
-        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 15000);
+        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 15000 * this.countBoost);
         
         for (let i = 0; i < particleCount; i++) {
             // Размер чуть больше для лучшей видимости (7-15px)
@@ -54,12 +58,12 @@ class ParticleSystem {
                 img: null, // Будет установлено после загрузки
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
+                vx: (Math.random() - 0.5) * 0.5 * this.speedBoost,
+                vy: (Math.random() - 0.5) * 0.5 * this.speedBoost,
                 size: size,
                 opacity: Math.random() * 0.3 + 0.4,
                 rotation: Math.random() * Math.PI * 2,
-                rotationSpeed: (Math.random() - 0.5) * 0.01
+                rotationSpeed: (Math.random() - 0.5) * 0.01 * this.speedBoost
             });
         }
         
