@@ -148,14 +148,14 @@ class ParticleSystem {
                 const dx = this.particles[i].x - this.particles[j].x;
                 const dy = this.particles[i].y - this.particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                const maxDist = this.isMobile ? 140 : 100;
+                const maxDist = this.isMobile ? 110 : 100; // меньше связей на телефоне
                 if (distance < maxDist) {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    const alpha = (this.isMobile ? 0.28 : 0.2) * (1 - distance / maxDist);
+                    const alpha = (this.isMobile ? 0.16 : 0.2) * (1 - distance / maxDist); // слабее на телефоне
                     this.ctx.strokeStyle = `rgba(139, 90, 191, ${alpha})`;
-                    this.ctx.lineWidth = this.isMobile ? 1.1 : 1;
+                    this.ctx.lineWidth = this.isMobile ? 0.8 : 1; // тоньше на телефоне
                     this.ctx.stroke();
                 }
             }
