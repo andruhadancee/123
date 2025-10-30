@@ -164,6 +164,57 @@
     min-width: 0;
 }
 
+/* Календарь событий - адаптивный layout */
+.calendar-event-card {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+}
+
+.calendar-event-main {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+.calendar-event-img,
+.calendar-event-placeholder {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+    border: 1px solid rgba(139, 90, 191, 0.35);
+}
+
+.calendar-event-placeholder {
+    background: rgba(139, 90, 191, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-secondary);
+    font-weight: 800;
+    border-color: rgba(139, 90, 191, 0.25);
+}
+
+.calendar-event-info {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 12px;
+    min-width: 0;
+}
+
+.calendar-event-title-text,
+.calendar-event-desc-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .tournament-admin-actions {
     display: flex;
     gap: 8px;
@@ -438,6 +489,21 @@
         gap: 12px;
     }
     
+    /* Календарь событий - планшеты */
+    .calendar-event-info {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    
+    .calendar-event-card {
+        flex-wrap: wrap;
+    }
+    
+    .calendar-event-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
     .info-label {
         font-size: 11px;
     }
@@ -582,6 +648,51 @@
     
     .tournament-admin-actions button:active {
         transform: scale(0.96);
+    }
+    
+    /* Календарь событий - мобильная версия */
+    .calendar-event-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .calendar-event-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .calendar-event-img,
+    .calendar-event-placeholder {
+        width: 100%;
+        height: 180px;
+        border-radius: 12px;
+    }
+    
+    .calendar-event-info {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        width: 100%;
+    }
+    
+    .calendar-event-title-text,
+    .calendar-event-desc-text {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        word-wrap: break-word;
+        line-height: 1.4;
+    }
+    
+    .calendar-event-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .calendar-event-actions button {
+        width: 100%;
     }
     
     /* Forms */

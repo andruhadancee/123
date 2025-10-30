@@ -149,28 +149,28 @@ async function loadCalendarAdmin() {
         return;
     }
     container.innerHTML = events.map(e => `
-        <div class="tournament-admin-card" style="display:flex; align-items:center; gap:16px;">
-            ${e.image_url ? `<img src="${e.image_url}" alt="thumb" style="width:72px; height:72px; object-fit:cover; border-radius:10px; flex-shrink:0; border:1px solid rgba(139,90,191,.35);">` : `
-            <div style="width:72px; height:72px; border-radius:10px; background:rgba(139,90,191,.12); display:flex; align-items:center; justify-content:center; color:var(--color-text-secondary); font-weight:800; border:1px solid rgba(139,90,191,.25);">EV</div>`}
-            <div style="display:flex; flex:1; gap:16px; align-items:center;">
-                <div class="tournament-admin-info" style="flex:1; display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:12px;">
+        <div class="tournament-admin-card calendar-event-card">
+            <div class="calendar-event-main">
+                ${e.image_url ? `<img src="${e.image_url}" alt="thumb" class="calendar-event-img">` : `
+                <div class="calendar-event-placeholder">EV</div>`}
+                <div class="tournament-admin-info calendar-event-info">
                     <div class="info-item">
                         <span class="info-label">Название</span>
-                        <span class="info-value" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${e.title}</span>
+                        <span class="info-value calendar-event-title-text">${e.title}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Описание</span>
-                        <span class="info-value" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:280px;">${e.description || '-'}</span>
+                        <span class="info-value calendar-event-desc-text">${e.description || '-'}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Дата</span>
                         <span class="info-value">${(e.event_date || '').slice(0,10)}</span>
                     </div>
                 </div>
-                <div class="tournament-admin-actions" style="display:flex; gap:10px;">
-                    <button class="btn-edit" onclick="editCalendarEvent(${e.id})">Изменить</button>
-                    <button class="btn-danger" onclick="deleteCalendarEvent(${e.id})">Удалить</button>
-                </div>
+            </div>
+            <div class="tournament-admin-actions calendar-event-actions">
+                <button class="btn-edit" onclick="editCalendarEvent(${e.id})">Изменить</button>
+                <button class="btn-danger" onclick="deleteCalendarEvent(${e.id})">Удалить</button>
             </div>
         </div>
     `).join('');
