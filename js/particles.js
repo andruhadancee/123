@@ -14,8 +14,8 @@ class ParticleSystem {
     window.addEventListener('resize', () => this.resize());
     // Мобильные коэффициенты: на телефоне делаем плотность и скорость как на десктопе
     this.isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    this.countBoost = this.isMobile ? 1.8 : 1; // больше частиц на мобиле
-    this.speedBoost = this.isMobile ? 1.6 : 1; // ускоряем движение на мобиле
+    this.countBoost = this.isMobile ? 1.8 : 1; // количество частиц
+    this.speedBoost = this.isMobile ? 2.4 : 1; // заметно ускоряем на мобиле
     this.loadImages();
     }
     
@@ -63,7 +63,7 @@ class ParticleSystem {
                 size: size,
                 opacity: Math.random() * 0.3 + 0.4,
                 rotation: Math.random() * Math.PI * 2,
-                rotationSpeed: (Math.random() - 0.5) * 0.01 * this.speedBoost
+                rotationSpeed: (Math.random() - 0.5) * 0.01 * (this.speedBoost * 1.5)
             });
         }
         
