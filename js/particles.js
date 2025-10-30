@@ -54,7 +54,15 @@ class ParticleSystem {
         
         for (let i = 0; i < particleCount; i++) {
             // Размер чуть больше для лучшей видимости (7-15px)
-            const size = Math.random() * 8 + 7;
+            // На мобиле ограничиваем размер, чтобы не было ярких пятен
+            const maxSize = this.isMobile ? 12 : 15;
+            const minSize = this.isMobile ? 5 : 7;
+            const size = Math.random() * (maxSize - minSize) + minSize;
+            
+            // На мобиле уменьшаем opacity, чтобы не было ярких засветов
+            const maxOpacity = this.isMobile ? 0.5 : 0.7;
+            const minOpacity = this.isMobile ? 0.2 : 0.4;
+            const opacity = Math.random() * (maxOpacity - minOpacity) + minOpacity;
             
             this.particles.push({
                 img: null, // Будет установлено после загрузки
@@ -63,7 +71,7 @@ class ParticleSystem {
                 vx: (Math.random() - 0.5) * 0.5 * this.speedBoost,
                 vy: (Math.random() - 0.5) * 0.5 * this.speedBoost,
                 size: size,
-                opacity: Math.random() * 0.3 + 0.4,
+                opacity: opacity,
                 rotation: Math.random() * Math.PI * 2,
                 rotationSpeed: (Math.random() - 0.5) * 0.01 * (this.speedBoost * 2)
             });
@@ -122,6 +130,11 @@ class ParticleSystem {
             // Устанавливаем прозрачность
             this.ctx.globalAlpha = p.opacity;
             
+            // На мобиле добавляем фильтр для уменьшения яркости/насыщенности
+            if (this.isMobile) {
+                this.ctx.filter = 'brightness(0.7) saturate(0.8)';
+            }
+            
             // Если изображение загружено, рисуем его, иначе временно рисуем точку
             if (p.img && p.img.complete) {
                 this.ctx.drawImage(p.img, -p.size / 2, -p.size / 2, p.size, p.size);
@@ -131,6 +144,11 @@ class ParticleSystem {
                 this.ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
                 this.ctx.fillStyle = `rgba(139, 90, 191, ${p.opacity})`;
                 this.ctx.fill();
+            }
+            
+            // Сбрасываем фильтр после рисования
+            if (this.isMobile) {
+                this.ctx.filter = 'none';
             }
             
             // Восстанавливаем состояние
