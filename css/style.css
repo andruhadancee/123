@@ -137,11 +137,11 @@ body {
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, minmax(45px, 1fr));
-    gap: 6px;
-    width: min(calc(100vw - 80px), 450px);
+    grid-template-columns: repeat(7, minmax(30px, 1fr));
+    gap: 3px;
+    width: min(calc(100vw - 80px), 280px);
     margin: 0 auto;
-    max-height: calc(100vh - 380px);
+    max-height: calc(100vh - 420px);
     overflow: visible;
 }
 
@@ -153,7 +153,7 @@ body {
     background: rgba(45, 27, 61, 0.25);
     cursor: pointer;
     transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
-    min-height: 42px;
+    min-height: 30px;
     aspect-ratio: 1 / 1;
 }
 .calendar-cell:hover { transform: translateY(-2px); }
@@ -191,7 +191,7 @@ body {
 }
 
 .calendar-discipline-icon .discipline-icon-emoji {
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1;
     display: inline-block;
 }
@@ -298,41 +298,41 @@ body {
 }
 
 .calendar-filters {
-    min-width: 220px;
-    padding: 20px;
+    min-width: 160px;
+    padding: 12px;
     background: linear-gradient(135deg, rgba(45, 27, 61, 0.6), rgba(30, 20, 40, 0.6));
     backdrop-filter: blur(10px);
     border: 1px solid rgba(139, 90, 191, 0.3);
-    border-radius: 16px;
+    border-radius: 12px;
     position: sticky;
     top: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .calendar-filters h3 {
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--color-text-primary);
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    padding-bottom: 12px;
+    letter-spacing: 0.8px;
+    padding-bottom: 8px;
     border-bottom: 1px solid rgba(139, 90, 191, 0.2);
 }
 
 .calendar-filters .filter-btn {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     text-align: left;
-    padding: 12px 16px;
-    font-size: 13px;
+    padding: 8px 12px;
+    font-size: 11px;
     font-weight: 600;
     background: rgba(139, 90, 191, 0.1);
     border: 1px solid rgba(139, 90, 191, 0.2);
-    border-radius: 10px;
+    border-radius: 8px;
     color: var(--color-text-primary);
     cursor: pointer;
     transition: all 0.3s ease;
