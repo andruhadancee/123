@@ -335,8 +335,9 @@
                 if (arrow) {
                     arrow.textContent = isHidden ? '▼' : '▲';
                 }
-                // Меняем скругление кнопки
+                // Меняем скругление кнопки и границу
                 this.style.borderRadius = isHidden ? '8px' : '8px 8px 0 0';
+                this.style.borderBottom = isHidden ? '1px solid rgba(139, 90, 191, 0.4)' : 'none';
             }
         });
     }
