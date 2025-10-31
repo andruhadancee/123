@@ -18,6 +18,15 @@ document.addEventListener('DOMContentLoaded', initializeMainPage);
 
 // Экспортируем для SPA
 window.initializeMainPage = initializeMainPage;
+window.loadActiveTournaments = loadActiveTournaments; // Экспортируем для использования в админке
+
+// Автоматическое обновление турниров каждые 30 секунд для актуальных счетчиков команд
+setInterval(() => {
+    const grid = document.getElementById('tournaments-grid');
+    if (grid && typeof loadActiveTournaments === 'function') {
+        loadActiveTournaments(true); // Обновляем с очисткой кеша
+    }
+}, 30000);
 
 function hideLoader() {
     const loader = document.getElementById('loader');
@@ -27,8 +36,14 @@ function hideLoader() {
     }
 }
 
-async function loadActiveTournaments() {
+async function loadActiveTournaments(forceReload = false) {
     const grid = document.getElementById('tournaments-grid');
+    if (!grid) return; // Если не на главной странице, выходим
+    
+    // Принудительно очищаем кеш если запрошено
+    if (forceReload && typeof clearCache === 'function') {
+        clearCache('tournaments');
+    }
     
     allTournaments = await API.tournaments.getAll('active');
     const links = await API.links.getAll();
@@ -178,25 +193,6 @@ function initTimers() {
     });
 }
 
-async function loadActiveTournaments() {
-    const grid = document.getElementById('tournaments-grid');
-    
-    allTournaments = await API.tournaments.getAll('active');
-    const links = await API.links.getAll();
-    
-    if (allTournaments.length === 0) {
-        grid.innerHTML = `
-            <div class="empty-state">
-                <h3>Активных турниров пока нет</h3>
-                <p>Следите за обновлениями в наших социальных сетях</p>
-            </div>
-        `;
-        return;
-    }
-    
-    displayFilteredTournaments();
-    setTimeout(initTimers, 100);
-}
 
 async function loadSocialLinks() {
     const socialLinks = await API.social.getAll();

@@ -1286,7 +1286,16 @@ async function deleteTeam(teamId) {
     
     try {
         await API.teams.delete(teamId);
+        // Очищаем кеш турниров и команд, чтобы обновились счетчики
+        if (typeof clearCache === 'function') {
+            clearCache('teams');
+            clearCache('tournaments'); // Важно! Обновляем турниры чтобы счетчик команд обновился
+        }
         await loadTeamsAdmin();
+        // Перезагружаем активные турниры на главной странице если она открыта
+        if (typeof window.loadActiveTournaments === 'function') {
+            await window.loadActiveTournaments(true); // forceReload = true
+        }
         alert('Команда удалена!');
     } catch (error) {
         alert('Ошибка удаления команды: ' + error.message);
@@ -1376,12 +1385,15 @@ async function handleTeamFormSubmit(e) {
             alert('Команда добавлена!');
         }
         
-        // Очищаем кеш и перезагружаем команды
+        // Очищаем кеш турниров и команд, чтобы обновились счетчики
         if (typeof clearCache === 'function') {
             clearCache('teams');
+            clearCache('tournaments'); // Важно! Обновляем турниры чтобы счетчик команд обновился
         }
         closeTeamModal();
         await loadTeamsAdmin();
+        // Перезагружаем активные турниры чтобы обновить счетчики команд
+        await loadActiveTournaments();
     } catch (error) {
         alert('Ошибка сохранения команды: ' + error.message);
     }

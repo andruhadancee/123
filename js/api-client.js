@@ -320,6 +320,8 @@ const API = {
                     body: JSON.stringify(teamData)
                 });
                 if (!response.ok) throw new Error('Ошибка добавления команды');
+                clearCache('teams'); // Очищаем кеш команд
+                clearCache('tournaments'); // Очищаем кеш турниров чтобы обновился счетчик команд
                 return await response.json();
             } catch (error) {
                 console.error('❌ Ошибка добавления команды:', error);
@@ -336,6 +338,8 @@ const API = {
                     body: JSON.stringify(teamData)
                 });
                 if (!response.ok) throw new Error('Ошибка обновления команды');
+                clearCache('teams'); // Очищаем кеш команд
+                clearCache('tournaments'); // Очищаем кеш турниров чтобы обновился счетчик команд
                 return await response.json();
             } catch (error) {
                 console.error('❌ Ошибка обновления команды:', error);
@@ -350,6 +354,8 @@ const API = {
                     method: 'DELETE'
                 });
                 if (!response.ok) throw new Error('Ошибка удаления команды');
+                clearCache('teams'); // Очищаем кеш команд
+                clearCache('tournaments'); // Очищаем кеш турниров чтобы обновился счетчик команд
                 return await response.json();
             } catch (error) {
                 console.error('❌ Ошибка удаления команды:', error);
