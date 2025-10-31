@@ -137,23 +137,39 @@ body {
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, minmax(22px, 1fr));
+    grid-template-columns: repeat(7, minmax(16px, 1fr));
     gap: 2px;
-    width: min(calc(100vw - 80px), 200px);
+    width: min(calc(100vw - 80px), 250px);
     margin: 0 auto;
-    max-height: calc(100vh - 450px);
+    max-height: none;
     overflow: visible;
+}
+
+/* Стили для заголовков дней недели */
+.calendar-grid > div:first-child,
+.calendar-grid > div:nth-child(2),
+.calendar-grid > div:nth-child(3),
+.calendar-grid > div:nth-child(4),
+.calendar-grid > div:nth-child(5),
+.calendar-grid > div:nth-child(6),
+.calendar-grid > div:nth-child(7) {
+    font-size: 9px;
+    padding: 2px;
+    text-align: center;
+    min-height: auto;
+    height: auto;
+    aspect-ratio: auto;
 }
 
 .calendar-cell {
     position: relative;
-    padding: 3px;
+    padding: 2px;
     border: 1px solid rgba(139, 90, 191, 0.2);
-    border-radius: 5px;
+    border-radius: 4px;
     background: rgba(45, 27, 61, 0.25);
     cursor: pointer;
     transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
-    min-height: 22px;
+    min-height: 14px;
     aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
@@ -164,8 +180,8 @@ body {
 
 .calendar-date-num { 
     font-weight: 800; 
-    font-size: 13px; 
-    margin-bottom: 2px; 
+    font-size: 10px; 
+    margin-bottom: 1px; 
     letter-spacing: -0.2px;
     align-self: flex-start;
     margin-left: 2px;
@@ -182,10 +198,10 @@ body {
 
 .calendar-discipline-icon {
     position: absolute;
-    top: 3px;
-    right: 3px;
-    width: 20px;
-    height: 20px;
+    top: 2px;
+    right: 2px;
+    width: 14px;
+    height: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -202,7 +218,7 @@ body {
 }
 
 .calendar-discipline-icon .discipline-icon-emoji {
-    font-size: 16px;
+    font-size: 12px;
     line-height: 1;
     display: inline-block;
 }
@@ -416,19 +432,19 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     margin: 0;
-    font-size: 10px;
-    line-height: 1.2;
-    padding: 0 4px;
+    font-size: 8px;
+    line-height: 1.1;
+    padding: 0 2px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: calc(100% - 8px);
+    width: calc(100% - 4px);
 }
 
 .calendar-event-item {
-    margin-bottom: 2px;
+    margin-bottom: 1px;
     font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -438,9 +454,9 @@ body {
 }
 
 .calendar-event-more {
-    font-size: 10px;
+    font-size: 8px;
     opacity: 0.7;
-    margin-top: 4px;
+    margin-top: 2px;
 }
 
 .calendar-event-content {
