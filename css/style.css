@@ -139,22 +139,24 @@ body {
     display: grid;
     /* Кубик автоматически подстраивается под ширину окна: 
        берем минимальную из 140px и (100vw - отступы - промежутки)/7 */
-    grid-template-columns: repeat(7, minmax(60px, 1fr));
-    gap: 8px;
-    width: min(calc(100vw - 80px), 700px); /* уменьшили ширину */
-    margin: 0 auto; /* центрируем сетку */
+    grid-template-columns: repeat(7, minmax(50px, 1fr));
+    gap: 6px;
+    width: min(calc(100vw - 80px), 600px);
+    margin: 0 auto;
+    max-height: calc(100vh - 300px);
+    overflow: visible;
 }
 
 .calendar-cell {
     position: relative;
-    padding: 8px;
+    padding: 6px;
     border: 1px solid rgba(139, 90, 191, 0.2);
-    border-radius: 12px;
+    border-radius: 10px;
     background: rgba(45, 27, 61, 0.25);
     cursor: pointer;
     transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
-    min-height: 55px;
-    aspect-ratio: 1 / 1; /* делаем кубики */
+    min-height: 48px;
+    aspect-ratio: 1 / 1;
 }
 .calendar-cell:hover { transform: translateY(-2px); }
 
@@ -247,8 +249,8 @@ body {
     animation: none !important;
     transform: translate(0, 0) scale(1) !important;
   }
-  .calendar-grid { gap: 5px; grid-template-columns: repeat(7, minmax(40px, 1fr)); width: 100%; margin-top: 12px; }
-  .calendar-cell { min-height: 45px; padding: 6px; border-radius: 10px; }
+  .calendar-grid { gap: 4px; grid-template-columns: repeat(7, minmax(38px, 1fr)); width: 100%; margin-top: 12px; max-height: none; }
+  .calendar-cell { min-height: 42px; padding: 5px; border-radius: 8px; }
   .calendar-day-number { font-size: 14px; }
   .calendar-discipline-icon { top: 6px; right: 6px; width: 18px; height: 18px; }
   .calendar-discipline-icon .discipline-icon-emoji { font-size: 12px; }

@@ -313,6 +313,10 @@
                 const discordBtn = document.querySelector('.social-btn.discord');
                 if (discordBtn) discordBtn.href = socialLinks.discord;
             }
+            if (socialLinks.contact) {
+                const contactBtn = document.querySelector('.btn-contact');
+                if (contactBtn) contactBtn.href = socialLinks.contact;
+            }
         } catch (err) {
             console.error('Ошибка загрузки социальных ссылок:', err);
         }

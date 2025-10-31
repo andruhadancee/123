@@ -140,7 +140,19 @@ async function loadAdminData() {
 // ===== КАЛЕНДАРЬ (АДМИН) =====
 // Календарь для админки
 let adminCalendarCurrent = new Date();
-adminCalendarCurrent.setDate(1);
+// Восстанавливаем сохраненный месяц из localStorage
+const savedAdminMonth = localStorage.getItem('adminCalendarCurrentMonth');
+if (savedAdminMonth) {
+    try {
+        const saved = JSON.parse(savedAdminMonth);
+        adminCalendarCurrent = new Date(saved.year, saved.month, 1);
+    } catch (e) {
+        console.warn('Не удалось восстановить месяц админ календаря:', e);
+        adminCalendarCurrent.setDate(1);
+    }
+} else {
+    adminCalendarCurrent.setDate(1);
+}
 let adminCalendarEvents = [];
 let adminCalendarSelectedDiscipline = 'all';
 let adminCalendarDisciplines = [];
@@ -646,9 +658,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextMonthBtn = document.getElementById('next-month-admin');
     const clearMonthBtn = document.getElementById('clear-calendar-month-btn');
     
+    function saveAdminCalendarMonth() {
+        localStorage.setItem('adminCalendarCurrentMonth', JSON.stringify({
+            year: adminCalendarCurrent.getFullYear(),
+            month: adminCalendarCurrent.getMonth()
+        }));
+    }
+    
     if (prevMonthBtn) {
         prevMonthBtn.addEventListener('click', () => {
             adminCalendarCurrent.setMonth(adminCalendarCurrent.getMonth() - 1);
+            saveAdminCalendarMonth();
             loadCalendarAdmin();
         });
     }
@@ -656,6 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nextMonthBtn) {
         nextMonthBtn.addEventListener('click', () => {
             adminCalendarCurrent.setMonth(adminCalendarCurrent.getMonth() + 1);
+            saveAdminCalendarMonth();
             loadCalendarAdmin();
         });
     }
@@ -1355,6 +1376,10 @@ async function handleTeamFormSubmit(e) {
             alert('Команда добавлена!');
         }
         
+        // Очищаем кеш и перезагружаем команды
+        if (typeof clearCache === 'function') {
+            clearCache('teams');
+        }
         closeTeamModal();
         await loadTeamsAdmin();
     } catch (error) {
