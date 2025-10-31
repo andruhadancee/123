@@ -97,6 +97,9 @@
                 render();
             });
         });
+        
+        // Восстанавливаем состояние фильтров после загрузки
+        restoreFiltersState();
     }
 
     function render(){
@@ -325,6 +328,24 @@
         }
     }
     
+    // Функция восстановления состояния фильтров
+    function restoreFiltersState() {
+        if (!toggleFiltersBtn || !filtersContainer) return;
+        
+        const savedState = localStorage.getItem('calendarFiltersCollapsed');
+        const isCollapsed = savedState === 'true';
+        
+        if (isCollapsed) {
+            filtersContainer.style.display = 'none';
+            const arrow = toggleFiltersBtn.querySelector('.toggle-arrow');
+            if (arrow) {
+                arrow.textContent = '▼';
+            }
+            toggleFiltersBtn.style.borderRadius = '8px';
+            toggleFiltersBtn.style.borderBottom = '1px solid rgba(139, 90, 191, 0.4)';
+        }
+    }
+    
     // Обработчик кнопки сворачивания фильтров
     if (toggleFiltersBtn) {
         toggleFiltersBtn.addEventListener('click', function() {
@@ -338,6 +359,8 @@
                 // Меняем скругление кнопки и границу
                 this.style.borderRadius = isHidden ? '8px' : '8px 8px 0 0';
                 this.style.borderBottom = isHidden ? '1px solid rgba(139, 90, 191, 0.4)' : 'none';
+                // Сохраняем состояние в localStorage
+                localStorage.setItem('calendarFiltersCollapsed', isHidden.toString());
             }
         });
     }
