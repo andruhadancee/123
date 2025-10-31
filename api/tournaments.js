@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
         
         // POST - создать турнир
         if (req.method === 'POST') {
-            const { title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl } = req.body;
+            const { title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl, description, imageUrl } = req.body;
             
             const result = await pool.query(
                 `INSERT INTO tournaments 
@@ -47,7 +47,23 @@ module.exports = async (req, res) => {
                 [title, discipline, date, prize, maxTeams, customLink || null, status || 'active', winner || null, watchUrl || null]
             );
             
-            return res.status(201).json(result.rows[0]);
+            const tournament = result.rows[0];
+            
+            // Автоматически создаём событие календаря для активных турниров
+            if (tournament.status === 'active' && date) {
+                try {
+                    await pool.query(
+                        `INSERT INTO calendar_events (title, description, event_date, image_url, discipline, prize, max_teams, registration_link, custom_link, tournament_id)
+                         VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10)
+                         ON CONFLICT DO NOTHING`,
+                        [title, description || null, date, imageUrl || null, discipline || null, prize || null, maxTeams || null, null, customLink || null, tournament.id]
+                    );
+                } catch (err) {
+                    console.error('Ошибка создания события календаря:', err);
+                }
+            }
+            
+            return res.status(201).json(tournament);
         }
         
         // PUT - обновить турнир
@@ -67,12 +83,35 @@ module.exports = async (req, res) => {
                 return res.status(404).json({ error: 'Турнир не найден' });
             }
             
-            return res.status(200).json(result.rows[0]);
+            const tournament = result.rows[0];
+            
+            // Обновляем связанное событие календаря
+            if (tournament.status === 'active' && date) {
+                try {
+                    await pool.query(
+                        `UPDATE calendar_events 
+                         SET title = $1, description = $2, event_date = $3::date, image_url = $4, discipline = $5, prize = $6, max_teams = $7, custom_link = $8, updated_at = CURRENT_TIMESTAMP
+                         WHERE tournament_id = $9`,
+                        [title, req.body.description || null, date, req.body.imageUrl || null, discipline || null, prize || null, maxTeams || null, customLink || null, id]
+                    );
+                } catch (err) {
+                    console.error('Ошибка обновления события календаря:', err);
+                }
+            }
+            
+            return res.status(200).json(tournament);
         }
         
         // DELETE - удалить турнир
         if (req.method === 'DELETE') {
             const { id } = req.query;
+            
+            // Удаляем связанное событие календаря
+            try {
+                await pool.query('DELETE FROM calendar_events WHERE tournament_id = $1', [id]);
+            } catch (err) {
+                deletions.error('Ошибка удаления события календаря:', err);
+            }
             
             const result = await pool.query('DELETE FROM tournaments WHERE id = $1 RETURNING *', [id]);
             

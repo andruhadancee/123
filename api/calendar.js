@@ -66,18 +66,48 @@ module.exports = async (req, res) => {
             
             let tournamentId = null;
             // Автоматически создаём турнир, если указаны обязательные поля
+            // Проверяем, нет ли уже турнира с такой же датой и дисциплиной
             if (discipline && prize && maxTeams) {
                 try {
-                    const tournamentResult = await pool.query(
-                        `INSERT INTO tournaments (title, discipline, date, prize, max_teams, custom_link, status, teams)
-                         VALUES ($1, $2, $3, $4, $5, $6, 'active', 0)
-                         RETURNING id`,
-                        [title, discipline, eventDate, prize, maxTeams, customLink || registrationLink || null]
+                    // Проверяем существующий турнир
+                    const existingTournament = await pool.query(
+                        `SELECT id FROM tournaments WHERE title = $1 AND date = $2 AND discipline = $3 AND status = 'active' LIMIT 1`,
+                        [title, eventDate, discipline]
                     );
-                    tournamentId = tournamentResult.rows[0].id;
+                    
+                    if (existingTournament.rows.length > 0) {
+                        tournamentId = existingTournament.rows[0].id;
+                    } else {
+                        // Создаём новый турнир только если его нет
+                        const tournamentResult = await pool.query(
+                            `INSERT INTO tournaments (title, discipline, date, prize, max_teams, custom_link, status, teams)
+                             VALUES ($1, $2, $3, $4, $5, $6, 'active', 0)
+                             RETURNING id`,
+                            [title, discipline, eventDate, prize, maxTeams, customLink || registrationLink || null]
+                        );
+                        tournamentId = tournamentResult.rows[0].id;
+                    }
                 } catch (err) {
                     console.error('Ошибка создания турнира:', err);
                 }
+            }
+            
+            // Проверяем, нет ли уже события для этого турнира
+            const existingEvent = await pool.query(
+                `SELECT id FROM calendar_events WHERE tournament_id = $1 OR (title = $2 AND event_date = $3::date) LIMIT 1`,
+                [tournamentId, title, eventDate]
+            );
+            
+            if (existingEvent.rows.length > 0) {
+                // Обновляем существующее событие
+                const result = await pool.query(
+                    `UPDATE calendar_events 
+                     SET title = $1, description = $2, image_url = $3, discipline = $4, prize = $5, max_teams = $6, registration_link = $7, custom_link = $8, tournament_id = $9, updated_at = CURRENT_TIMESTAMP
+                     WHERE id = $10
+                     RETURNING *`,
+                    [title, description || null, imageUrl || null, discipline || null, prize || null, maxTeams || null, registrationLink || null, customLink || null, tournamentId, existingEvent.rows[0].id]
+                );
+                return res.status(200).json(result.rows[0]);
             }
             
             const result = await pool.query(
@@ -120,8 +150,32 @@ module.exports = async (req, res) => {
 
         if (req.method === 'DELETE') {
             const { id } = req.query;
+            // Получаем событие перед удалением
+            const eventResult = await pool.query('SELECT * FROM calendar_events WHERE id = $1', [id]);
+            if (eventResult.rows.length === 0) {
+                return res.status(404).json({ error: 'Событие не найдено' });
+            }
+            
+            const event = eventResult.rows[0];
             const result = await pool.query('DELETE FROM calendar_events WHERE id = $1 RETURNING *', [id]);
-            if (result.rows.length === 0) return res.status(404).json({ error: 'Событие не найдено' });
+            
+            // Если событие было связано с турниром и турнир был создан из календаря, удаляем турнир тоже
+            if (event.tournament_id) {
+                try {
+                    // Проверяем, есть ли другие события для этого турнира
+                    const otherEvents = await pool.query(
+                        'SELECT COUNT(*) as count FROM calendar_events WHERE tournament_id = $1',
+                        [event.tournament_id]
+                    );
+                    // Если других событий нет, удаляем турнир
+                    if (otherEvents.rows[0].count === '0') {
+                        await pool.query('DELETE FROM tournaments WHERE id = $1', [event.tournament_id]);
+                    }
+                } catch (err) {
+                    console.error('Ошибка удаления связанного турнира:', err);
+                }
+            }
+            
             return res.status(200).json({ message: 'Удалено', event: result.rows[0] });
         }
 

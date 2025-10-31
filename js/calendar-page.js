@@ -17,28 +17,28 @@
     let disciplines = [];
     let registrationLinks = {}; // Кеш ссылок на регистрацию
 
-    // Цвета для дисциплин
+    // Цвета для дисциплин - смягчённые тона
     function getDisciplineColor(discipline) {
         const colors = {
-            'Dota 2': '#e64c3c',           // светло-красный
-            'CS 2': '#ff6b00',             // оранжевый
-            'Valorant': '#fa4454',         // красно-розовый
-            'Overwatch 2': '#ff9c00',      // оранжевый
-            'League of Legends': '#c89b3c', // золотой
-            'PUBG': '#4A90E2',             // светло-синий
-            'Mobile Legends': '#32CD32',   // лайм
-            'MLBB': '#32CD32',             // лайм
-            'CS:GO': '#ff6b00',            // оранжевый
-            'Counter-Strike 2': '#ff6b00'  // оранжевый
+            'Dota 2': '#b83d2d',           // приглушённый красный
+            'CS 2': '#cc8844',             // приглушённый оранжевый
+            'Valorant': '#c85565',         // приглушённый розовый
+            'Overwatch 2': '#cc8844',      // приглушённый оранжевый
+            'League of Legends': '#a0853a', // приглушённый золотой
+            'PUBG': '#5a7aa5',             // приглушённый синий
+            'Mobile Legends': '#5a9a5a',   // приглушённый зелёный
+            'MLBB': '#5a9a5a',             // приглушённый зелёный
+            'CS:GO': '#cc8844',            // приглушённый оранжевый
+            'Counter-Strike 2': '#cc8844'  // приглушённый оранжевый
         };
-        // Если дисциплина не найдена, генерируем цвет на основе хеша строки
+        // Если дисциплина не найдена, генерируем приглушённый цвет
         if (!colors[discipline]) {
             let hash = 0;
             for (let i = 0; i < discipline.length; i++) {
                 hash = discipline.charCodeAt(i) + ((hash << 5) - hash);
             }
             const hue = hash % 360;
-            return `hsl(${hue}, 65%, 60%)`; // Генерируем случайный цвет
+            return `hsl(${hue}, 45%, 50%)`; // Более приглушённые цвета
         }
         return colors[discipline];
     }
@@ -114,11 +114,31 @@
             return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         }
 
-        // Фильтруем события по дисциплине
+        // Фильтруем события по дисциплине и убираем дубликаты по tournament_id
         let filteredEvents = events;
         if (selectedDiscipline !== 'all') {
             filteredEvents = events.filter(e => e.discipline === selectedDiscipline);
         }
+        
+        // Убираем дубликаты по tournament_id - если есть tournament_id, оставляем только одно событие
+        const uniqueEvents = [];
+        const seenTournamentIds = new Set();
+        filteredEvents.forEach(e => {
+            if (e.tournament_id) {
+                if (!seenTournamentIds.has(e.tournament_id)) {
+                    seenTournamentIds.add(e.tournament_id);
+                    uniqueEvents.push(e);
+                }
+            } else {
+                // Для событий без tournament_id проверяем по title + date
+                const key = `${e.title}_${(e.event_date || e.eventDate).slice(0,10)}`;
+                if (!seenTournamentIds.has(key)) {
+                    seenTournamentIds.add(key);
+                    uniqueEvents.push(e);
+                }
+            }
+        });
+        filteredEvents = uniqueEvents;
 
         for(let day=1; day<=daysInMonth; day++){
             const cell = document.createElement('div');
@@ -127,7 +147,18 @@
             const date = new Date(year, month, day);
             const dateStr = fmtLocal(year, month, day);
             const dayEventsFiltered = filteredEvents.filter(e => (e.event_date || e.eventDate).slice(0,10) === dateStr);
-            const dayEventsAll = events.filter(e => (e.event_date || e.eventDate).slice(0,10) === dateStr);
+            
+            // Убираем дубликаты из всех событий тоже
+            const dayEventsAllRaw = events.filter(e => (e.event_date || e.eventDate).slice(0,10) === dateStr);
+            const dayEventsAll = [];
+            const seenAll = new Set();
+            dayEventsAllRaw.forEach(e => {
+                const key = e.tournament_id ? `tournament_${e.tournament_id}` : `${e.title}_${dateStr}`;
+                if (!seenAll.has(key)) {
+                    seenAll.add(key);
+                    dayEventsAll.push(e);
+                }
+            });
 
             const head = document.createElement('div');
             head.textContent = String(day);
@@ -137,7 +168,9 @@
             if (dayEventsFiltered.length > 0){
                 const badge = document.createElement('div');
                 badge.className = 'calendar-badge';
-                badge.textContent = dayEventsAll.length;
+                // Считаем уникальные события
+                const uniqueCount = new Set(dayEventsAll.map(e => e.tournament_id || `${e.title}_${dateStr}`)).size;
+                badge.textContent = uniqueCount;
                 cell.appendChild(badge);
                 cell.classList.add('calendar-has-events');
                 
