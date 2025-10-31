@@ -11,7 +11,19 @@
     const filtersContainer = document.getElementById('calendar-filters');
 
     let current = new Date();
-    current.setDate(1);
+    // Восстанавливаем сохраненный месяц из localStorage
+    const savedMonth = localStorage.getItem('calendarCurrentMonth');
+    if (savedMonth) {
+        try {
+            const saved = JSON.parse(savedMonth);
+            current = new Date(saved.year, saved.month, 1);
+        } catch (e) {
+            console.warn('Не удалось восстановить месяц календаря:', e);
+            current.setDate(1);
+        }
+    } else {
+        current.setDate(1);
+    }
     let events = [];
     let selectedDiscipline = 'all';
     let disciplines = [];
@@ -267,8 +279,23 @@
     modalClose.addEventListener('click', closeModal);
     window.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
     modal.addEventListener('click', (e)=>{ if (e.target === modal) closeModal(); });
-    prevBtn.addEventListener('click', ()=>{ current.setMonth(current.getMonth()-1); load(); });
-    nextBtn.addEventListener('click', ()=>{ current.setMonth(current.getMonth()+1); load(); });
+    function saveCurrentMonth() {
+        localStorage.setItem('calendarCurrentMonth', JSON.stringify({
+            year: current.getFullYear(),
+            month: current.getMonth()
+        }));
+    }
+    
+    prevBtn.addEventListener('click', ()=>{ 
+        current.setMonth(current.getMonth()-1); 
+        saveCurrentMonth();
+        load(); 
+    });
+    nextBtn.addEventListener('click', ()=>{ 
+        current.setMonth(current.getMonth()+1); 
+        saveCurrentMonth();
+        load(); 
+    });
 
     // Загружаем социальные ссылки
     async function loadSocialLinks() {

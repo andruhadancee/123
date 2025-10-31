@@ -401,6 +401,14 @@ async function deleteAdminCalendarEvent(id) {
     if (!confirm('Удалить это событие?')) return;
     await API.calendar.delete(id);
     closeAdminDayEventsModal();
+    // Очищаем кеш и перезагружаем турниры и календарь
+    if (typeof API !== 'undefined' && API.tournaments && API.tournaments.clearCache) {
+        API.tournaments.clearCache();
+    }
+    if (typeof clearCache === 'function') {
+        clearCache('tournaments');
+    }
+    await loadActiveTournaments(); // Перезагружаем активные турниры
     await loadCalendarAdmin();
 }
 
@@ -597,6 +605,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             await API.calendar.create(data);
         }
+        // Очищаем кеш и перезагружаем турниры
+        if (typeof clearCache === 'function') {
+            clearCache('tournaments');
+        }
+        await loadActiveTournaments(); // Перезагружаем активные турниры
         closeCalendarModal();
         await loadCalendarAdmin();
     }
