@@ -941,43 +941,6 @@ body {
 
 }
 
-.calendar-filters .filter-btn::before {
-
-    content: '';
-
-    position: absolute;
-
-    top: 0;
-
-    left: -100%;
-
-    width: 100%;
-
-    height: 100%;
-
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-
-    transition: left 0.5s ease;
-
-}
-
-.calendar-filters .filter-btn:hover::before {
-
-    left: 100%;
-
-}
-
-.calendar-filters .filter-btn:hover {
-
-    background: rgba(139, 90, 191, 0.25);
-
-    border-color: rgba(139, 90, 191, 0.5);
-
-    transform: translateX(4px);
-
-    box-shadow: 0 6px 16px rgba(139, 90, 191, 0.4);
-
-}
 
 .calendar-filters .filter-btn.active {
 
