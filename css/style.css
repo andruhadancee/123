@@ -137,23 +137,23 @@ body {
 
 .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, minmax(25px, 1fr));
-    gap: 2px;
-    width: min(calc(100vw - 80px), 220px);
+    grid-template-columns: repeat(7, minmax(28px, 1fr));
+    gap: 3px;
+    width: min(calc(100vw - 80px), 250px);
     margin: 0 auto;
-    max-height: calc(100vh - 450px);
+    max-height: calc(100vh - 430px);
     overflow: visible;
 }
 
 .calendar-cell {
     position: relative;
-    padding: 4px;
+    padding: 5px;
     border: 1px solid rgba(139, 90, 191, 0.2);
     border-radius: 6px;
     background: rgba(45, 27, 61, 0.25);
     cursor: pointer;
     transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
-    min-height: 25px;
+    min-height: 28px;
     aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
@@ -164,7 +164,7 @@ body {
 
 .calendar-date-num { 
     font-weight: 800; 
-    font-size: 11px; 
+    font-size: 13px; 
     margin-bottom: 2px; 
     letter-spacing: -0.2px;
     align-self: flex-start;
@@ -182,10 +182,10 @@ body {
 
 .calendar-discipline-icon {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 18px;
-    height: 18px;
+    top: 3px;
+    right: 3px;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -202,7 +202,7 @@ body {
 }
 
 .calendar-discipline-icon .discipline-icon-emoji {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1;
     display: inline-block;
 }
@@ -334,7 +334,7 @@ body {
 .calendar-filters .filter-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     width: 100%;
     margin-bottom: 6px;
     text-align: left;
@@ -349,6 +349,19 @@ body {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+}
+
+.calendar-filters .filter-btn img.discipline-icon,
+.calendar-filters .filter-btn .discipline-icon {
+    width: 24px !important;
+    height: 24px !important;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.calendar-filters .filter-btn .discipline-icon-emoji {
+    font-size: 18px !important;
+    line-height: 1;
 }
 
 .calendar-filters .filter-btn::before {
@@ -398,8 +411,11 @@ body {
 }
 
 .calendar-events-text {
-    margin-top: auto;
-    margin-bottom: 2px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
     font-size: 10px;
     line-height: 1.2;
     padding: 0 4px;
@@ -408,7 +424,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: calc(100% - 8px);
 }
 
 .calendar-event-item {
