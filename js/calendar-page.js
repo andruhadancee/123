@@ -76,7 +76,6 @@
         
         // Показываем ВСЕ дисциплины из базы, не только те что в событиях
         filtersContainer.innerHTML = `
-            <h3>Фильтр по дисциплинам</h3>
             <button class="filter-btn ${selectedDiscipline === 'all' ? 'active' : ''}" data-discipline="all">Все</button>
             ${disciplines.map(d => `
                 <button class="filter-btn ${selectedDiscipline === d ? 'active' : ''}" 

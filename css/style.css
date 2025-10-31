@@ -661,7 +661,7 @@ body {
 
     position: static;
 
-    display: grid !important;
+    display: grid;
 
     grid-template-columns: repeat(3, 1fr) !important;
 
