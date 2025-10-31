@@ -256,15 +256,15 @@ body {
 
     display: grid;
 
-    grid-template-columns: repeat(7, minmax(16px, 1fr));
+    grid-template-columns: repeat(7, minmax(14px, 1fr));
 
-    gap: 2px;
+    gap: 1px;
 
-    width: min(calc(100vw - 80px), 250px);
+    width: min(calc(100vw - 200px), 180px);
 
     margin: 0 auto;
 
-    max-height: none;
+    max-height: calc(100vh - 550px);
 
     overflow: visible;
 
@@ -304,11 +304,11 @@ body {
 
     position: relative;
 
-    padding: 2px;
+    padding: 1px;
 
     border: 1px solid rgba(139, 90, 191, 0.2);
 
-    border-radius: 4px;
+    border-radius: 3px;
 
     background: rgba(45, 27, 61, 0.25);
 
@@ -598,6 +598,10 @@ body {
 
     align-items: flex-start;
 
+    max-height: calc(100vh - 200px);
+
+    overflow: visible;
+
 }
 
 .calendar-filters {
@@ -779,6 +783,10 @@ body {
 .calendar-grid-container {
 
     flex: 1;
+
+    max-height: calc(100vh - 550px);
+
+    overflow: visible;
 
 }
 
