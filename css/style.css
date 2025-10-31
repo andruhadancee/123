@@ -605,6 +605,8 @@ body {
 
     flex-direction: column;
 
+    gap: 0 !important;
+
   }
 
   .toggle-filters-btn {
