@@ -336,7 +336,7 @@
                     arrow.textContent = isHidden ? '▼' : '▲';
                 }
                 // Меняем скругление кнопки
-                this.style.borderRadius = isHidden ? '12px' : '12px 12px 0 0';
+                this.style.borderRadius = isHidden ? '8px' : '8px 8px 0 0';
             }
         });
     }

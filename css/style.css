@@ -573,7 +573,7 @@ body {
 
   }
 
-  .calendar-grid { gap: 4px; grid-template-columns: repeat(7, minmax(44px, 1fr)); width: 100%; margin-top: 16px; max-height: none; }
+  .calendar-grid { gap: 4px; grid-template-columns: repeat(7, minmax(44px, 1fr)); width: 100%; margin-top: 20px; max-height: none; }
 
   .calendar-cell { min-height: 50px; padding: 4px; border-radius: 6px; }
 
@@ -607,6 +607,8 @@ body {
 
     gap: 0 !important;
 
+    margin-top: 0 !important;
+
   }
 
   .calendar-controls {
@@ -627,43 +629,39 @@ body {
 
     width: 100% !important;
 
-    padding: 16px !important;
+    padding: 14px 16px !important;
 
     margin-bottom: 0 !important;
 
-    background: linear-gradient(135deg, rgba(139, 90, 191, 0.25), rgba(107, 45, 143, 0.2)) !important;
+    background: rgba(139, 90, 191, 0.15) !important;
 
-    border: 2px solid rgba(139, 90, 191, 0.6) !important;
-
-    border-radius: 12px 12px 0 0 !important;
+    border: 1px solid rgba(139, 90, 191, 0.4) !important;
 
     border-bottom: none !important;
 
+    border-radius: 8px 8px 0 0 !important;
+
     color: var(--color-text-primary) !important;
 
-    font-size: 15px !important;
+    font-size: 14px !important;
 
-    font-weight: 700 !important;
+    font-weight: 600 !important;
 
     cursor: pointer;
 
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 
     position: relative;
 
     gap: 8px;
 
-    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2) !important;
-
   }
 
   .toggle-filters-btn:active {
 
-    background: linear-gradient(135deg, rgba(139, 90, 191, 0.35), rgba(107, 45, 143, 0.3));
+    background: rgba(139, 90, 191, 0.25) !important;
 
     transform: scale(0.98);
-
-    box-shadow: 0 2px 8px rgba(139, 90, 191, 0.3);
 
   }
 
@@ -697,17 +695,15 @@ body {
 
     max-width: none !important;
 
-    border-radius: 0 0 12px 12px !important;
+    border-radius: 0 0 8px 8px !important;
 
-    border: 2px solid rgba(139, 90, 191, 0.6) !important;
+    border: 1px solid rgba(139, 90, 191, 0.4) !important;
 
     border-top: none !important;
 
-    background: linear-gradient(135deg, rgba(45, 27, 61, 0.6), rgba(30, 20, 40, 0.6)) !important;
+    background: rgba(45, 27, 61, 0.3) !important;
 
     backdrop-filter: blur(10px) !important;
-
-    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2) !important;
 
   }
 
