@@ -342,8 +342,8 @@
             if (arrow) {
                 arrow.textContent = '▼';
             }
-            toggleFiltersBtn.style.borderRadius = '8px';
-            toggleFiltersBtn.style.borderBottom = '1px solid rgba(139, 90, 191, 0.4)';
+            toggleFiltersBtn.style.setProperty('border-radius', '8px', 'important');
+            toggleFiltersBtn.style.setProperty('border-bottom', '1px solid rgba(139, 90, 191, 0.4)', 'important');
         }
     }
     
@@ -358,8 +358,8 @@
                     arrow.textContent = isHidden ? '▼' : '▲';
                 }
                 // Меняем скругление кнопки и границу
-                this.style.borderRadius = isHidden ? '8px' : '8px 8px 0 0';
-                this.style.borderBottom = isHidden ? '1px solid rgba(139, 90, 191, 0.4)' : 'none';
+                this.style.setProperty('border-radius', isHidden ? '8px' : '8px 8px 0 0', 'important');
+                this.style.setProperty('border-bottom', isHidden ? '1px solid rgba(139, 90, 191, 0.4)' : 'none', 'important');
                 // Сохраняем состояние в localStorage
                 localStorage.setItem('calendarFiltersCollapsed', isHidden.toString());
             }
