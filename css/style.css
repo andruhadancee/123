@@ -261,6 +261,112 @@ body {
 .calendar-event-desc { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 10px; }
 .calendar-event-img { width: 100%; height: 300px; object-fit: cover; border-radius: 10px; display: block; }
 
+/* Календарь: фильтр и текст событий */
+.calendar-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.calendar-filters {
+    min-width: 200px;
+    padding: 16px;
+    background: rgba(45, 27, 61, 0.3);
+    border: 1px solid rgba(139, 90, 191, 0.2);
+    border-radius: 12px;
+    position: sticky;
+    top: 20px;
+}
+
+.calendar-filters h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.calendar-filters .filter-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 13px;
+}
+
+.calendar-grid-container {
+    flex: 1;
+}
+
+.calendar-events-text {
+    margin-top: 8px;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.calendar-event-item {
+    margin-bottom: 4px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.calendar-event-more {
+    font-size: 10px;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+.calendar-event-content {
+    padding: 12px;
+}
+
+.calendar-event-discipline {
+    font-weight: 700;
+    font-size: 14px;
+    margin: 8px 0;
+}
+
+.calendar-event-prize,
+.calendar-event-teams {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin: 6px 0;
+}
+
+@media (max-width: 768px) {
+    .calendar-wrapper {
+        flex-direction: column;
+    }
+    
+    .calendar-filters {
+        width: 100%;
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+    }
+    
+    .calendar-filters h3 {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    
+    .calendar-filters .filter-btn {
+        display: inline-block;
+        width: auto;
+        margin-bottom: 0;
+    }
+    
+    .calendar-events-text {
+        font-size: 10px;
+    }
+}
+
 
 .animated-bg-container {
     position: fixed;

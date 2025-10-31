@@ -101,20 +101,47 @@
                 <form id="calendar-event-form" style="padding: 16px 24px;">
                     <input type="hidden" id="calendar-event-id">
                     <div class="form-group">
-                        <label for="calendar-title">Название *</label>
+                        <label for="calendar-title">Название турнира *</label>
                         <input type="text" id="calendar-title" required placeholder="Например: Турнир 5х5 CS2">
                     </div>
-                    <div class="form-group">
-                        <label for="calendar-date">Дата *</label>
-                        <input type="date" id="calendar-date" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="calendar-discipline">Дисциплина *</label>
+                            <select id="calendar-discipline" required>
+                                <option value="">Выберите дисциплину</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="calendar-date">Дата *</label>
+                            <input type="date" id="calendar-date" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="calendar-prize">Призовой фонд *</label>
+                            <input type="text" id="calendar-prize" required placeholder="100 000 ₽">
+                        </div>
+                        <div class="form-group">
+                            <label for="calendar-max-teams">Количество команд *</label>
+                            <input type="number" id="calendar-max-teams" required placeholder="16" min="2">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="calendar-description">Описание</label>
-                        <input type="text" id="calendar-description" placeholder="Краткое описание события">
+                        <textarea id="calendar-description" rows="3" placeholder="Краткое описание события"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="calendar-image">Картинка (URL, необязательно)</label>
+                        <label for="calendar-image">Картинка (URL)</label>
                         <input type="text" id="calendar-image" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label for="calendar-registration-link">Ссылка на регистрацию</label>
+                        <input type="text" id="calendar-registration-link" placeholder="https://forms.gle/...">
+                    </div>
+                    <div class="form-group">
+                        <label for="calendar-custom-link">Пользовательская ссылка</label>
+                        <input type="text" id="calendar-custom-link" placeholder="https://...">
+                        <small>Если указана, будет использована вместо ссылки на регистрацию</small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn-secondary" id="cancel-calendar-event">Отмена</button>

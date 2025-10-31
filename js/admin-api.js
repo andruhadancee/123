@@ -184,7 +184,7 @@ async function deleteCalendarEvent(id) {
 
 let editingCalendarId = null;
 
-function openCalendarModal(event) {
+async function openCalendarModal(event) {
     const modal = document.getElementById('calendar-event-modal');
     const titleEl = document.getElementById('calendar-event-title');
     const idEl = document.getElementById('calendar-event-id');
@@ -192,15 +192,32 @@ function openCalendarModal(event) {
     const d = document.getElementById('calendar-date');
     const desc = document.getElementById('calendar-description');
     const img = document.getElementById('calendar-image');
+    const disc = document.getElementById('calendar-discipline');
+    const prize = document.getElementById('calendar-prize');
+    const maxTeams = document.getElementById('calendar-max-teams');
+    const regLink = document.getElementById('calendar-registration-link');
+    const customLink = document.getElementById('calendar-custom-link');
+    
+    // Загружаем дисциплины в селект
+    if (disc && disc.options.length <= 1) {
+        const disciplines = await API.disciplines.getAll();
+        disc.innerHTML = '<option value="">Выберите дисциплину</option>' +
+            disciplines.map(d => `<option value="${d}">${d}</option>`).join('');
+    }
 
     if (event) {
         editingCalendarId = event.id;
         titleEl.textContent = 'Изменить событие';
         idEl.value = event.id;
         t.value = event.title || '';
-        d.value = (event.event_date || '').slice(0,10);
+        d.value = (event.event_date || event.eventDate || '').slice(0,10);
         desc.value = event.description || '';
-        img.value = event.image_url || '';
+        img.value = event.image_url || event.imageUrl || '';
+        if (disc) disc.value = event.discipline || '';
+        if (prize) prize.value = event.prize || '';
+        if (maxTeams) maxTeams.value = event.max_teams || event.maxTeams || '';
+        if (regLink) regLink.value = event.registration_link || event.registrationLink || '';
+        if (customLink) customLink.value = event.custom_link || event.customLink || '';
     } else {
         editingCalendarId = null;
         titleEl.textContent = 'Добавить событие';
@@ -209,6 +226,11 @@ function openCalendarModal(event) {
         d.value = '';
         desc.value = '';
         img.value = '';
+        if (disc) disc.value = '';
+        if (prize) prize.value = '';
+        if (maxTeams) maxTeams.value = '';
+        if (regLink) regLink.value = '';
+        if (customLink) customLink.value = '';
     }
     modal.classList.add('active');
 }
@@ -226,11 +248,11 @@ async function editCalendarEvent(id) {
     const events = await API.calendar.getAll(key);
     const e = events.find(x => x.id === id);
     if (!e) return;
-    openCalendarModal(e);
+    await openCalendarModal(e);
 }
 
 async function createCalendarEvent() {
-    openCalendarModal(null);
+    await openCalendarModal(null);
 }
 
 window.editCalendarEvent = editCalendarEvent;
@@ -263,11 +285,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const eventDate = document.getElementById('calendar-date').value;
         const description = document.getElementById('calendar-description').value.trim();
         const imageUrl = document.getElementById('calendar-image').value.trim();
+        const discipline = document.getElementById('calendar-discipline').value.trim();
+        const prize = document.getElementById('calendar-prize').value.trim();
+        const maxTeams = document.getElementById('calendar-max-teams').value.trim();
+        const registrationLink = document.getElementById('calendar-registration-link').value.trim();
+        const customLink = document.getElementById('calendar-custom-link').value.trim();
+        
         if (!title || !eventDate) return;
+        
+        const data = {
+            title,
+            eventDate,
+            description: description || null,
+            imageUrl: imageUrl || null,
+            discipline: discipline || null,
+            prize: prize || null,
+            maxTeams: maxTeams ? parseInt(maxTeams) : null,
+            registrationLink: registrationLink || null,
+            customLink: customLink || null
+        };
+        
         if (editingCalendarId) {
-            await API.calendar.update({ id: editingCalendarId, title, description, eventDate, imageUrl });
+            data.id = editingCalendarId;
+            await API.calendar.update(data);
         } else {
-            await API.calendar.create({ title, description, eventDate, imageUrl });
+            await API.calendar.create(data);
         }
         closeCalendarModal();
         await loadCalendarAdmin();
