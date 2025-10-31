@@ -609,6 +609,14 @@ body {
 
   }
 
+  .calendar-controls {
+
+    margin-bottom: 0 !important;
+
+    border-bottom: none !important;
+
+  }
+
   .toggle-filters-btn {
 
     display: flex !important;
@@ -617,25 +625,25 @@ body {
 
     justify-content: center;
 
-    width: 100%;
+    width: 100% !important;
 
-    padding: 16px;
+    padding: 16px !important;
 
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 
-    background: linear-gradient(135deg, rgba(139, 90, 191, 0.25), rgba(107, 45, 143, 0.2));
+    background: linear-gradient(135deg, rgba(139, 90, 191, 0.25), rgba(107, 45, 143, 0.2)) !important;
 
-    border: 2px solid rgba(139, 90, 191, 0.6);
+    border: 2px solid rgba(139, 90, 191, 0.6) !important;
 
-    border-radius: 12px 12px 0 0;
+    border-radius: 12px 12px 0 0 !important;
 
-    border-bottom: none;
+    border-bottom: none !important;
 
-    color: var(--color-text-primary);
+    color: var(--color-text-primary) !important;
 
-    font-size: 15px;
+    font-size: 15px !important;
 
-    font-weight: 700;
+    font-weight: 700 !important;
 
     cursor: pointer;
 
@@ -645,7 +653,7 @@ body {
 
     gap: 8px;
 
-    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2);
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2) !important;
 
   }
 
@@ -671,35 +679,35 @@ body {
 
     width: 100% !important;
 
-    position: static;
+    position: static !important;
 
-    display: grid;
+    display: grid !important;
 
     grid-template-columns: repeat(3, 1fr) !important;
 
-    gap: 8px;
+    gap: 8px !important;
 
     padding: 16px !important;
 
-    margin-top: 0;
+    margin-top: 0 !important;
 
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
 
     min-width: auto !important;
 
     max-width: none !important;
 
-    border-radius: 0 0 12px 12px;
+    border-radius: 0 0 12px 12px !important;
 
-    border: 2px solid rgba(139, 90, 191, 0.6);
+    border: 2px solid rgba(139, 90, 191, 0.6) !important;
 
-    border-top: none;
+    border-top: none !important;
 
-    background: linear-gradient(135deg, rgba(45, 27, 61, 0.6), rgba(30, 20, 40, 0.6));
+    background: linear-gradient(135deg, rgba(45, 27, 61, 0.6), rgba(30, 20, 40, 0.6)) !important;
 
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px) !important;
 
-    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2);
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2) !important;
 
   }
 
