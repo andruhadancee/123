@@ -573,7 +573,7 @@ body {
 
   }
 
-  .calendar-grid { gap: 4px; grid-template-columns: repeat(7, minmax(44px, 1fr)); width: 100%; margin-top: 12px; max-height: none; }
+  .calendar-grid { gap: 4px; grid-template-columns: repeat(7, minmax(44px, 1fr)); width: 100%; margin-top: 16px; max-height: none; }
 
   .calendar-cell { min-height: 50px; padding: 4px; border-radius: 6px; }
 
@@ -619,21 +619,23 @@ body {
 
     width: 100%;
 
-    padding: 12px 16px;
+    padding: 16px;
 
     margin-bottom: 0;
 
-    background: rgba(139, 90, 191, 0.2);
+    background: linear-gradient(135deg, rgba(139, 90, 191, 0.25), rgba(107, 45, 143, 0.2));
 
-    border: 1px solid rgba(139, 90, 191, 0.5);
+    border: 2px solid rgba(139, 90, 191, 0.6);
 
     border-radius: 12px 12px 0 0;
 
+    border-bottom: none;
+
     color: var(--color-text-primary);
 
-    font-size: 14px;
+    font-size: 15px;
 
-    font-weight: 600;
+    font-weight: 700;
 
     cursor: pointer;
 
@@ -643,13 +645,17 @@ body {
 
     gap: 8px;
 
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2);
+
   }
 
   .toggle-filters-btn:active {
 
-    background: rgba(139, 90, 191, 0.3);
+    background: linear-gradient(135deg, rgba(139, 90, 191, 0.35), rgba(107, 45, 143, 0.3));
 
     transform: scale(0.98);
+
+    box-shadow: 0 2px 8px rgba(139, 90, 191, 0.3);
 
   }
 
@@ -685,7 +691,15 @@ body {
 
     border-radius: 0 0 12px 12px;
 
+    border: 2px solid rgba(139, 90, 191, 0.6);
+
     border-top: none;
+
+    background: linear-gradient(135deg, rgba(45, 27, 61, 0.6), rgba(30, 20, 40, 0.6));
+
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2);
 
   }
 
