@@ -1,224 +1,3697 @@
 /* ===== ШРИФТЫ ===== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display= Größe');
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 /* Fallback шрифт пока не подключен ALS Hauss VF */
+
 :root {
+
     /* WB Cyber Club Color Palette - Брендбук */
+
     --color-bg-dark: #000000;
+
     --color-bg-medium: #0f0f0f;
+
     --color-bg-light: #1a1a1a;
+
     --color-black-pure: #000000;
+
     --color-purple-dark: #2d1b3d;
+
     --color-purple: #6b2d8f;
+
     --color-purple-light: #8b3db5;
+
     --color-purple-bright: #a855f7;
+
     --color-pink: #8b5abf;
+
     --color-pink-light: #9d6fd4;
+
     
+
     /* Gradient */
-    --gradient-main: Ø linear-gradient(135deg, #000000 0%, #0f0f0f 25%, #2d1b3d 50%, #6b2d8f 100%);
+
+    --gradient-main: linear-gradient(135deg, #000000 0%, #0f0f0f 25%, #2d1b3d 50%, #6b2d8f 100%);
+
     --gradient-card: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(45, 27, 61, 0.6) 100%);
+
     --gradient-button: linear-gradient(90deg, #8b5abf 0%, #a855f7 100%);
+
     
+
     /* Text */
+
     --color-text-primary: #ffffff;
+
     --color-text-secondary: #9ca3af;
+
     
+
     /* Borders */
+
     --border-radius: 16px;
+
     --border-color: rgba(139, 90, 191, 0.3);
+
     --border-color-dark: rgba(0, 0, 0, 0.5);
+
 }
 
 /* ===== RESET & BASE ===== */
+
 * {
+
     margin: 0;
+
     padding: 0;
+
     box-sizing: border-box;
+
 }
 
 body {
+
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
     background: #0a0a0a; /* Было background: #0a0a0a; или использовать var(--color-bg-dark) */
-    color: var精心--color-text-primary);
+
+    color: var(--color-text-primary);
+
     line-height: 1.6;
+
     overflow-x: hidden;
+
     position: relative;
+
     min-height: 100vh;
+
 }
 
 /* ===== КРАСИВЫЙ ФОН С ВОЛНАМИ И ЭФФЕКТАМИ ===== */
+
 .animated-bg {
+
     position: fixed;
+
     top: 0;
+
     left: 0;
-    width: řen%;
+
+    width: 100%;
+
     height: 100%;
-    z是一種: -2;
+
+    z-index: -2;
+
     overflow: hidden;
+
 }
 
 /* Усиленный градиентный дрейф */
+
 .animated-bg::before {
+
     content: '';
+
     position: absolute;
+
     top: -50%;
+
     left: -50%;
+
     width: 200%;
+
     height: 200%;
+
     background: radial-gradient(circle, rgba(139, 90, 191, 0.15) 0%, rgba(107, 45, 143, 0.1) 50%, transparent 100%);
+
     animation: gradientFloat 20s ease-in-out infinite alternate;
+
 }
 
 @keyframes gradientFloat {
+
     0% {
+
         transform: translate(0, 0) scale(1);
+
     }
+
     25% {
+
         transform: translate(-10%, 10%) scale(1.1);
+
     }
+
     50% {
+
         transform: translate(-20%, -10%) scale(0.9);
+
     }
+
     75% {
+
         transform: translate(10%, 20%) scale(1.05);
+
     }
+
     100% {
+
         transform: translate(20%, -5%) scale(1);
+
     }
+
 }
 
 #particles-canvas {
+
     position: fixed;
+
     top: 0;
+
     left: 0;
+
     width: 100%;
+
     height: 100%;
+
     z-index: -1;
+
     pointer-events: none;
+
 }
 
 /* ===== КАЛЕНДАРЬ ===== */
+
 .calendar-controls {
+
     display: flex;
+
     gap: 12px;
+
     align-items: center;
+
     margin-bottom: 16px;
+
     padding: 8px 0 12px;
+
     border-bottom: 1px solid rgba(139,90,191,.25);
-    justify-content: khoảng; /* по центру стрелки и месяц */
+
+    justify-content: center; /* по центру стрелки и месяц */
+
 }
 
 .calendar-nav-btn {
+
     width: 36px;
+
     height: 36px;
+
     border-radius: 50%;
+
     border: 1px solid rgba(139,90,191,.45);
+
     background: rgba(35, 35, 50, 0.4);
+
     color: #fff;
+
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
+
     font-weight: 800;
+
     cursor: pointer;
+
     transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+
     box-shadow: 0 2px 8px rgba(139,90,191,.25);
+
 }
+
 .calendar-nav-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(139,90,191,.35); }
+
 .calendar-nav-btn:active { transform: scale(.96); }
 
 .calendar-month {
+
     font-weight: 800;
+
     font-size: 18px;
+
     min-width: 200px;
+
     text-align: center;
+
     color: #fff;
+
 }
 
 .calendar-grid {
+
     display: grid;
-    grid-template-columns:mx repeat(7, minmax(18px, 1fr));
+
+    grid-template-columns: repeat(7, minmax(16px, 1fr));
+
     gap: 2px;
-    width: min(calc(100vw - 80px), 280px);
+
+    width: min(calc(100vw - 80px), 250px);
+
     margin: 0 auto;
+
     max-height: none;
+
     overflow: visible;
+
 }
 
 /* Стили для заголовков дней недели */
+
 .calendar-grid > div:first-child,
+
 .calendar-grid > div:nth-child(2),
+
 .calendar-grid > div:nth-child(3),
+
 .calendar-grid > div:nth-child(4),
+
 .calendar-grid > div:nth-child(5),
+
 .calendar-grid > div:nth-child(6),
+
 .calendar-grid > div:nth-child(7) {
+
     font-size: 9px;
+
     padding: 2px;
+
     text-align: center;
+
     min-height: auto;
+
     height: auto;
+
     aspect-ratio: auto;
+
 }
 
 .calendar-cell {
+
     position: relative;
-    padding: 3px;
+
+    padding: 2px;
+
     border: 1px solid rgba(139, 90, 191, 0.2);
-    border-radius: 5px;
+
+    border-radius: 4px;
+
     background: rgba(45, 27, 61, 0.25);
+
     cursor: pointer;
-    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .것s ease;
-    min-height: 18px;
+
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+
+    min-height: 14px;
+
     aspect-ratio: 1 / 1;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     justify-content: flex-start;
+
 }
+
 .calendar-cell:hover { transform: translateY(-2px); }
 
 .calendar-date-num { 
+
     font-weight: 800; 
-    font-size: 12px; 
-    margin-bottom: 2px; 
+
+    font-size: 10px; 
+
+    margin-bottom: 1px; 
+
     letter-spacing: -0.2px;
+
     align-self: flex-start;
+
     margin-left: 2px;
+
 }
 
 .calendar-has-events {
-    background: linear-gradient(180deg, rgba(15,mind,30,.85), rgba(45,27,61,.35));
+
+    background: linear-gradient(180deg, rgba(15,18,30,.85), rgba(45,27,61,.35));
+
     border-color: #5eead4; /* teal */
+
     box-shadow: 0 8px 24px rgba(94, 234, 212, 0.25);
+
 }
+
 .calendar-has-events:hover {
+
     box-shadow: 0 12px 32px rgba(94, 234, 212, 0.35);
+
 }
 
 .calendar-discipline-icon {
+
     position: absolute;
-    top: 3px;
-    right: 3px;
-    width: 18px;
-    height: 18px;
+
+    top: 2px;
+
+    right: 2px;
+
+    width: 14px;
+
+    height: 14px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     z-index: 2;
+
 }
 
 .calendar-discipline-icon img.discipline-icon,
+
 .calendar-discipline-icon .discipline-icon {
+
     width: 100%;
+
     height: 100%;
+
     object-fit: contain;
+
     filter: brightness(1.2);
+
     display: block;
+
 }
 
 .calendar-discipline-icon .discipline-icon-emoji {
-    font-sizeemony: 15px;
+
+    font-size: 12px;
+
     line-height: 1;
+
     display: inline-block;
+
+}
+
+.calendar-badge {
+
+    position: absolute;
+
+    top: 8px;
+
+    right: 8px;
+
+    background: #ffffff;
+
+    color: #1f2937;
+
+    border-radius: 999px;
+
+    padding: 3px 8px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    box-shadow: 0 4px 12px rgba(255,255,255, 0.25);
+
+}
+
+.calendar-empty { opacity: .35; background: rgba(45,27,61,0.15); }
+
+@media (max-width: 900px) {
+
+  .calendar-cell { min-height: 56px; padding: 10px; }
+
+}
+
+/* Мобильные улучшения календаря и модалки */
+
+@media (max-width: 768px) {
+
+  /* Убираем только АНИМИРОВАННЫЕ градиенты и эффекты (волны, световые лучи) */
+
+  .loader-container .loader-wave,
+
+  .loader-container .loader-wave-2,
+
+  .animated-bg .animated-bg-wave,
+
+  .animated-bg .animated-bg-wave-2,
+
+  .animated-bg > .overlay,
+
+  .light-rays,
+
+  .loader-container .loader-light-rays {
+
+    display: none !important;
+
+    visibility: hidden !important;
+
+    background: none !important;
+
+    background-image: none !important;
+
+    animation: none !important;
+
+    opacity: 0 !important;
+
+    pointer-events: none !important;
+
+  }
+
+  
+
+  /* Оставляем статичный градиент как на ПК, но БЕЗ анимации */
+
+  .animated-bg::before,
+
+  .loader-container::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: -50%;
+
+    left: -50%;
+
+    width: 200%;
+
+    height: 200%;
+
+    background: radial-gradient(circle, rgba(139, 90, 191, 0.15) 0%, rgba(107, 45, 143, 0.1) 50%, transparent 100%);
+
+    /* УБИРАЕМ только анимацию, сам градиент оставляем */
+
+    animation: none !important;
+
+    transform: translate(0, 0) scale(1) !important;
+
+  }
+
+  .calendar-grid { gap: 2px; grid-template-columns: repeat(7, minmax(28px, 1fr)); width: 100%; margin-top: 12px; max-height: none; }
+
+  .calendar-cell { min-height: 28px; padding: 3px; border-radius: 5px; }
+
+  .calendar-date-num { font-size: 10px; margin-bottom: 1px; }
+
+  .calendar-events-text { margin-top: auto; font-size: 8px; padding: 0 2px; }
+
+  .calendar-discipline-icon { top: 2px; right: 2px; width: 14px; height: 14px; }
+
+  .calendar-discipline-icon .discipline-icon-emoji { font-size: 10px; }
+
+  .calendar-popover { display: none; }
+
+  .modal { padding: 80px 12px 12px; }
+
+  .modal-content { max-width: 92vw; border-radius: 16px; }
+
+  .calendar-event-img { height: 180px; }
+
+}
+
+.calendar-popover {
+
+    position: absolute;
+
+    left: 12px;
+
+    right: 12px;
+
+    bottom: 12px;
+
+    background: rgba(15, 15, 24, 0.9);
+
+    border: 1px solid rgba(139, 90, 191, 0.4);
+
+    border-radius: 10px;
+
+    padding: 8px;
+
+    display: none;
+
+    z-index: 3;
+
+}
+
+.calendar-cell:hover .calendar-popover { display: block; }
+
+.calendar-popover-title { font-size: 12px; font-weight: 700; color: var(--color-pink); margin-bottom: 6px; }
+
+.calendar-popover-item { font-size: 12px; color: var(--color-text-primary); opacity: .9; }
+
+/* Календарь: модалка событий */
+
+.calendar-modal-title { font-size: 22px; font-weight: 800; }
+
+.calendar-events-wrap { padding-right: 0; }
+
+.calendar-event-card {
+
+    background: rgba(25,25,40,.85);
+
+    border: 1px solid rgba(139,90,191,.35);
+
+    border-radius: 14px;
+
+    padding: 14px;
+
+    margin-bottom: 14px;
+
+}
+
+.calendar-event-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+
+.calendar-event-desc { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 10px; }
+
+.calendar-event-img { width: 100%; height: 300px; object-fit: cover; border-radius: 10px; display: block; }
+
+/* Календарь: фильтр и текст событий */
+
+.calendar-wrapper {
+
+    display: flex;
+
+    gap: 20px;
+
+    align-items: flex-start;
+
+}
+
+.calendar-filters {
+
+    min-width: 160px;
+
+    padding: 12px;
+
+    background: linear-gradient(135deg, rgba(45, 27, 61, 0.6), rgba(30, 20, 40, 0.6));
+
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(139, 90, 191, 0.3);
+
+    border-radius: 12px;
+
+    position: sticky;
+
+    top: 20px;
+
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+}
+
+.calendar-filters h3 {
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: var(--color-text-primary);
+
+    margin-bottom: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.8px;
+
+    padding-bottom: 8px;
+
+    border-bottom: 1px solid rgba(139, 90, 191, 0.2);
+
+}
+
+.calendar-filters .filter-btn {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin-bottom: 6px;
+
+    text-align: left;
+
+    padding: 8px 12px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    background: rgba(139, 90, 191, 0.1);
+
+    border: 1px solid rgba(139, 90, 191, 0.2);
+
+    border-radius: 8px;
+
+    color: var(--color-text-primary);
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+.calendar-filters .filter-btn img.discipline-icon,
+
+.calendar-filters .filter-btn .discipline-icon {
+
+    width: 24px !important;
+
+    height: 24px !important;
+
+    flex-shrink: 0;
+
+    object-fit: contain;
+
+}
+
+.calendar-filters .filter-btn .discipline-icon-emoji {
+
+    font-size: 18px !important;
+
+    line-height: 1;
+
+}
+
+.calendar-filters .filter-btn::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+
+    left: -100%;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+
+    transition: left 0.5s ease;
+
+}
+
+.calendar-filters .filter-btn:hover::before {
+
+    left: 100%;
+
+}
+
+.calendar-filters .filter-btn:hover {
+
+    background: rgba(139, 90, 191, 0.2);
+
+    border-color: rgba(139, 90, 191, 0.4);
+
+    transform: translateX(4px);
+
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2);
+
+}
+
+.calendar-filters .filter-btn.active {
+
+    background: rgba(139, 90, 191, 0.25);
+
+    border-color: rgba(139, 90, 191, 0.5);
+
+    box-shadow: 0 0 20px rgba(139, 90, 191, 0.3);
+
+    transform: translateX(0);
+
+}
+
+.calendar-filters .filter-btn.active::after {
+
+    content: '';
+
+    position: absolute;
+
+    right: 12px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    width: 6px;
+
+    height: 6px;
+
+    background: var(--color-pink-light);
+
+    border-radius: 50%;
+
+    box-shadow: 0 0 8px rgba(139, 90, 191, 0.8);
+
+}
+
+.calendar-grid-container {
+
+    flex: 1;
+
+}
+
+.calendar-events-text {
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    margin: 0;
+
+    font-size: 8px;
+
+    line-height: 1.1;
+
+    padding: 0 2px;
+
+    text-align: center;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: calc(100% - 4px);
+
+}
+
+.calendar-event-item {
+
+    margin-bottom: 1px;
+
+    font-weight: 600;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    text-align: center;
+
+    width: 100%;
+
+}
+
+.calendar-event-more {
+
+    font-size: 8px;
+
+    opacity: 0.7;
+
+    margin-top: 2px;
+
+}
+
+.calendar-event-content {
+
+    padding: 12px;
+
+}
+
+.calendar-event-discipline {
+
+    font-weight: 700;
+
+    font-size: 14px;
+
+    margin: 8px 0;
+
+}
+
+.calendar-event-prize,
+
+.calendar-event-teams {
+
+    font-size: 13px;
+
+    color: var(--color-text-secondary);
+
+    margin: 6px 0;
+
+}
+
+.calendar-apply-btn {
+
+    margin-top: 16px;
+
+    width: 100%;
+
+    padding: 12px 24px;
+
+    text-align: center;
+
+    display: inline-block;
+
+    background: rgba(139, 90, 191, 0.2);
+
+    border: 1px solid rgba(139, 90, 191, 0.5);
+
+    border-radius: 8px;
+
+    color: white;
+
+    font-weight: 600;
+
+    font-size: 14px;
+
+    text-decoration: none;
+
+    transition: all 0.3s ease;
+
+}
+
+.calendar-apply-btn:hover {
+
+    background: rgba(139, 90, 191, 0.35);
+
+    border-color: rgba(139, 90, 191, 0.7);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.3);
+
+    text-decoration: none;
+
+}
+
+@media (max-width: 768px) {
+
+    .calendar-wrapper {
+
+        flex-direction: column;
+
+    }
+
+    
+
+    .calendar-filters {
+
+        width: 100%;
+
+        position: static;
+
+        display: flex;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+
+        padding: 12px;
+
+    }
+
+    
+
+    .calendar-filters h3 {
+
+        width: 100%;
+
+        margin-bottom: 8px;
+
+    }
+
+    
+
+    .calendar-filters .filter-btn {
+
+        display: inline-block;
+
+        width: auto;
+
+        margin-bottom: 0;
+
+    }
+
+    
+
+    .calendar-events-text {
+
+        font-size: 10px;
+
+    }
+
+}
+
+.animated-bg-container {
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow: hidden;
+
+    background-image: url('../11111.png');
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+}
+
+/* Яркие волны внизу */
+
+.animated-bg-wave {
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 0;
+
+    width: 200%;
+
+    height: 35vh;
+
+    background: linear-gradient(
+
+        180deg,
+
+        transparent 0%,
+
+        rgba(107, 33, 168, 0.2) 40%,
+
+        rgba(139, 90, 191, 0.3) 70%,
+
+        rgba(107, 33, 168, 0.35) 100%
+
+    );
+
+    animation: waveMove 8s ease-in-out infinite;
+
+    pointer-events: none;
+
+}
+
+/* Второй слой волн */
+
+.animated-bg-wave-2 {
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 0;
+
+    width: 200%;
+
+    height: 30vh;
+
+    background: linear-gradient(
+
+        180deg,
+
+        transparent 0%,
+
+        rgba(107, 33, 168, 0.15) 50%,
+
+        rgba(139, 90, 191, 0.25) 100%
+
+    );
+
+    animation: waveMove 10s ease-in-out infinite reverse;
+
+    opacity: 0.9;
+
+    pointer-events: none;
+
+}
+
+/* Световые лучи */
+
+.light-rays {
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: 
+
+        linear-gradient(30deg, transparent 40%, rgba(139, 90, 191, 0.1) 50%, transparent 60%),
+
+        linear-gradient(150deg, transparent 40%, rgba(107, 45, 143, 0.08) 50%, transparent 60%);
+
+    animation: lightRay 25s linear infinite;
+
+    pointer-events: none;
+
+}
+
+@keyframes lightRay {
+
+    0% {
+
+        transform: translateX(-100%) translateY(0);
+
+    }
+
+    100% {
+
+        transform: translateX(100%) translateY(0);
+
+    }
+
+}
+
+@keyframes waveMove {
+
+    0%, 100% {
+
+        transform: translateX(0) translateY(0);
+
+    }
+
+    25% {
+
+        transform: translateX(-10%) translateY(-3%);
+
+    }
+
+    50% {
+
+        transform: translateX(-15%) translateY(3%);
+
+    }
+
+    75% {
+
+        transform: translateX(-5%) translateY(-2%);
+
+    }
+
+}
+
+/* Затемняющий overlay для лучшей читаемости */
+
+.animated-bg > .overlay {
+
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: linear-gradient(
+
+        to bottom,
+
+        rgba(10, 10, 20, 0) 0%,
+
+        rgba(10, 10, 20, 0.1) 30%,
+
+        rgba(10, 10, 20, 0.3) 60%,
+
+        rgba(10, 10, 20, 0.5) 85%,
+
+        rgba(10, 10, 20, 0.7) 100%
+
+    );
+
+    pointer-events: none;
+
+    z-index: 3;
+
+}
+
+/* ===== CONTAINER ===== */
+
+.container {
+
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding: 0 24px;
+
+}
+
+/* ===== HEADER ===== */
+
+header {
+
+    padding: 24px 0;
+
+    position: relative;
+
+    z-index: 100;
+
+    background: transparent;
+
+    backdrop-filter: none;
+
+}
+
+header .container {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 40px;
+
+    flex-wrap: wrap;
+
+}
+
+/* Logo */
+
+.logo {
+
+    display: flex;
+
+    align-items: center;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+}
+
+.logo-image {
+
+    height: 50px;
+
+    width: auto;
+
+    transition: all 0.3s ease;
+
+    filter: brightness(1);
+
+}
+
+.logo:hover .logo-image {
+
+    transform: scale(1.05);
+
+    filter: brightness(1.2);
+
+}
+
+/* Navigation */
+
+nav {
+
+    display: flex;
+
+    gap: 8px;
+
+    flex: 1;
+
+    justify-content: center;
+
+}
+
+nav a {
+
+    padding: 12px 20px;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 50px;
+
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+
+    white-space: nowrap;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    border: 2px solid rgba(255, 255, 255, 0.3);
+
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+}
+
+nav a:hover {
+
+    color: white;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.4);
+
+    background: rgba(255, 255, 255, 0.25);
+
+    border-color: rgba(255, 255, 255, 0.5);
+
+}
+
+nav a.active {
+
+    color: white;
+
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.4);
+
+    background: rgba(255, 255, 255, 0.25);
+
+    border-color: rgba(255, 255, 255, 0.5);
+
+}
+
+/* Social Links */
+
+.social-links {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+.social-btn {
+
+    width: 44px;
+
+    height: 44px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    background: rgba(255, 255, 255, 0.08);
+
+    transition: all 0.3s ease;
+
+    text-decoration: none;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    backdrop-filter: blur(10px);
+
+}
+
+.social-btn:hover {
+
+    background: rgba(255, 255, 255, 0.15);
+
+    border-color: rgba(255, 255, 255, 0.3);
+
+    color: white;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.2);
+
+}
+
+.btn-contact {
+
+    padding: 12px 24px;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    color: white;
+
+    border-radius: 50px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: all 0.3s ease;
+
+    white-space: nowrap;
+
+    border: 2px solid rgba(255, 255, 255, 0.3);
+
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+}
+
+.btn-contact:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.4);
+
+    background: rgba(255, 255, 255, 0.25);
+
+    border-color: rgba(255, 255, 255, 0.5);
+
+}
+
+/* ===== MAIN CONTENT ===== */
+
+main {
+
+    padding: 32px 24px 60px;
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+.page-title {
+
+    font-size: 42px;
+
+    font-weight: 700;
+
+    margin-bottom: 28px;
+
+    text-transform: capitalize;
+
+}
+
+/* ===== TOURNAMENTS GRID ===== */
+
+.tournaments-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+
+    gap: 18px;
+
+}
+
+/* Tournament Card - Стиль Orchid Cup */
+
+.tournament-card {
+
+    background: rgba(45, 27, 61, 0.3);
+
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(139, 90, 191, 0.2);
+
+    border-radius: 12px;
+
+    padding: 16px 20px;
+
+    position: relative;
+
+    transition: all 0.3s ease;
+
+    overflow: hidden;
+
+    word-wrap: break-word;
+
+}
+
+.tournament-card:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
+
+    border-color: var(--color-pink);
+
+}
+
+.tournament-card-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    margin-bottom: 12px;
+
+}
+
+.tournament-card h2 {
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    color: var(--color-text-primary);
+
+    margin-bottom: 0;
+
+    flex: 1;
+
+    word-wrap: break-word;
+
+    overflow-wrap: break-word;
+
+    hyphens: auto;
+
+    max-width: 100%;
+
+    line-height: 1.3;
+
+}
+
+.tournament-number {
+
+    display: none;
+
+}
+
+.tournament-info {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px 12px;
+
+    margin-bottom: 12px;
+
+}
+
+.info-item {
+
+    display: flex;
+
+    min-width: 0;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+}
+
+.info-label {
+
+    font-size: 11px;
+
+    color: var(--color-text-secondary);
+
+    font-weight: 500;
+
+    line-height: 1.2;
+
+}
+
+.info-value {
+
+    font-size: 14px;
+
+    color: var(--color-text-primary);
+
+    font-weight: 600;
+
+    word-wrap: break-word;
+
+    overflow-wrap: break-word;
+
+    max-width: 100%;
+
+    line-height: 1.3;
+
+}
+
+.tournament-card .btn-submit {
+
+    width: auto;
+
+    padding: 10px 24px;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    color: white;
+
+    border: 2px solid rgba(255, 255, 255, 0.3);
+
+    border-radius: 50px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    text-decoration: none;
+
+    display: inline-block;
+
+    text-align: center;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+}
+
+.tournament-card .btn-submit:hover {
+
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.4);
+
+    transform: translateY(-2px);
+
+    background: rgba(255, 255, 255, 0.25);
+
+    border-color: rgba(255, 255, 255, 0.5);
+
+}
+
+/* ===== TEAMS PAGE ===== */
+
+.teams-container {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 24px;
+
+}
+
+.tournament-section {
+
+    background: rgba(25, 25, 40, 0.6);
+
+    backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(139, 90, 191, 0.3);
+
+    border-radius: 12px;
+
+    padding: 24px;
+
+}
+
+.tournament-section h2 {
+
+    font-size: 22px;
+
+    font-weight: 600;
+
+    margin-bottom: 16px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+.tournament-discipline-line {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+.tournament-header-icon {
+
+    display: inline-flex;
+
+    flex-shrink: 0;
+
+}
+
+.tournament-header-discipline {
+
+    color: var(--color-text-primary);
+
+    font-weight: 700;
+
+    font-size: 18px;
+
+}
+
+.tournament-title-line {
+
+    color: #8b5abf;
+
+    font-size: 20px;
+
+    font-weight: 600;
+
+}
+
+.teams-list {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+    gap: 16px;
+
+}
+
+.team-card {
+
+    background: rgba(35, 35, 50, 0.7);
+
+    border: 2px solid rgba(139, 90, 191, 0.5);
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    overflow: hidden;
+
+    word-wrap: break-word;
+
+    position: relative;
+
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 4px 16px rgba(139, 90, 191, 0.25);
+
+}
+
+.team-card::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+
+    left: -100%;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: linear-gradient(90deg, transparent, rgba(139, 90, 191, 0.1), transparent);
+
+    transition: left 0.5s;
+
+}
+
+.team-card:hover::before {
+
+    left: 100%;
+
+}
+
+.team-card:hover {
+
+    background: rgba(45, 45, 60, 0.8);
+
+    border-color: rgba(139, 90, 191, 0.7);
+
+    transform: translateY(-4px);
+
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.35);
+
+}
+
+.team-name {
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    color: var(--color-text-primary);
+
+    margin-bottom: 10px;
+
+    word-wrap: break-word;
+
+    overflow-wrap: break-word;
+
+    letter-spacing: -0.3px;
+
+}
+
+.team-info {
+
+    display: flex;
+
+    gap: 12px;
+
+    font-size: 15px;
+
+    color: var(--color-pink);
+
+    font-weight: 600;
+
+}
+
+.tournament-section {
+
+    margin-bottom: 40px;
+
+}
+
+.tournament-section h2 {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 24px;
+
+    padding-bottom: 16px;
+
+    border-bottom: 2px solid rgba(139, 90, 191, 0.3);
+
+}
+
+/* Empty State */
+
+.empty-state {
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    color: var(--color-text-secondary);
+
+}
+
+.empty-state h3 {
+
+    font-size: 20px;
+
+    margin-bottom: 8px;
+
+    color: var(--color-text-primary);
+
+}
+
+.empty-state p {
+
+    font-size: 14px;
+
+}
+
+/* Loading State */
+
+.loading {
+
+    text-align: center;
+
+    padding: 40px 20px;
+
+    color: var(--color-text-secondary);
+
+    font-size: 14px;
+
+}
+
+/* ===== LOADER ===== */
+
+.loader-container {
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100vw;
+
+    height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: #0a0a0a;
+
+    z-index: 9999;
+
+    opacity: 1;
+
+    transition: opacity 0.3s ease;
+
+    overflow: hidden;
+
+}
+
+#loader-particles-canvas {
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+}
+
+/* Градиентный дрейф для загрузчика (как на основном фоне) */
+
+.loader-container::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: -50%;
+
+    left: -50%;
+
+    width: 200%;
+
+    height: 200%;
+
+    background: radial-gradient(circle, rgba(139, 90, 191, 0.15) 0%, rgba(107, 45, 143, 0.1) 50%, transparent 100%);
+
+    animation: gradientFloat 20s ease-in-out infinite alternate;
+
+}
+
+/* Волны для загрузчика */
+
+.loader-container .loader-wave {
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 0;
+
+    width: 200%;
+
+    height: 35vh;
+
+    background: linear-gradient(
+
+        180deg,
+
+        transparent 0%,
+
+        rgba(107, 33, 168, 0.2) 40%,
+
+        rgba(139, 90, 191, 0.3) 70%,
+
+        rgba(107, 33, 168, 0.35) 100%
+
+    );
+
+    animation: waveMove 8s ease-in-out infinite;
+
+    pointer-events: none;
+
+}
+
+.loader-container .loader-wave-2 {
+
+    position: absolute;
+
+    bottom: 0;
+
+    left: 0;
+
+    width: 200%;
+
+    height: 30vh;
+
+    background: linear-gradient(
+
+        180deg,
+
+        transparent 0%,
+
+        rgba(107, 33, 168, 0.15) 50%,
+
+        rgba(139, 90, 191, 0.25) 100%
+
+    );
+
+    animation: waveMove 10s ease-in-out infinite reverse;
+
+    opacity: 0.9;
+
+    pointer-events: none;
+
+}
+
+/* Световые лучи для загрузчика */
+
+.loader-container .loader-light-rays {
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: 
+
+        linear-gradient(30deg, transparent 40%, rgba(139, 90, 191, 0.1) 50%, transparent 60%),
+
+        linear-gradient(150deg, transparent 40%, rgba(107, 45, 143, 0.08) 50%, transparent 60%);
+
+    animation: lightRay 25s linear infinite;
+
+    pointer-events: none;
+
+}
+
+.loader-container.hidden {
+
+    opacity: 0;
+
+    pointer-events: none;
+
+}
+
+.loader {
+
+    display: flex;
+
+    gap: 12px;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+.loader-gamepad {
+
+    font-size: 24px;
+
+    display: inline-block;
+
+    animation: rotateGamepad 1s linear infinite;
+
+    filter: drop-shadow(0 0 8px rgba(139, 90, 191, 0.6));
+
+}
+
+.loader-gamepad:nth-child(1) {
+
+    animation-delay: 0s;
+
+}
+
+.loader-gamepad:nth-child(2) {
+
+    animation-delay: 0.2s;
+
+}
+
+.loader-gamepad:nth-child(3) {
+
+    animation-delay: 0.4s;
+
+}
+
+@keyframes rotateGamepad {
+
+    0% {
+
+        transform: rotate(0deg);
+
+        opacity: 0.6;
+
+    }
+
+    50% {
+
+        opacity: 1;
+
+    }
+
+    100% {
+
+        transform: rotate(360deg);
+
+        opacity: 0.6;
+
+    }
+
+}
+
+.loader-text {
+
+    margin-top: 32px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: var(--color-text-primary);
+
+    letter-spacing: 0.5px;
+
+    text-align: center;
+
+    position: relative;
+
+    z-index: 10;
+
+}
+
+.loader {
+
+    position: relative;
+
+    z-index: 10;
+
+}
+
+@keyframes bounce {
+
+    0%, 70%, 100% {
+
+        transform: scale(0.8) translateY(0);
+
+        opacity: 0.6;
+
+    }
+
+    35% {
+
+        transform: scale(1.2) translateY(-18px);
+
+        opacity: 1;
+
+    }
+
+}
+
+/* ===== DISCIPLINE ICONS ===== */
+
+.discipline-with-icon {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+.discipline-icon {
+
+    width: 28px;
+
+    height: 28px;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
+
+    border-radius: 6px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    padding: 3px;
+
+    box-shadow: 0 0 10px rgba(139, 90, 191, 0.2);
+
+    border: 1px solid rgba(139, 90, 191, 0.15);
+
+}
+
+/* Смайлик для дисциплин без логотипа */
+
+.discipline-icon-emoji {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 20px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    padding: 0;
+
+    box-shadow: 0 0 8px rgba(139, 90, 191, 0.15);
+
+}
+
+/* Иконки для мобильных устройств - чуть меньше */
+
+@media (max-width: 768px) {
+
+    .discipline-icon {
+
+        width: 24px;
+
+        height: 24px;
+
+        padding: 3px;
+
+    }
+
+    
+
+    .discipline-icon-emoji {
+
+        font-size: 18px;
+
+    }
+
+    
+
+    .discipline-with-icon {
+
+        gap: 6px;
+
+    }
+
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Планшеты */
+
+@media (max-width: 1200px) {
+
+    .tournaments-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    
+
+    .container {
+
+        padding: 0 20px;
+
+    }
+
+}
+
+/* Планшеты и большие телефоны */
+
+@media (max-width: 768px) {
+
+    /* Header */
+
+    header {
+
+        padding: 16px 0;
+
+    }
+
+    
+
+    header .container {
+
+        flex-wrap: wrap;
+
+        gap: 16px;
+
+    }
+
+    
+
+    .logo-image {
+
+        height: 40px;
+
+    }
+
+    
+
+    nav {
+
+        order: 3;
+
+        width: 100%;
+
+        flex-wrap: nowrap;
+
+        justify-content: space-between;
+
+        gap: 6px;
+
+    }
+
+    
+
+    nav a {
+
+        padding: 10px 5px;
+
+        font-size: 9.5px;
+
+        white-space: nowrap;
+
+        flex: 1 1 0;
+
+        text-align: center;
+
+        min-width: 0;
+
+        line-height: 1.25;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+    }
+
+    
+
+    nav a:active {
+
+        transform: scale(0.98);
+
+    }
+
+    
+
+    .social-links {
+
+        gap: 8px;
+
+    }
+
+    
+
+    .social-btn {
+
+        width: 36px;
+
+        height: 36px;
+
+    }
+
+    
+
+    .btn-contact {
+
+        padding: 8px 16px;
+
+        font-size: 13px;
+
+    }
+
+    
+
+    /* Main Content */
+
+    main {
+
+        padding: 24px 16px 40px;
+
+    }
+
+    
+
+    .page-title {
+
+        font-size: 32px;
+
+        margin-bottom: 20px;
+
+    }
+
+    
+
+    /* Tournament Cards */
+
+    .tournaments-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 14px;
+
+    }
+
+    
+
+    .tournament-card {
+
+        padding: 14px 16px;
+
+    }
+
+    
+
+    .tournament-card h2 {
+
+        font-size: 15px;
+
+    }
+
+    
+
+    .tournament-info {
+
+        gap: 10px;
+
+    }
+
+    
+
+    .info-label {
+
+        font-size: 10px;
+
+    }
+
+    
+
+    .info-value {
+
+        font-size: 13px;
+
+    }
+
+    
+
+    .tournament-card .btn-submit {
+
+        padding: 10px;
+
+        font-size: 13px;
+
+    }
+
+    
+
+    /* Teams */
+
+    .teams-list {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    
+
+    .tournament-section {
+
+        padding: 16px;
+
+    }
+
+    
+
+    .tournament-section h2 {
+
+        font-size: 18px;
+
+        gap: 6px;
+
+    }
+
+    
+
+    .tournament-header-discipline {
+
+        font-size: 16px;
+
+    }
+
+    
+
+    .tournament-title-line {
+
+        font-size: 17px;
+
+    }
+
+    
+
+    .team-card {
+
+        padding: 12px 14px;
+
+    }
+
+    
+
+    .team-name {
+
+        font-size: 16px;
+
+        margin-bottom: 5px;
+
+    }
+
+    
+
+    .team-info {
+
+        font-size: 14px;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+
+    }
+
+}
+
+/* Маленькие телефоны */
+
+@media (max-width: 480px) {
+
+    /* Header */
+
+    header {
+
+        padding: 10px 0;
+
+        backdrop-filter: none;
+
+        background: transparent;
+
+    }
+
+    
+
+    .logo-image {
+
+        height: 32px;
+
+    }
+
+    
+
+    nav {
+
+        gap: 4px;
+
+        flex-wrap: nowrap;
+
+    }
+
+    
+
+    nav a {
+
+        padding: 9px 2px;
+
+        font-size: 8px;
+
+        border-radius: 16px;
+
+        flex: 1 1 0;
+
+        min-width: 0;
+
+        line-height: 1.2;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+    }
+
+    
+
+    nav a:active {
+
+        transform: scale(0.98);
+
+    }
+
+    
+
+    .social-btn {
+
+        width: 32px;
+
+        height: 32px;
+
+    }
+
+    
+
+    .social-btn svg {
+
+        width: 14px;
+
+        height: 14px;
+
+    }
+
+    
+
+    .btn-contact {
+
+        padding: 6px 14px;
+
+        font-size: 11px;
+
+        border-radius: 20px;
+
+    }
+
+    
+
+    /* Main */
+
+    main {
+
+        padding: 16px 12px 32px;
+
+    }
+
+    
+
+    .container {
+
+        padding: 0 12px;
+
+    }
+
+    
+
+    .page-title {
+
+        font-size: 32px;
+
+        margin-bottom: 16px;
+
+        font-weight: 800;
+
+        letter-spacing: -0.5px;
+
+    }
+
+    
+
+    /* Tournament Cards - более компактные и красивые */
+
+    .tournaments-grid {
+
+        gap: 12px;
+
+    }
+
+    
+
+    .tournament-card {
+
+        padding: 14px 16px;
+
+        border-radius: 16px;
+
+        border-width: 1.5px;
+
+        background: rgba(45, 27, 61, 0.4);
+
+    }
+
+    
+
+    .tournament-card:active {
+
+        transform: scale(0.98);
+
+    }
+
+    
+
+    .tournament-card h2 {
+
+        font-size: 15px;
+
+        font-weight: 700;
+
+        line-height: 1.3;
+
+        letter-spacing: -0.3px;
+
+    }
+
+    
+
+    .tournament-card-header {
+
+        margin-bottom: 12px;
+
+    }
+
+    
+
+    .tournament-info {
+
+        gap: 10px 12px;
+
+        margin-bottom: 12px;
+
+    }
+
+    
+
+    .info-label {
+
+        font-size: 10px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.3px;
+
+        opacity: 0.8;
+
+    }
+
+    
+
+    .info-value {
+
+        font-size: 13px;
+
+        font-weight: 700;
+
+        letter-spacing: -0.2px;
+
+    }
+
+    
+
+    .tournament-card .btn-submit {
+
+        padding: 11px 16px;
+
+        font-size: 13px;
+
+        font-weight: 700;
+
+        border-radius: 25px;
+
+        letter-spacing: -0.2px;
+
+        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
+
+        border: none;
+
+    }
+
+    
+
+    .tournament-card .btn-submit:active {
+
+        transform: scale(0.96);
+
+    }
+
+    
+
+    /* Teams */
+
+    .tournament-section {
+
+        padding: 14px;
+
+        border-radius: 16px;
+
+    }
+
+    
+
+    .tournament-section h2 {
+
+        font-size: 18px;
+
+        margin-bottom: 12px;
+
+        font-weight: 700;
+
+        letter-spacing: -0.3px;
+
+        gap: 6px;
+
+    }
+
+    
+
+    .tournament-header-discipline {
+
+        font-size: 15px;
+
+    }
+
+    
+
+    .tournament-title-line {
+
+        font-size: 16px;
+
+    }
+
+    
+
+    .team-card {
+
+        padding: 11px 13px;
+
+        border-radius: 12px;
+
+    }
+
+    
+
+    .team-name {
+
+        font-size: 15px;
+
+        font-weight: 700;
+
+        letter-spacing: -0.2px;
+
+        margin-bottom: 4px;
+
+    }
+
+    
+
+    .team-info {
+
+        font-size: 13px;
+
+        gap: 8px;
+
+        margin-top: 0;
+
+    }
+
+    
+
+    /* Empty state */
+
+    .empty-state {
+
+        padding: 40px 16px;
+
+    }
+
+    
+
+    .empty-state h3 {
+
+        font-size: 20px;
+
+        font-weight: 700;
+
+        letter-spacing: -0.3px;
+
+    }
+
+    
+
+    .empty-state p {
+
+        font-size: 13px;
+
+        margin-top: 8px;
+
+        opacity: 0.8;
+
+    }
+
+    
+
+    /* Плавные анимации */
+
+    .tournament-card,
+
+    .team-card,
+
+    nav a,
+
+    .btn-submit,
+
+    .btn-contact {
+
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    }
+
+    
+
+    /* Улучшенная читаемость */
+
+    body {
+
+        -webkit-font-smoothing: antialiased;
+
+        -moz-osx-font-smoothing: grayscale;
+
+    }
+
+}
+
+/* ===== REGULATIONS PAGE ===== */
+
+.regulations-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
+    gap: 24px;
+
+}
+
+.regulation-card {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 16px;
+
+    padding: 24px;
+
+    background: rgba(35, 35, 50, 0.7);
+
+    border: 2px solid rgba(139, 90, 191, 0.5);
+
+    border-radius: 16px;
+
+    transition: all 0.3s ease;
+
+    text-decoration: none;
+
+    color: var(--color-text-primary);
+
+    position: relative;
+
+}
+
+.regulation-card > svg,
+
+.regulation-card > img {
+
+    flex-shrink: 0;
+
+    width: 48px;
+
+    height: 48px;
+
+}
+
+.regulation-card:hover {
+
+    transform: translateY(-4px);
+
+    border-color: rgba(139, 90, 191, 0.8);
+
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.3);
+
+}
+
+.regulation-info {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    flex: 1;
+
+}
+
+.regulation-info h3 {
+
+    font-size: 20px;
+
+    font-weight: 600;
+
+    margin: 0;
+
+    text-align: center;
+
+}
+
+.regulation-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 6px 14px;
+
+    background: rgba(139, 90, 191, 0.3);
+
+    border-radius: 12px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: var(--color-text-primary);
+
+    white-space: nowrap;
+
+    flex-shrink: 0;
+
+}
+
+/* ===== REGULATIONS MODAL ===== */
+
+.modal {
+
+    display: none;
+
+    position: fixed;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.8);
+
+    backdrop-filter: blur(10px);
+
+    z-index: 5000; /* Поверх шапки и кнопок */
+
+    align-items: flex-start; /* Не перекрываем кнопки навигации контентом */
+
+    justify-content: center;
+
+    padding: 100px 20px 20px; /* Отступ сверху под навигацию */
+
+}
+
+.modal.active {
+
+    display: flex;
+
+}
+
+.modal-content {
+
+    background: rgba(0, 0, 0, 0.95);
+
+    border: 2px solid rgba(139, 90, 191, 0.5);
+
+    backdrop-filter: blur(20px);
+
+    border-radius: var(--border-radius);
+
+    max-width: 600px;
+
+    width: 100%;
+
+    max-height: calc(100vh - 160px); /* Учитываем верхний отступ */
+
+    overflow-y: auto;
+
+    animation: modalSlideIn 0.3s ease-out;
+
+}
+
+/* Блокируем прокрутку фона, когда открыта модалка */
+
+body.modal-open {
+
+    overflow: hidden;
+
+}
+
+@keyframes modalSlideIn {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(-50px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}
+
+.modal-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 24px;
+
+    border-bottom: 1px solid rgba(139, 90, 191, 0.3);
+
+}
+
+.modal-header h2 {
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+    color: var(--color-text-primary);
+
+}
+
+.modal-close {
+
+    background: none;
+
+    border: none;
+
+    color: var(--color-text-primary);
+
+    font-size: 32px;
+
+    cursor: pointer;
+
+    padding: 0;
+
+    width: 32px;
+
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    transition: all 0.3s ease;
+
+}
+
+.modal-close:hover {
+
+    color: var(--color-pink);
+
+    transform: rotate(90deg);
+
+}
+
+.modal-body {
+
+    padding: 24px;
+
+}
+
+.regulations-buttons {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+}
+
+.regulation-discipline-btn {
+
+    padding: 16px 24px;
+
+    background: rgba(139, 90, 191, 0.1);
+
+    border: 1px solid rgba(139, 90, 191, 0.3);
+
+    border-radius: 12px;
+
+    color: var(--color-text-primary);
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    text-align: center;
+
+}
+
+.regulation-discipline-btn:hover {
+
+    background: rgba(139, 90, 191, 0.2);
+
+    border-color: var(--color-pink);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.3);
+
+}
+
+@media (max-width: 768px) {
+
+    .modal-content {
+
+        max-width: 100%;
+
+        border-radius: 16px 16px 0 0;
+
+    }
+
+    
+
+    .regulations-buttons {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    
+
+    .regulation-discipline-btn {
+
+        padding: 14px 20px;
+
+        font-size: 15px;
+
+    }
+
+}
+
+/* ===== FILTERS ===== */
+
+.filters-container {
+
+    margin-bottom: 32px;
+
+    padding-bottom: 20px;
+
+    border-bottom: none;
+
+}
+
+.filter-label {
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: var(--color-text-secondary);
+
+    margin-bottom: 12px;
+
+}
+
+.filters {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+}
+
+.filter-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 20px;
+
+    background: rgba(107, 33, 168, 0.25);
+
+    border: 1px solid rgba(139, 90, 191, 0.5);
+
+    border-radius: 20px;
+
+    color: var(--color-text-primary);
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+    white-space: nowrap;
+
+}
+
+.filter-btn:hover {
+
+    background: rgba(139, 90, 191, 0.4);
+
+    border-color: var(--color-pink);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 2px 8px rgba(139, 90, 191, 0.3);
+
+}
+
+.filter-btn.active {
+
+    background: var(--gradient-button);
+
+    border-color: transparent;
+
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.4);
+
+}
+
+.filter-btn .discipline-icon {
+
+    width: 26px !important;
+
+    height: 26px !important;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
+
+}
+
+.filter-btn .discipline-icon-emoji {
+
+    font-size: 20px !important;
+
+}
+
+@media (max-width: 768px) {
+
+    .filters {
+
+        gap: 8px;
+
+    }
+
+    
+
+    .filter-btn {
+
+        padding: 8px 16px;
+
+        font-size: 13px;
+
+    }
+
+    
+
+    .filter-btn .discipline-icon {
+
+        width: 22px !important;
+
+        height: 22px !important;
+
+    }
+
+    
+
+    .filter-btn .discipline-icon-emoji {
+
+        font-size: 18px !important;
+
+    }
+
+}
+
+/* ===== TIMER ===== */
+
+.timer-container {
+
+    margin: 8px 0;
+
+    min-height: 28px;
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+.timer-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 12px;
+
+    background: rgba(139, 90, 191, 0.08);
+
+    border: 1px solid rgba(139, 90, 191, 0.2);
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: var(--color-text-secondary);
+
+    box-shadow: 0 2px 6px rgba(139, 90, 191, 0.1);
+
+}
+
+.timer-label {
+
+    color: var(--color-text-secondary);
+
+    font-weight: 500;
+
+    font-size: 11px;
+
+}
+
+.timer-value {
+
+    color: var(--color-pink);
+
+    font-weight: 700;
+
+    font-size: 12px;
+
+}
+
+.timer-ended {
+
+    background: rgba(255, 59, 48, 0.1);
+
+    border-color: rgba(255, 59, 48, 0.3);
+
+    color: #ff3b30;
+
+    box-shadow: 0 2px 6px rgba(255, 59, 48, 0.15);
+
+}
+
+.timer-container:empty {
+
+    display: none;
+
+}
+
+/* ===== TOURNAMENT CARD ANIMATIONS ===== */
+
+.tournament-card {
+
+    animation: cardFadeIn 0.7s ease-out forwards;
+
+}
+
+@keyframes cardFadeIn {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(50px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}
+
+.tournament-card:nth-child(1) { animation-delay: 0.05s; }
+
+.tournament-card:nth-child(2) { animation-delay: 0.1s; }
+
+.tournament-card:nth-child(3) { animation-delay: 0.15s; }
+
+.tournament-card:nth-child(4) { animation-delay: 0.2s; }
+
+.tournament-card:nth-child(5) { animation-delay: 0.25s; }
+
+.tournament-card:nth-child(6) { animation-delay: 0.3s; }
+
+.tournament-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+.tournament-card::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+
+    left: -100%;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: linear-gradient(90deg, transparent, rgba(139, 90, 191, 0.08), transparent);
+
+    transition: left 0.6s;
+
+}
+
+.tournament-card:hover::before {
+
+    left: 100%;
+
+}
+
+.tournament-card:hover {
+
+    transform: translateY(-4px);
+
+    box-shadow: 0 12px 32px rgba(139, 90, 191, 0.25);
+
+}
+
+/* Убираем яркое свечение */
+
+.btn-submit {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background-size: 200% auto;
+
+    transition: all 0.3s ease;
+
+}
+
+.btn-submit::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+
+    left: -100%;
+
+    width: 100%;
+
+    height: 100%;
+
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+
+    transition: left 0.5s;
+
+}
+
+.btn-submit:hover::before {
+
+    left: 100%;
+
+}
+
+.btn-submit:hover {
+
+    background-position: right center;
+
+    box-shadow: 0 8px 24px rgba(139, 90, 191, 0.5);
+
+    transform: translateY(-2px);
+
+}
+
+/* Анимированный градиент для кнопки */
+
+.btn-submit {
+
+    background: linear-gradient(135deg, #8b5abf 0%, #9d6fd4 50%, #b17ee0 100%);
+
+    background-size: 200% auto;
+
+    animation: gradientShift 3s ease infinite;
+
+}
+
+@keyframes gradientShift {
+
+    0%, 100% {
+
+        background-position: 0% 50%;
+
+    }
+
+    50% {
+
+        background-position: 100% 50%;
+
+    }
+
+}
+
+/* ===== FILTER BUTTON ANIMATIONS ===== */
+
+.filter-btn {
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+.filter-btn::before {
+
+    content: '';
+
+    position: absolute;
+
+    top: 50%;
+
+    left: 50%;
+
+    width: 0;
+
+    height: 0;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.1);
+
+    transform: translate(-50%, -50%);
+
+    transition: width 0.6s, height 0.6s;
+
+}
+
+.filter-btn:active::before {
+
+    width: 300px;
+
+    height: 300px;
+
+}
+
+.filter-btn.active {
+
+    background: var(--gradient-button);
+
+    border-color: transparent;
+
+    box-shadow: 0 4px 12px rgba(139, 90, 191, 0.4);
+
 }
