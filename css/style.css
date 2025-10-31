@@ -256,15 +256,15 @@ body {
 
     display: grid;
 
-    grid-template-columns: repeat(7, minmax(100px, 1fr));
+    grid-template-columns: repeat(7, minmax(110px, 1fr));
 
     gap: 8px;
 
     width: 100%;
 
-    max-width: 1000px;
+    max-width: 1100px;
 
-    margin: 0 auto;
+    margin: 0;
 
     overflow: visible;
 
@@ -306,7 +306,7 @@ body {
 
     position: relative;
 
-    padding: 8px;
+    padding: 10px;
 
     border: 1px solid rgba(139, 90, 191, 0.2);
 
@@ -318,7 +318,7 @@ body {
 
     transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
 
-    min-height: 100px;
+    min-height: 110px;
 
     display: flex;
 
@@ -786,7 +786,7 @@ body {
 
     flex: 1;
 
-    max-width: 1000px;
+    max-width: 1100px;
 
     overflow: visible;
 
