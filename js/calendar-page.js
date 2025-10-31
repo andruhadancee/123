@@ -86,6 +86,9 @@
             `).join('')}
         `;
         
+        // Убираем отступ на мобильных
+        filtersContainer.style.marginTop = '0';
+        
         filtersContainer.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 selectedDiscipline = btn.dataset.discipline;
