@@ -322,6 +322,24 @@
         }
     }
     
+    // Мобильный переключатель фильтров
+    const filterToggle = document.getElementById('filter-toggle');
+    const filters = document.getElementById('calendar-filters');
+    
+    // Скрываем фильтры на мобильных по умолчанию
+    if (window.innerWidth <= 768 && filters) {
+        filters.classList.add('mobile-hidden');
+    }
+    
+    if (filterToggle) {
+        filterToggle.addEventListener('click', () => {
+            if (filters) {
+                filters.classList.toggle('mobile-hidden');
+                filterToggle.classList.toggle('active');
+            }
+        });
+    }
+    
     loadSocialLinks();
     load();
 })();
