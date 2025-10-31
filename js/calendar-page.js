@@ -9,6 +9,7 @@
     const eventTitle = document.getElementById('event-title');
     const eventBody = document.getElementById('event-body');
     const filtersContainer = document.getElementById('calendar-filters');
+    const toggleFiltersBtn = document.getElementById('toggle-filters-btn');
 
     let current = new Date();
     // Восстанавливаем сохраненный месяц из localStorage
@@ -322,6 +323,20 @@
         }
     }
     
+    // Обработчик кнопки сворачивания фильтров
+    if (toggleFiltersBtn) {
+        toggleFiltersBtn.addEventListener('click', function() {
+            if (filtersContainer) {
+                const isHidden = filtersContainer.style.display === 'none';
+                filtersContainer.style.display = isHidden ? '' : 'none';
+                const arrow = this.querySelector('.toggle-arrow');
+                if (arrow) {
+                    arrow.textContent = isHidden ? '▼' : '▲';
+                }
+            }
+        });
+    }
+
     loadSocialLinks();
     load();
 })();

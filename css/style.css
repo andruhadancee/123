@@ -445,6 +445,8 @@ body {
 
     z-index: 2;
 
+    overflow: hidden;
+
 }
 
 .calendar-discipline-icon img.discipline-icon,
@@ -579,7 +581,7 @@ body {
 
   .calendar-events-text { margin-top: auto; font-size: 9px; padding: 0 2px; line-height: 1.1; }
 
-  .calendar-discipline-icon { top: 4px; right: 4px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+  .calendar-discipline-icon { top: 4px; right: 4px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
   .calendar-discipline-icon .discipline-icon-emoji { font-size: 16px; line-height: 1; }
   
@@ -605,6 +607,54 @@ body {
 
   }
 
+  .toggle-filters-btn {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 12px 16px;
+
+    margin-bottom: 8px;
+
+    background: rgba(139, 90, 191, 0.2);
+
+    border: 1px solid rgba(139, 90, 191, 0.5);
+
+    border-radius: 12px;
+
+    color: var(--color-text-primary);
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+  }
+
+  .toggle-filters-btn:active {
+
+    background: rgba(139, 90, 191, 0.3);
+
+    transform: scale(0.98);
+
+  }
+
+  .toggle-arrow {
+
+    font-size: 12px;
+
+    transition: transform 0.3s ease;
+
+  }
+
   .calendar-filters {
 
     width: 100%;
@@ -613,11 +663,11 @@ body {
 
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
 
     gap: 8px;
 
-    padding: 12px;
+    padding: 16px;
 
     margin-top: 0;
 
@@ -635,9 +685,9 @@ body {
 
     width: 100%;
 
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 
-    font-size: 10px;
+    font-size: 11px;
 
   }
 
@@ -649,9 +699,9 @@ body {
 
     margin-bottom: 0;
 
-    padding: 8px 10px;
+    padding: 10px 12px;
 
-    font-size: 11px;
+    font-size: 12px;
 
   }
 
@@ -659,15 +709,15 @@ body {
 
   .calendar-filters .filter-btn .discipline-icon {
 
-    width: 16px !important;
+    width: 18px !important;
 
-    height: 16px !important;
+    height: 18px !important;
 
   }
 
   .calendar-filters .filter-btn .discipline-icon-emoji {
 
-    font-size: 14px !important;
+    font-size: 16px !important;
 
   }
 
@@ -768,6 +818,14 @@ body {
     overflow: visible;
 
     justify-content: center;
+
+}
+
+/* Кнопка переключения фильтров */
+
+.toggle-filters-btn {
+
+    display: none;
 
 }
 
