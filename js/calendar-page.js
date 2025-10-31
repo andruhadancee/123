@@ -174,7 +174,7 @@
 
             const head = document.createElement('div');
             head.textContent = String(day);
-            head.className = 'calendar-day-number';
+            head.className = 'calendar-date-num';
             cell.appendChild(head);
 
             if (dayEventsFiltered.length > 0){

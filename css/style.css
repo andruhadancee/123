@@ -137,30 +137,28 @@ body {
 
 .calendar-grid {
     display: grid;
-    /* Кубик автоматически подстраивается под ширину окна: 
-       берем минимальную из 140px и (100vw - отступы - промежутки)/7 */
-    grid-template-columns: repeat(7, minmax(50px, 1fr));
-    gap: 6px;
-    width: min(calc(100vw - 80px), 600px);
+    grid-template-columns: repeat(7, minmax(28px, 1fr));
+    gap: 3px;
+    width: min(calc(100vw - 80px), 420px);
     margin: 0 auto;
-    max-height: calc(100vh - 300px);
+    max-height: calc(100vh - 400px);
     overflow: visible;
 }
 
 .calendar-cell {
     position: relative;
-    padding: 6px;
+    padding: 2px;
     border: 1px solid rgba(139, 90, 191, 0.2);
-    border-radius: 10px;
+    border-radius: 6px;
     background: rgba(45, 27, 61, 0.25);
     cursor: pointer;
     transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
-    min-height: 48px;
+    min-height: 32px;
     aspect-ratio: 1 / 1;
 }
 .calendar-cell:hover { transform: translateY(-2px); }
 
-.calendar-day-number { font-weight: 800; margin-bottom: 6px; letter-spacing: -0.2px; }
+.calendar-date-num { font-weight: 800; font-size: 9px; margin-bottom: 1px; letter-spacing: -0.2px; }
 
 .calendar-has-events {
     background: linear-gradient(180deg, rgba(15,18,30,.85), rgba(45,27,61,.35));
@@ -173,10 +171,10 @@ body {
 
 .calendar-discipline-icon {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 24px;
-    height: 24px;
+    top: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -193,7 +191,7 @@ body {
 }
 
 .calendar-discipline-icon .discipline-icon-emoji {
-    font-size: 16px;
+    font-size: 10px;
     line-height: 1;
     display: inline-block;
 }
@@ -249,13 +247,12 @@ body {
     animation: none !important;
     transform: translate(0, 0) scale(1) !important;
   }
-  .calendar-grid { gap: 4px; grid-template-columns: repeat(7, minmax(38px, 1fr)); width: 100%; margin-top: 12px; max-height: none; }
-  .calendar-cell { min-height: 42px; padding: 5px; border-radius: 8px; }
-  .calendar-day-number { font-size: 14px; }
-  .calendar-discipline-icon { top: 6px; right: 6px; width: 18px; height: 18px; }
-  .calendar-discipline-icon .discipline-icon-emoji { font-size: 12px; }
-  .calendar-events-text { margin-top: 22px; padding-right: 24px; font-size: 10px; }
-  .calendar-badge { top: 6px; right: 6px; padding: 2px 6px; font-size: 11px; }
+  .calendar-grid { gap: 2px; grid-template-columns: repeat(7, minmax(28px, 1fr)); width: 100%; margin-top: 12px; max-height: none; }
+  .calendar-cell { min-height: 30px; padding: 2px; border-radius: 4px; }
+  .calendar-date-num { font-size: 9px; margin-bottom: 0; }
+  .calendar-events-text { margin-top: 12px; font-size: 7px; padding-right: 12px; }
+  .calendar-discipline-icon { top: 2px; right: 2px; width: 10px; height: 10px; }
+  .calendar-discipline-icon .discipline-icon-emoji { font-size: 8px; }
   .calendar-popover { display: none; }
 
   .modal { padding: 80px 12px 12px; }
@@ -390,10 +387,10 @@ body {
 }
 
 .calendar-events-text {
-    margin-top: 28px;
-    font-size: 11px;
-    line-height: 1.4;
-    padding-right: 32px;
+    margin-top: 14px;
+    font-size: 8px;
+    line-height: 1.1;
+    padding-right: 14px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -402,7 +399,7 @@ body {
 }
 
 .calendar-event-item {
-    margin-bottom: 4px;
+    margin-bottom: 1px;
     font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
