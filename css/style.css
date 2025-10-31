@@ -981,13 +981,13 @@ body {
 
 .calendar-filters .filter-btn.active {
 
-    background: rgba(139, 90, 191, 0.35);
+    background: rgba(139, 90, 191, 0.35) !important;
 
-    border-color: rgba(0, 255, 255, 1);
+    border-color: rgba(0, 255, 255, 1) !important;
 
-    border-width: 2px;
+    border-width: 2px !important;
 
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.9);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.9) !important;
 
     transform: translateX(0);
 
