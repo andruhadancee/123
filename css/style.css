@@ -619,6 +619,16 @@ body {
 
   }
 
+  .calendar-filters-container {
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    width: 100% !important;
+
+  }
+
   .toggle-filters-btn {
 
     display: flex !important;

@@ -54,14 +54,15 @@
             <button class="calendar-nav-btn" id="next-month" aria-label="Следующий месяц">▶</button>
         </div>
 
-        <button id="toggle-filters-btn" class="toggle-filters-btn" aria-label="Фильтры дисциплин">
-            Фильтры дисциплин <span class="toggle-arrow">▲</span>
-        </button>
-
         <div class="calendar-wrapper">
-            <div id="calendar-filters" class="calendar-filters" style="margin-top: 0;">
-                <button class="filter-btn active" data-discipline="all">Все</button>
-                <!-- Фильтры будут добавлены динамически -->
+            <div id="calendar-filters-container" class="calendar-filters-container">
+                <button id="toggle-filters-btn" class="toggle-filters-btn" aria-label="Фильтры дисциплин">
+                    Фильтры дисциплин <span class="toggle-arrow">▲</span>
+                </button>
+                <div id="calendar-filters" class="calendar-filters">
+                    <button class="filter-btn active" data-discipline="all">Все</button>
+                    <!-- Фильтры будут добавлены динамически -->
+                </div>
             </div>
             <div id="calendar-grid" class="calendar-grid-container"></div>
         </div>
@@ -81,6 +82,6 @@
 
     <script src="js/api-client.js"></script>
     <script src="js/particles.js"></script>
-    <script src="js/calendar-page.js?v=1.2"></script>
+    <script src="js/calendar-page.js?v=1.3"></script>
 </body>
 </html>

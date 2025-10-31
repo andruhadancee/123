@@ -8,7 +8,8 @@
     const modalClose = document.getElementById('event-modal-close');
     const eventTitle = document.getElementById('event-title');
     const eventBody = document.getElementById('event-body');
-    const filtersContainer = document.getElementById('calendar-filters');
+    const filtersContainer = document.getElementById('calendar-filters-container');
+    const filtersInner = document.getElementById('calendar-filters');
     const toggleFiltersBtn = document.getElementById('toggle-filters-btn');
 
     let current = new Date();
@@ -72,10 +73,10 @@
     }
 
     function loadFilters() {
-        if (!filtersContainer) return;
+        if (!filtersInner) return;
         
         // Показываем ВСЕ дисциплины из базы, не только те что в событиях
-        filtersContainer.innerHTML = `
+        filtersInner.innerHTML = `
             <button class="filter-btn ${selectedDiscipline === 'all' ? 'active' : ''}" data-discipline="all">Все</button>
             ${disciplines.map(d => `
                 <button class="filter-btn ${selectedDiscipline === d ? 'active' : ''}" 
@@ -89,10 +90,10 @@
         // Убираем отступ на мобильных
         filtersContainer.style.marginTop = '0';
         
-        filtersContainer.querySelectorAll('.filter-btn').forEach(btn => {
+        filtersInner.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 selectedDiscipline = btn.dataset.discipline;
-                filtersContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                filtersInner.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 render();
             });
@@ -330,13 +331,13 @@
     
     // Функция восстановления состояния фильтров
     function restoreFiltersState() {
-        if (!toggleFiltersBtn || !filtersContainer) return;
+        if (!toggleFiltersBtn || !filtersInner) return;
         
         const savedState = localStorage.getItem('calendarFiltersCollapsed');
         const isCollapsed = savedState === 'true';
         
         if (isCollapsed) {
-            filtersContainer.style.display = 'none';
+            filtersInner.style.display = 'none';
             const arrow = toggleFiltersBtn.querySelector('.toggle-arrow');
             if (arrow) {
                 arrow.textContent = '▼';
@@ -349,9 +350,9 @@
     // Обработчик кнопки сворачивания фильтров
     if (toggleFiltersBtn) {
         toggleFiltersBtn.addEventListener('click', function() {
-            if (filtersContainer) {
-                const isHidden = filtersContainer.style.display === 'none';
-                filtersContainer.style.display = isHidden ? '' : 'none';
+            if (filtersInner) {
+                const isHidden = filtersInner.style.display === 'none';
+                filtersInner.style.display = isHidden ? '' : 'none';
                 const arrow = this.querySelector('.toggle-arrow');
                 if (arrow) {
                     arrow.textContent = isHidden ? '▼' : '▲';
