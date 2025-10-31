@@ -981,21 +981,35 @@ body {
 
 .calendar-filters .filter-btn.active::after {
 
-    content: '';
+    content: '✓';
 
     position: absolute;
 
     right: 8px;
 
-    bottom: 4px;
+    top: 50%;
 
-    width: 6px;
+    transform: translateY(-50%);
 
-    height: 6px;
+    width: 18px;
 
-    background: var(--color-pink-light);
+    height: 18px;
+
+    background: rgba(139, 90, 191, 0.3);
 
     border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    color: var(--color-pink-light);
 
     box-shadow: 0 0 8px rgba(139, 90, 191, 0.8);
 

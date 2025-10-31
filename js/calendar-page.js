@@ -74,7 +74,9 @@
         if (!filtersInner) return;
         
         // Показываем ВСЕ дисциплины из базы, не только те что в событиях
+        const existingH3 = filtersInner.querySelector('h3');
         filtersInner.innerHTML = `
+            ${existingH3 ? existingH3.outerHTML : '<h3>Фильтры дисциплин</h3>'}
             <button class="filter-btn ${selectedDiscipline === 'all' ? 'active' : ''}" data-discipline="all">Все</button>
             ${disciplines.map(d => `
                 <button class="filter-btn ${selectedDiscipline === d ? 'active' : ''}" 
