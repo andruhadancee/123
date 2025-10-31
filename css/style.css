@@ -1113,21 +1113,25 @@ body {
 
         display: grid;
 
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
 
-        gap: 6px;
+        gap: 8px;
 
-        padding: 8px;
+        padding: 16px;
 
         margin-top: 0;
 
         margin-bottom: 12px;
 
-        background: none !important;
+        background: linear-gradient(135deg, rgba(45, 27, 61, 0.6), rgba(30, 20, 40, 0.6));
 
-        border: none !important;
+        backdrop-filter: blur(10px);
 
-        box-shadow: none !important;
+        border: 1px solid rgba(139, 90, 191, 0.3);
+
+        border-radius: 12px;
+
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
     }
     
@@ -1141,7 +1145,15 @@ body {
 
     .calendar-filters h3 {
 
-        display: none;
+        grid-column: 1 / -1;
+
+        width: 100%;
+
+        margin-bottom: 8px;
+
+        font-size: 10px;
+
+        display: block;
 
     }
 
@@ -1158,14 +1170,6 @@ body {
         padding: 8px 10px;
 
         font-size: 11px;
-
-        background: linear-gradient(135deg, rgba(45, 27, 61, 0.6), rgba(30, 20, 40, 0.6));
-
-        backdrop-filter: blur(10px);
-
-        border: 1px solid rgba(139, 90, 191, 0.3);
-
-        border-radius: 8px;
 
     }
 
