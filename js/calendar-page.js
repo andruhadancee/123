@@ -166,12 +166,6 @@
             cell.appendChild(head);
 
             if (dayEventsFiltered.length > 0){
-                const badge = document.createElement('div');
-                badge.className = 'calendar-badge';
-                // Считаем уникальные события
-                const uniqueCount = new Set(dayEventsAll.map(e => e.tournament_id || `${e.title}_${dateStr}`)).size;
-                badge.textContent = uniqueCount;
-                cell.appendChild(badge);
                 cell.classList.add('calendar-has-events');
                 
                 // Определяем цвет по первой дисциплине
@@ -181,6 +175,16 @@
                     cell.style.borderColor = color;
                     cell.style.borderWidth = '2px';
                 }
+                
+                // Показываем логотип дисциплины вместо цифры
+                const disciplineIcon = document.createElement('div');
+                disciplineIcon.className = 'calendar-discipline-icon';
+                if (firstDiscipline && window.getDisciplineIcon) {
+                    disciplineIcon.innerHTML = window.getDisciplineIcon(firstDiscipline);
+                } else {
+                    disciplineIcon.innerHTML = '<span class="discipline-icon discipline-icon-emoji">🎮</span>';
+                }
+                cell.appendChild(disciplineIcon);
 
                 // Отображаем текст событий сразу в квадратике
                 const eventsText = document.createElement('div');
@@ -266,5 +270,27 @@
     prevBtn.addEventListener('click', ()=>{ current.setMonth(current.getMonth()-1); load(); });
     nextBtn.addEventListener('click', ()=>{ current.setMonth(current.getMonth()+1); load(); });
 
+    // Загружаем социальные ссылки
+    async function loadSocialLinks() {
+        try {
+            const socialLinks = await API.social.getAll();
+            if (socialLinks.twitch) {
+                const twitchBtn = document.querySelector('.social-btn.twitch');
+                if (twitchBtn) twitchBtn.href = socialLinks.twitch;
+            }
+            if (socialLinks.telegram) {
+                const telegramBtn = document.querySelector('.social-btn.telegram');
+                if (telegramBtn) telegramBtn.href = socialLinks.telegram;
+            }
+            if (socialLinks.discord) {
+                const discordBtn = document.querySelector('.social-btn.discord');
+                if (discordBtn) discordBtn.href = socialLinks.discord;
+            }
+        } catch (err) {
+            console.error('Ошибка загрузки социальных ссылок:', err);
+        }
+    }
+    
+    loadSocialLinks();
     load();
 })();

@@ -329,33 +329,83 @@ async function handleAdminDayClick(dateStr, dayEvents) {
     if (dayEvents.length === 0) {
         // Пустой день - добавляем событие
         await openCalendarModalWithDate(dateStr, null);
-    } else if (dayEvents.length === 1) {
-        // Один день - выбор: изменить или удалить
-        const choice = confirm(`На этот день уже есть событие "${dayEvents[0].title}".\n\nНажмите OK чтобы изменить, Отмена чтобы удалить.`);
-        if (choice) {
-            await openCalendarModalWithDate(dateStr, dayEvents[0]);
-        } else {
-            if (confirm('Удалить это событие?')) {
-                await deleteCalendarEvent(dayEvents[0].id);
-                await loadCalendarAdmin();
-            }
-        }
     } else {
-        // Несколько событий - список для выбора
-        const eventList = dayEvents.map((e, i) => `${i+1}. ${e.title}`).join('\n');
-        const choice = prompt(`На этот день несколько событий:\n\n${eventList}\n\nВведите номер события для редактирования, или "delete" для удаления всех:`);
-        if (choice && !isNaN(choice) && parseInt(choice) > 0 && parseInt(choice) <= dayEvents.length) {
-            await openCalendarModalWithDate(dateStr, dayEvents[parseInt(choice)-1]);
-        } else if (choice && choice.toLowerCase() === 'delete') {
-            if (confirm(`Удалить все ${dayEvents.length} события этого дня?`)) {
-                for (const e of dayEvents) {
-                    await API.calendar.delete(e.id);
-                }
-                await loadCalendarAdmin();
-            }
-        }
+        // Показываем модальное окно с событиями дня (как на обычной странице)
+        await openAdminDayEventsModal(dateStr, dayEvents);
     }
 }
+
+async function openAdminDayEventsModal(dateStr, dayEvents) {
+    const modal = document.getElementById('calendar-day-events-modal');
+    const titleEl = document.getElementById('calendar-day-events-title');
+    const bodyEl = document.getElementById('calendar-day-events-body');
+    
+    if (!modal || !titleEl || !bodyEl) return;
+    
+    // Убираем дубликаты
+    const uniqueEvents = [];
+    const seen = new Set();
+    dayEvents.forEach(e => {
+        const key = e.tournament_id ? `tournament_${e.tournament_id}` : `${e.title}_${dateStr}`;
+        if (!seen.has(key)) {
+            seen.add(key);
+            uniqueEvents.push(e);
+        }
+    });
+    
+    const dateInner = new Date(dateStr + 'T12:00:00');
+    const dateFormatted = dateInner.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    titleEl.textContent = `События на ${dateFormatted}`;
+    
+    bodyEl.innerHTML = `
+        <div class="calendar-events-wrap">
+            ${uniqueEvents.map(e => {
+                return `
+                    <div class="calendar-event-card">
+                        ${e.image_url || e.imageUrl ? `<img class="calendar-event-img" src="${e.image_url || e.imageUrl}" alt="${e.title}">` : ''}
+                        <div class="calendar-event-content">
+                            <h3>${e.title}</h3>
+                            ${e.discipline ? `<div class="calendar-event-discipline" style="color: ${getAdminDisciplineColor(e.discipline)}">${e.discipline}</div>` : ''}
+                            ${e.prize ? `<div class="calendar-event-prize">Призовой фонд: ${e.prize}</div>` : ''}
+                            ${e.description ? `<div class="calendar-event-desc">${e.description}</div>` : ''}
+                            ${e.max_teams || e.maxTeams ? `<div class="calendar-event-teams">Команд: ${e.max_teams || e.maxTeams}</div>` : ''}
+                            <div style="display: flex; gap: 12px; margin-top: 16px;">
+                                <button onclick="editAdminCalendarEvent(${e.id})" class="btn-primary" style="flex: 1;">Редактировать турнир</button>
+                                <button onclick="deleteAdminCalendarEvent(${e.id})" class="btn-danger" style="flex: 1; background: rgba(220, 53, 69, 0.8); border-color: rgba(220, 53, 69, 0.8);">Удалить турнир</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+    
+    modal.classList.add('active');
+    document.body.classList.add('modal-open');
+}
+
+function closeAdminDayEventsModal() {
+    const modal = document.getElementById('calendar-day-events-modal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+}
+
+async function editAdminCalendarEvent(id) {
+    closeAdminDayEventsModal();
+    await editCalendarEvent(id);
+}
+
+async function deleteAdminCalendarEvent(id) {
+    if (!confirm('Удалить это событие?')) return;
+    await API.calendar.delete(id);
+    closeAdminDayEventsModal();
+    await loadCalendarAdmin();
+}
+
+window.editAdminCalendarEvent = editAdminCalendarEvent;
+window.deleteAdminCalendarEvent = deleteAdminCalendarEvent;
 
 async function openCalendarModalWithDate(dateStr, event) {
     if (event && event.id) {
@@ -560,6 +610,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     if (cancelBtn) cancelBtn.addEventListener('click', closeCalendarModal);
     if (closeBtn) closeBtn.addEventListener('click', closeCalendarModal);
+    
+    // Обработчики закрытия модального окна событий дня
+    const closeDayEventsBtn = document.getElementById('close-calendar-day-events-modal');
+    const dayEventsModal = document.getElementById('calendar-day-events-modal');
+    if (closeDayEventsBtn) {
+        closeDayEventsBtn.addEventListener('click', closeAdminDayEventsModal);
+    }
+    if (dayEventsModal) {
+        dayEventsModal.addEventListener('click', (e) => {
+            if (e.target === dayEventsModal) closeAdminDayEventsModal();
+        });
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && dayEventsModal.classList.contains('active')) {
+                closeAdminDayEventsModal();
+            }
+        });
+    }
     
     // Обработчики навигации календаря в админке
     const prevMonthBtn = document.getElementById('prev-month-admin');

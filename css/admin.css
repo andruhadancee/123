@@ -974,3 +974,23 @@
     }
 }
 
+/* Стили для модального окна событий дня в админке */
+#calendar-day-events-modal .calendar-event-card {
+    margin-bottom: 16px;
+}
+
+#calendar-day-events-modal .calendar-event-content button {
+    margin-top: 12px;
+}
+
+#calendar-day-events-modal .btn-danger {
+    background: rgba(220, 53, 69, 0.8) !important;
+    border-color: rgba(220, 53, 69, 0.8) !important;
+    color: white !important;
+}
+
+#calendar-day-events-modal .btn-danger:hover {
+    background: rgba(220, 53, 69, 1) !important;
+    border-color: rgba(220, 53, 69, 1) !important;
+}
+
