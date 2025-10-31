@@ -83,11 +83,25 @@
         <!-- Calendar Tab -->
         <div class="tab-content" id="calendar-tab">
             <div class="links-container">
-                <div class="admin-header" style="margin-bottom: 20px; display:flex; gap:10px; align-items:center;">
-                    <h2 style="flex:1;">Календарь активностей</h2>
-                    <button class="btn-primary" id="add-calendar-event-btn">Добавить событие</button>
+                <div class="admin-header" style="margin-bottom: 20px; display:flex; gap:10px; align-items:center; flex-wrap: wrap;">
+                    <h2 style="flex:1; min-width: 200px;">Календарь активностей</h2>
+                    <button class="btn-primary" id="clear-calendar-month-btn" style="background: rgba(220, 53, 69, 0.8);">Очистить месяц</button>
                 </div>
-                <div id="calendar-admin-list"><!-- события появятся здесь --></div>
+                
+                <div id="calendar-controls-admin" class="calendar-controls" style="display: flex; gap: 12px; align-items: center; justify-content: center; margin-bottom: 16px; padding: 8px 0 12px;">
+                    <button class="calendar-nav-btn" id="prev-month-admin" aria-label="Предыдущий месяц">◀</button>
+                    <div id="month-title-admin" class="calendar-month"></div>
+                    <button class="calendar-nav-btn" id="next-month-admin" aria-label="Следующий месяц">▶</button>
+                </div>
+
+                <div class="calendar-wrapper-admin">
+                    <div id="calendar-filters-admin" class="calendar-filters">
+                        <h3>Фильтр по дисциплинам</h3>
+                        <button class="filter-btn active" data-discipline="all">Все</button>
+                        <!-- Фильтры будут добавлены динамически -->
+                    </div>
+                    <div id="calendar-grid-admin" class="calendar-grid-container"></div>
+                </div>
             </div>
         </div>
 

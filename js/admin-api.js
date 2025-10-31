@@ -138,42 +138,263 @@ async function loadAdminData() {
 }
 
 // ===== КАЛЕНДАРЬ (АДМИН) =====
+// Календарь для админки
+let adminCalendarCurrent = new Date();
+adminCalendarCurrent.setDate(1);
+let adminCalendarEvents = [];
+let adminCalendarSelectedDiscipline = 'all';
+let adminCalendarDisciplines = [];
+
+function getAdminDisciplineColor(discipline) {
+    const colors = {
+        'Dota 2': '#b83d2d',
+        'CS 2': '#cc8844',
+        'Valorant': '#c85565',
+        'Overwatch 2': '#cc8844',
+        'League of Legends': '#a0853a',
+        'PUBG': '#5a7aa5',
+        'Mobile Legends': '#5a9a5a',
+        'MLBB': '#5a9a5a',
+        'CS:GO': '#cc8844',
+        'Counter-Strike 2': '#cc8844'
+    };
+    if (!colors[discipline]) {
+        let hash = 0;
+        for (let i = 0; i < discipline.length; i++) {
+            hash = discipline.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const hue = hash % 360;
+        return `hsl(${hue}, 45%, 50%)`;
+    }
+    return colors[discipline];
+}
+
+function fmtMonth(d){
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    return `${y}-${m}`;
+}
+
 async function loadCalendarAdmin() {
-    const container = document.getElementById('calendar-admin-list');
-    if (!container) return;
-    const now = new Date();
-    const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-    const events = await API.calendar.getAll(month);
-    if (!events || events.length === 0) {
-        container.innerHTML = '<div class="empty-state"><p>Событий нет</p></div>';
+    const grid = document.getElementById('calendar-grid-admin');
+    const title = document.getElementById('month-title-admin');
+    if (!grid || !title) return;
+    
+    const monthKey = fmtMonth(adminCalendarCurrent);
+    adminCalendarEvents = await API.calendar.getAll(monthKey);
+    adminCalendarDisciplines = await API.disciplines.getAll();
+    
+    title.textContent = adminCalendarCurrent.toLocaleString('ru-RU', { month:'long', year:'numeric' });
+    loadAdminCalendarFilters();
+    renderAdminCalendar();
+}
+
+function loadAdminCalendarFilters() {
+    const filtersContainer = document.getElementById('calendar-filters-admin');
+    if (!filtersContainer) return;
+    
+    filtersContainer.innerHTML = `
+        <h3>Фильтр по дисциплинам</h3>
+        <button class="filter-btn ${adminCalendarSelectedDiscipline === 'all' ? 'active' : ''}" data-discipline="all">Все</button>
+        ${adminCalendarDisciplines.map(d => `
+            <button class="filter-btn ${adminCalendarSelectedDiscipline === d ? 'active' : ''}" 
+                    data-discipline="${d}" 
+                    style="background: ${getAdminDisciplineColor(d)}; border-color: ${getAdminDisciplineColor(d)}; opacity: 0.75; filter: brightness(0.85);">
+                ${window.getDisciplineIcon ? window.getDisciplineIcon(d) : ''} ${d}
+            </button>
+        `).join('')}
+    `;
+    
+    filtersContainer.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            adminCalendarSelectedDiscipline = btn.dataset.discipline;
+            filtersContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderAdminCalendar();
+        });
+    });
+}
+
+function renderAdminCalendar() {
+    const grid = document.getElementById('calendar-grid-admin');
+    if (!grid) return;
+    
+    const month = adminCalendarCurrent.getMonth();
+    const year = adminCalendarCurrent.getFullYear();
+    
+    grid.classList.add('calendar-grid');
+    grid.innerHTML = '';
+    const weekdays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+    weekdays.forEach(w => {
+        const h = document.createElement('div');
+        h.textContent = w;
+        h.style.color = 'var(--color-text-secondary)';
+        h.style.fontWeight = '700';
+        grid.appendChild(h);
+    });
+
+    const firstDay = new Date(year, month, 1);
+    const startOffset = (firstDay.getDay()+6)%7;
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+
+    for(let i=0;i<startOffset;i++){
+        const empty = document.createElement('div');
+        empty.className = 'calendar-cell calendar-empty';
+        grid.appendChild(empty);
+    }
+
+    function fmtLocal(y,m,d){
+        return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
+
+    // Фильтруем события по дисциплине и убираем дубликаты
+    let filteredEvents = adminCalendarEvents;
+    if (adminCalendarSelectedDiscipline !== 'all') {
+        filteredEvents = adminCalendarEvents.filter(e => e.discipline === adminCalendarSelectedDiscipline);
+    }
+    
+    const uniqueEvents = [];
+    const seenTournamentIds = new Set();
+    filteredEvents.forEach(e => {
+        if (e.tournament_id) {
+            if (!seenTournamentIds.has(e.tournament_id)) {
+                seenTournamentIds.add(e.tournament_id);
+                uniqueEvents.push(e);
+            }
+        } else {
+            const key = `${e.title}_${(e.event_date || e.eventDate).slice(0,10)}`;
+            if (!seenTournamentIds.has(key)) {
+                seenTournamentIds.add(key);
+                uniqueEvents.push(e);
+            }
+        }
+    });
+    filteredEvents = uniqueEvents;
+
+    for(let day=1; day<=daysInMonth; day++){
+        const cell = document.createElement('div');
+        cell.className = 'calendar-cell';
+        const dateStr = fmtLocal(year, month, day);
+        const dayEvents = filteredEvents.filter(e => (e.event_date || e.eventDate).slice(0,10) === dateStr);
+        
+        const dateNum = document.createElement('div');
+        dateNum.className = 'calendar-date-num';
+        dateNum.textContent = day;
+        cell.appendChild(dateNum);
+        
+        // Показываем фотки вместо текста
+        if (dayEvents.length > 0) {
+            const eventImg = dayEvents[0];
+            const imgWrapper = document.createElement('div');
+            imgWrapper.className = 'calendar-event-image-wrapper';
+            if (eventImg.image_url || eventImg.imageUrl) {
+                const img = document.createElement('img');
+                img.src = eventImg.image_url || eventImg.imageUrl;
+                img.alt = eventImg.title || '';
+                img.className = 'calendar-day-event-img';
+                imgWrapper.appendChild(img);
+            } else {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'calendar-day-event-placeholder';
+                placeholder.textContent = dayEvents.length > 1 ? `+${dayEvents.length}` : 'EV';
+                imgWrapper.appendChild(placeholder);
+            }
+            
+            // Цветная обводка по дисциплине
+            if (eventImg.discipline) {
+                cell.style.borderColor = getAdminDisciplineColor(eventImg.discipline);
+                cell.style.borderWidth = '2px';
+            }
+            
+            if (dayEvents.length > 1) {
+                const badge = document.createElement('div');
+                badge.className = 'calendar-event-badge';
+                badge.textContent = dayEvents.length;
+                cell.appendChild(badge);
+            }
+            
+            cell.appendChild(imgWrapper);
+        }
+        
+        // Клик на день
+        cell.addEventListener('click', () => {
+            handleAdminDayClick(dateStr, dayEvents);
+        });
+        
+        grid.appendChild(cell);
+    }
+}
+
+async function handleAdminDayClick(dateStr, dayEvents) {
+    if (dayEvents.length === 0) {
+        // Пустой день - добавляем событие
+        await openCalendarModalWithDate(dateStr, null);
+    } else if (dayEvents.length === 1) {
+        // Один день - выбор: изменить или удалить
+        const choice = confirm(`На этот день уже есть событие "${dayEvents[0].title}".\n\nНажмите OK чтобы изменить, Отмена чтобы удалить.`);
+        if (choice) {
+            await openCalendarModalWithDate(dateStr, dayEvents[0]);
+        } else {
+            if (confirm('Удалить это событие?')) {
+                await deleteCalendarEvent(dayEvents[0].id);
+                await loadCalendarAdmin();
+            }
+        }
+    } else {
+        // Несколько событий - список для выбора
+        const eventList = dayEvents.map((e, i) => `${i+1}. ${e.title}`).join('\n');
+        const choice = prompt(`На этот день несколько событий:\n\n${eventList}\n\nВведите номер события для редактирования, или "delete" для удаления всех:`);
+        if (choice && !isNaN(choice) && parseInt(choice) > 0 && parseInt(choice) <= dayEvents.length) {
+            await openCalendarModalWithDate(dateStr, dayEvents[parseInt(choice)-1]);
+        } else if (choice && choice.toLowerCase() === 'delete') {
+            if (confirm(`Удалить все ${dayEvents.length} события этого дня?`)) {
+                for (const e of dayEvents) {
+                    await API.calendar.delete(e.id);
+                }
+                await loadCalendarAdmin();
+            }
+        }
+    }
+}
+
+async function openCalendarModalWithDate(dateStr, event) {
+    if (event && event.id) {
+        await openCalendarModal(event);
+    } else {
+        const newEvent = { eventDate: dateStr };
+        await openCalendarModal(newEvent);
+    }
+}
+
+async function clearCalendarMonth() {
+    const year = adminCalendarCurrent.getFullYear();
+    const month = adminCalendarCurrent.getMonth() + 1;
+    const monthName = adminCalendarCurrent.toLocaleString('ru-RU', { month:'long', year:'numeric' });
+    
+    if (!confirm(`Удалить ВСЕ события календаря за ${monthName}? Это действие нельзя отменить!`)) {
         return;
     }
-    container.innerHTML = events.map(e => `
-        <div class="tournament-admin-card calendar-event-card">
-            <div class="calendar-event-main">
-                ${e.image_url ? `<img src="${e.image_url}" alt="thumb" class="calendar-event-img">` : `
-                <div class="calendar-event-placeholder">EV</div>`}
-                <div class="tournament-admin-info calendar-event-info">
-                    <div class="info-item">
-                        <span class="info-label">Название</span>
-                        <span class="info-value calendar-event-title-text">${e.title}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Описание</span>
-                        <span class="info-value calendar-event-desc-text">${e.description || '-'}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Дата</span>
-                        <span class="info-value">${(e.event_date || '').slice(0,10)}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="tournament-admin-actions calendar-event-actions">
-                <button class="btn-edit" onclick="editCalendarEvent(${e.id})">Изменить</button>
-                <button class="btn-danger" onclick="deleteCalendarEvent(${e.id})">Удалить</button>
-            </div>
-        </div>
-    `).join('');
+    
+    const monthKey = fmtMonth(adminCalendarCurrent);
+    const events = await API.calendar.getAll(monthKey);
+    
+    if (events.length === 0) {
+        alert('В этом месяце нет событий.');
+        return;
+    }
+    
+    let deleted = 0;
+    for (const event of events) {
+        try {
+            await API.calendar.delete(event.id);
+            deleted++;
+        } catch (err) {
+            console.error('Ошибка удаления события:', err);
+        }
+    }
+    
+    alert(`Удалено событий: ${deleted}`);
+    await loadCalendarAdmin();
 }
 
 async function deleteCalendarEvent(id) {
@@ -205,7 +426,7 @@ async function openCalendarModal(event) {
             disciplines.map(d => `<option value="${d}">${d}</option>`).join('');
     }
 
-    if (event) {
+    if (event && event.id) {
         editingCalendarId = event.id;
         titleEl.textContent = 'Изменить событие';
         idEl.value = event.id;
@@ -223,7 +444,7 @@ async function openCalendarModal(event) {
         titleEl.textContent = 'Добавить событие';
         idEl.value = '';
         t.value = '';
-        d.value = '';
+        d.value = (event && event.eventDate) ? event.eventDate.slice(0,10) : '';
         desc.value = '';
         img.value = '';
         if (disc) disc.value = '';
@@ -240,14 +461,29 @@ function closeCalendarModal(){
 }
 
 async function editCalendarEvent(id) {
-    // Получаем событие из списка на странице
-    const container = document.getElementById('calendar-admin-list');
-    if (!container) return;
-    const month = new Date();
-    const key = `${month.getFullYear()}-${String(month.getMonth()+1).padStart(2,'0')}`;
-    const events = await API.calendar.getAll(key);
+    // Получаем событие из текущего календаря
+    const monthKey = fmtMonth(adminCalendarCurrent);
+    const events = await API.calendar.getAll(monthKey);
     const e = events.find(x => x.id === id);
-    if (!e) return;
+    if (!e) {
+        // Если не найдено в текущем месяце, ищем во всех событиях (может быть в другом месяце)
+        const allMonths = [];
+        for (let i = -2; i <= 2; i++) {
+            const checkDate = new Date(adminCalendarCurrent);
+            checkDate.setMonth(checkDate.getMonth() + i);
+            allMonths.push(fmtMonth(checkDate));
+        }
+        for (const month of allMonths) {
+            const monthEvents = await API.calendar.getAll(month);
+            const found = monthEvents.find(x => x.id === id);
+            if (found) {
+                await openCalendarModal(found);
+                return;
+            }
+        }
+        alert('Событие не найдено');
+        return;
+    }
     await openCalendarModal(e);
 }
 
@@ -324,6 +560,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     if (cancelBtn) cancelBtn.addEventListener('click', closeCalendarModal);
     if (closeBtn) closeBtn.addEventListener('click', closeCalendarModal);
+    
+    // Обработчики навигации календаря в админке
+    const prevMonthBtn = document.getElementById('prev-month-admin');
+    const nextMonthBtn = document.getElementById('next-month-admin');
+    const clearMonthBtn = document.getElementById('clear-calendar-month-btn');
+    
+    if (prevMonthBtn) {
+        prevMonthBtn.addEventListener('click', () => {
+            adminCalendarCurrent.setMonth(adminCalendarCurrent.getMonth() - 1);
+            loadCalendarAdmin();
+        });
+    }
+    
+    if (nextMonthBtn) {
+        nextMonthBtn.addEventListener('click', () => {
+            adminCalendarCurrent.setMonth(adminCalendarCurrent.getMonth() + 1);
+            loadCalendarAdmin();
+        });
+    }
+    
+    if (clearMonthBtn) {
+        clearMonthBtn.addEventListener('click', clearCalendarMonth);
+    }
 });
 
 async function loadActiveTournaments() {
