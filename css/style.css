@@ -306,6 +306,30 @@ body {
 
 }
 
+@media (max-width: 768px) {
+
+    .calendar-grid > div:first-child,
+
+    .calendar-grid > div:nth-child(2),
+
+    .calendar-grid > div:nth-child(3),
+
+    .calendar-grid > div:nth-child(4),
+
+    .calendar-grid > div:nth-child(5),
+
+    .calendar-grid > div:nth-child(6),
+
+    .calendar-grid > div:nth-child(7) {
+
+        font-size: 11px;
+
+        padding: 4px;
+
+    }
+
+}
+
 .calendar-cell {
 
     position: relative;
@@ -541,17 +565,21 @@ body {
 
   }
 
-  .calendar-grid { gap: 2px; grid-template-columns: repeat(7, minmax(28px, 1fr)); width: 100%; margin-top: 12px; max-height: none; }
+  .calendar-grid { gap: 4px; grid-template-columns: repeat(7, minmax(44px, 1fr)); width: 100%; margin-top: 12px; max-height: none; }
 
-  .calendar-cell { min-height: 28px; padding: 3px; border-radius: 5px; }
+  .calendar-cell { min-height: 50px; padding: 4px; border-radius: 6px; }
 
-  .calendar-date-num { font-size: 10px; margin-bottom: 1px; }
+  .calendar-date-num { font-size: 12px; margin-bottom: 2px; }
 
-  .calendar-events-text { margin-top: auto; font-size: 8px; padding: 0 2px; }
+  .calendar-events-text { margin-top: auto; font-size: 9px; padding: 0 2px; line-height: 1.1; }
 
-  .calendar-discipline-icon { top: 2px; right: 2px; width: 14px; height: 14px; }
+  .calendar-discipline-icon { top: 3px; right: 3px; width: 16px; height: 16px; }
 
-  .calendar-discipline-icon .discipline-icon-emoji { font-size: 10px; }
+  .calendar-discipline-icon .discipline-icon-emoji { font-size: 12px; }
+  
+  .calendar-has-events { animation: none; }
+  
+  .calendar-cell:hover:not(.calendar-has-events) { box-shadow: none; background: rgba(45, 27, 61, 0.25); }
 
   .calendar-popover { display: none; }
 
@@ -1003,9 +1031,13 @@ body {
 
         flex-wrap: wrap;
 
-        gap: 8px;
+        gap: 6px;
 
-        padding: 12px;
+        padding: 8px;
+
+        margin-top: 0;
+
+        margin-bottom: 12px;
 
     }
 
@@ -1015,7 +1047,9 @@ body {
 
         width: 100%;
 
-        margin-bottom: 8px;
+        margin-bottom: 6px;
+
+        font-size: 9px;
 
     }
 
@@ -1029,13 +1063,59 @@ body {
 
         margin-bottom: 0;
 
+        padding: 6px 8px;
+
+        font-size: 10px;
+
     }
 
     
 
     .calendar-events-text {
 
-        font-size: 10px;
+        font-size: 9px;
+
+    }
+    
+    .calendar-controls {
+
+        margin-bottom: 8px;
+
+        padding: 6px 0 6px;
+
+    }
+    
+    .calendar-nav-btn {
+
+        width: 36px;
+
+        height: 36px;
+
+        font-size: 16px;
+
+    }
+    
+    .calendar-month {
+
+        font-size: 16px;
+
+        min-width: 160px;
+
+    }
+    
+    .calendar-filters .filter-btn img.discipline-icon,
+
+    .calendar-filters .filter-btn .discipline-icon {
+
+        width: 16px !important;
+
+        height: 16px !important;
+
+    }
+    
+    .calendar-filters .filter-btn .discipline-icon-emoji {
+
+        font-size: 14px !important;
 
     }
 
