@@ -372,9 +372,9 @@ body {
 
     right: 6px;
 
-    width: 20px;
+    width: 28px;
 
-    height: 20px;
+    height: 28px;
 
     display: flex;
 
@@ -404,7 +404,7 @@ body {
 
 .calendar-discipline-icon .discipline-icon-emoji {
 
-    font-size: 16px;
+    font-size: 20px;
 
     line-height: 1;
 
@@ -622,7 +622,7 @@ body {
 
     position: sticky;
 
-    top: 20px;
+    top: 60px;
 
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 
