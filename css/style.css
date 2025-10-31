@@ -337,6 +337,13 @@ body {
     margin: 6px 0;
 }
 
+.calendar-apply-btn {
+    margin-top: 12px;
+    width: 100%;
+    text-align: center;
+    display: inline-block;
+}
+
 @media (max-width: 768px) {
     .calendar-wrapper {
         flex-direction: column;

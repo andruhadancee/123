@@ -15,17 +15,32 @@
     let events = [];
     let selectedDiscipline = 'all';
     let disciplines = [];
+    let registrationLinks = {}; // Кеш ссылок на регистрацию
 
     // Цвета для дисциплин
     function getDisciplineColor(discipline) {
         const colors = {
-            'Dota 2': '#e64c3c',
-            'CS 2': '#ff6b00',
-            'Valorant': '#fa4454',
-            'Overwatch 2': '#ff9c00',
-            'League of Legends': '#c89b3c'
+            'Dota 2': '#e64c3c',           // светло-красный
+            'CS 2': '#ff6b00',             // оранжевый
+            'Valorant': '#fa4454',         // красно-розовый
+            'Overwatch 2': '#ff9c00',      // оранжевый
+            'League of Legends': '#c89b3c', // золотой
+            'PUBG': '#4A90E2',             // светло-синий
+            'Mobile Legends': '#32CD32',   // лайм
+            'MLBB': '#32CD32',             // лайм
+            'CS:GO': '#ff6b00',            // оранжевый
+            'Counter-Strike 2': '#ff6b00'  // оранжевый
         };
-        return colors[discipline] || '#8b5abf';
+        // Если дисциплина не найдена, генерируем цвет на основе хеша строки
+        if (!colors[discipline]) {
+            let hash = 0;
+            for (let i = 0; i < discipline.length; i++) {
+                hash = discipline.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            const hue = hash % 360;
+            return `hsl(${hue}, 65%, 60%)`; // Генерируем случайный цвет
+        }
+        return colors[discipline];
     }
 
     function fmtMonth(d){
@@ -38,25 +53,23 @@
         const monthKey = fmtMonth(current);
         events = await API.calendar.getAll(monthKey);
         disciplines = await API.disciplines.getAll();
+        registrationLinks = await API.links.getAll(); // Загружаем ссылки для кнопки "Подать заявку"
         loadFilters();
         render();
     }
 
     function loadFilters() {
         if (!filtersContainer) return;
-        const disciplinesInEvents = [...new Set(events.map(e => e.discipline).filter(d => d))];
         
-        // Сортируем дисциплины по порядку из списка всех дисциплин
-        const sortedDisciplines = disciplines.filter(d => disciplinesInEvents.includes(d));
-        
+        // Показываем ВСЕ дисциплины из базы, не только те что в событиях
         filtersContainer.innerHTML = `
             <h3>Фильтр по дисциплинам</h3>
             <button class="filter-btn ${selectedDiscipline === 'all' ? 'active' : ''}" data-discipline="all">Все</button>
-            ${sortedDisciplines.map(d => `
+            ${disciplines.map(d => `
                 <button class="filter-btn ${selectedDiscipline === d ? 'active' : ''}" 
                         data-discipline="${d}" 
                         style="background: ${getDisciplineColor(d)}; border-color: ${getDisciplineColor(d)};">
-                    ${d}
+                    ${window.getDisciplineIcon ? window.getDisciplineIcon(d) : ''} ${d}
                 </button>
             `).join('')}
         `;
@@ -161,10 +174,33 @@
             eventTitle.textContent = `Событий нет — ${dateStr}`;
             eventBody.innerHTML = '<p style="color:var(--color-text-secondary)">На этот день пока ничего не запланировано.</p>';
         } else {
+            // Убираем дубликаты по tournament_id или по комбинации title + date
+            const uniqueEvents = [];
+            const seen = new Set();
+            
+            dayEvents.forEach(e => {
+                const key = e.tournament_id ? `tournament_${e.tournament_id}` : `${e.title}_${dateStr}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    uniqueEvents.push(e);
+                }
+            });
+            
             eventTitle.textContent = `События — ${dateStr}`;
             eventBody.innerHTML = `
                 <div class="calendar-events-wrap">
-                    ${dayEvents.map(e => `
+                    ${uniqueEvents.map(e => {
+                        // Определяем ссылку для регистрации (приоритет: custom_link > registration_link > links[discipline])
+                        let regLink = '#';
+                        if (e.custom_link && e.custom_link.trim()) {
+                            regLink = e.custom_link.trim();
+                        } else if (e.registration_link && e.registration_link.trim()) {
+                            regLink = e.registration_link.trim();
+                        } else if (e.discipline && registrationLinks && registrationLinks[e.discipline]) {
+                            regLink = registrationLinks[e.discipline];
+                        }
+                        
+                        return `
                         <div class="calendar-event-card">
                             ${e.image_url || e.imageUrl ? `<img class="calendar-event-img" src="${e.image_url || e.imageUrl}" alt="${e.title}">` : ''}
                             <div class="calendar-event-content">
@@ -173,9 +209,13 @@
                                 ${e.prize ? `<div class="calendar-event-prize">Призовой фонд: ${e.prize}</div>` : ''}
                                 ${e.description ? `<div class="calendar-event-desc">${e.description}</div>` : ''}
                                 ${e.max_teams || e.maxTeams ? `<div class="calendar-event-teams">Команд: ${e.max_teams || e.maxTeams}</div>` : ''}
+                                <a href="${regLink}" target="_blank" class="btn-submit calendar-apply-btn" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
+                                    Подать заявку
+                                </a>
                             </div>
                         </div>
-                    `).join('')}
+                    `;
+                    }).join('')}
                 </div>`;
         }
         modal.classList.add('active');
