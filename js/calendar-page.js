@@ -344,6 +344,15 @@
             }
             toggleFiltersBtn.style.borderRadius = '8px';
             toggleFiltersBtn.style.borderBottom = '1px solid rgba(139, 90, 191, 0.4)';
+        } else {
+            // Явно устанавливаем открытое состояние
+            filtersInner.style.display = '';
+            const arrow = toggleFiltersBtn.querySelector('.toggle-arrow');
+            if (arrow) {
+                arrow.textContent = '▲';
+            }
+            toggleFiltersBtn.style.borderRadius = '8px 8px 0 0';
+            toggleFiltersBtn.style.borderBottom = 'none';
         }
     }
     
