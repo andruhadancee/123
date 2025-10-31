@@ -821,6 +821,10 @@ body {
   .toggle-filters-btn {
     display: none;
   }
+  
+  .filters-section {
+    order: -1;
+  }
 }
 
 .calendar-filters {
