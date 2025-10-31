@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS tournaments (
     custom_link TEXT,
     status VARCHAR(50) DEFAULT 'active',
     winner VARCHAR(255),
+    watch_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -24,6 +25,12 @@ CREATE TABLE IF NOT EXISTS calendar_events (
     description TEXT,
     event_date DATE NOT NULL,
     image_url TEXT,
+    discipline VARCHAR(100),
+    prize VARCHAR(100),
+    max_teams INTEGER,
+    registration_link TEXT,
+    custom_link TEXT,
+    tournament_id INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -77,6 +84,7 @@ ON CONFLICT (name) DO NOTHING;
 CREATE TABLE IF NOT EXISTS regulations (
     id SERIAL PRIMARY KEY,
     discipline_name VARCHAR(100) NOT NULL,
+    regulation_name VARCHAR(255),
     pdf_url TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

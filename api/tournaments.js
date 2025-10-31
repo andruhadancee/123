@@ -110,7 +110,7 @@ module.exports = async (req, res) => {
             try {
                 await pool.query('DELETE FROM calendar_events WHERE tournament_id = $1', [id]);
             } catch (err) {
-                deletions.error('Ошибка удаления события календаря:', err);
+                console.error('Ошибка удаления события календаря:', err);
             }
             
             const result = await pool.query('DELETE FROM tournaments WHERE id = $1 RETURNING *', [id]);
