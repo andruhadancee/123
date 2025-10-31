@@ -647,9 +647,9 @@ body {
 
     border: 1px solid rgba(139, 90, 191, 0.4) !important;
 
-    border-bottom: none !important;
+    border-bottom: none;
 
-    border-radius: 8px 8px 0 0 !important;
+    border-radius: 8px 8px 0 0;
 
     color: var(--color-text-primary) !important;
 
