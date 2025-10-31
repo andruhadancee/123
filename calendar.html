@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Календарь – WB Cyber Club</title>
     <link rel="icon" type="image/png" href="Group 2131328338.png">
-    <link rel="stylesheet" href="css/style.css?v=5.1">
+    <link rel="stylesheet" href="css/style.css?v=6.0">
 </head>
 <body>
     <div class="animated-bg">
@@ -55,16 +55,14 @@
         </div>
 
         <div class="calendar-wrapper">
-            <div id="calendar-filters-container" class="calendar-filters-container">
-                <button id="toggle-filters-btn" class="toggle-filters-btn" aria-label="Фильтры дисциплин">
-                    Фильтры дисциплин <span class="toggle-arrow">▲</span>
-                </button>
+            <div id="calendar-grid" class="calendar-grid-container"></div>
+            <div class="filters-section">
+                <h3 class="filters-title">Фильтры дисциплин</h3>
                 <div id="calendar-filters" class="calendar-filters">
                     <button class="filter-btn active" data-discipline="all">Все</button>
                     <!-- Фильтры будут добавлены динамически -->
                 </div>
             </div>
-            <div id="calendar-grid" class="calendar-grid-container"></div>
         </div>
 
         <div id="calendar-events" style="margin-top:20px;"></div>
@@ -82,6 +80,6 @@
 
     <script src="js/api-client.js"></script>
     <script src="js/particles.js"></script>
-    <script src="js/calendar-page.js?v=2.3"></script>
+    <script src="js/calendar-page.js?v=3.0"></script>
 </body>
 </html>

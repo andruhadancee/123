@@ -619,67 +619,25 @@ body {
 
   }
 
-  .calendar-filters-container {
+  .filters-section {
 
-    display: flex !important;
-
-    flex-direction: column !important;
+    margin-top: 20px !important;
 
     width: 100% !important;
 
   }
 
-  .toggle-filters-btn {
-
-    display: flex !important;
-
-    align-items: center;
-
-    justify-content: center;
-
-    width: 100% !important;
-
-    padding: 14px 16px !important;
-
-    margin-bottom: 0 !important;
-
-    background: rgba(139, 90, 191, 0.15) !important;
-
-    border: 1px solid rgba(139, 90, 191, 0.4) !important;
-
-    border-bottom: none;
-
-    border-radius: 8px 8px 0 0;
-
-    color: var(--color-text-primary) !important;
+  .filters-title {
 
     font-size: 14px !important;
 
     font-weight: 600 !important;
 
-    cursor: pointer;
+    color: var(--color-text-primary) !important;
 
-    transition: all 0.2s ease;
+    margin-bottom: 12px !important;
 
-    position: relative;
-
-    gap: 8px;
-
-  }
-
-  .toggle-filters-btn:active {
-
-    background: rgba(139, 90, 191, 0.25) !important;
-
-    transform: scale(0.98);
-
-  }
-
-  .toggle-arrow {
-
-    font-size: 12px;
-
-    transition: transform 0.3s ease;
+    text-align: center !important;
 
   }
 
@@ -689,7 +647,7 @@ body {
 
     position: static !important;
 
-    display: grid;
+    display: grid !important;
 
     grid-template-columns: repeat(3, 1fr) !important;
 
@@ -705,11 +663,9 @@ body {
 
     max-width: none !important;
 
-    border-radius: 0 0 8px 8px !important;
+    border-radius: 8px !important;
 
     border: 1px solid rgba(139, 90, 191, 0.4) !important;
-
-    border-top: none !important;
 
     background: rgba(45, 27, 61, 0.3) !important;
 

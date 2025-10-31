@@ -8,9 +8,7 @@
     const modalClose = document.getElementById('event-modal-close');
     const eventTitle = document.getElementById('event-title');
     const eventBody = document.getElementById('event-body');
-    const filtersContainer = document.getElementById('calendar-filters-container');
     const filtersInner = document.getElementById('calendar-filters');
-    const toggleFiltersBtn = document.getElementById('toggle-filters-btn');
 
     let current = new Date();
     // Восстанавливаем сохраненный месяц из localStorage
@@ -87,9 +85,6 @@
             `).join('')}
         `;
         
-        // Убираем отступ на мобильных
-        filtersContainer.style.marginTop = '0';
-        
         filtersInner.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 selectedDiscipline = btn.dataset.discipline;
@@ -98,9 +93,6 @@
                 render();
             });
         });
-        
-        // Восстанавливаем состояние фильтров после загрузки
-        restoreFiltersState();
     }
 
     function render(){
@@ -327,52 +319,6 @@
         } catch (err) {
             console.error('Ошибка загрузки социальных ссылок:', err);
         }
-    }
-    
-    // Функция восстановления состояния фильтров
-    function restoreFiltersState() {
-        if (!toggleFiltersBtn || !filtersInner) return;
-        
-        const savedState = localStorage.getItem('calendarFiltersCollapsed');
-        const isCollapsed = savedState === 'true';
-        
-        if (isCollapsed) {
-            filtersInner.style.display = 'none';
-            const arrow = toggleFiltersBtn.querySelector('.toggle-arrow');
-            if (arrow) {
-                arrow.textContent = '▼';
-            }
-            toggleFiltersBtn.style.borderRadius = '8px';
-            toggleFiltersBtn.style.borderBottom = '1px solid rgba(139, 90, 191, 0.4)';
-        } else {
-            // Явно устанавливаем открытое состояние
-            filtersInner.style.display = '';
-            const arrow = toggleFiltersBtn.querySelector('.toggle-arrow');
-            if (arrow) {
-                arrow.textContent = '▲';
-            }
-            toggleFiltersBtn.style.borderRadius = '8px 8px 0 0';
-            toggleFiltersBtn.style.borderBottom = 'none';
-        }
-    }
-    
-    // Обработчик кнопки сворачивания фильтров
-    if (toggleFiltersBtn) {
-        toggleFiltersBtn.addEventListener('click', function() {
-            if (filtersInner) {
-                const isHidden = filtersInner.style.display === 'none';
-                filtersInner.style.display = isHidden ? '' : 'none';
-                const arrow = this.querySelector('.toggle-arrow');
-                if (arrow) {
-                    arrow.textContent = isHidden ? '▼' : '▲';
-                }
-                // Меняем скругление кнопки и границу
-                this.style.borderRadius = isHidden ? '8px' : '8px 8px 0 0';
-                this.style.borderBottom = isHidden ? '1px solid rgba(139, 90, 191, 0.4)' : 'none';
-                // Сохраняем состояние в localStorage
-                localStorage.setItem('calendarFiltersCollapsed', isHidden.toString());
-            }
-        });
     }
 
     loadSocialLinks();
