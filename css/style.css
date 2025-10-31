@@ -609,7 +609,7 @@ body {
 
   .toggle-filters-btn {
 
-    display: flex;
+    display: flex !important;
 
     align-items: center;
 
@@ -821,12 +821,12 @@ body {
 
 }
 
-/* Кнопка переключения фильтров */
+/* Кнопка переключения фильтров - скрыта на десктопе */
 
-.toggle-filters-btn {
-
+@media (min-width: 769px) {
+  .toggle-filters-btn {
     display: none;
-
+  }
 }
 
 .calendar-filters {
