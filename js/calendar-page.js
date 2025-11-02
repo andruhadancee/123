@@ -233,25 +233,44 @@
                     }
                 });
                 
+                // Проверяем, идёт ли турнир (зелёный фон)
+                const isActive = isTournamentActive(dayEventsFiltered[0]);
+                const activeBg = isActive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(45, 27, 61, 0.25)';
+                
                 // Если несколько дисциплин - делаем градиентную обводку
                 if (uniqueDisciplines.length === 1) {
                     const discipline = uniqueDisciplines[0];
                     const color = getDisciplineColor(discipline);
                     cell.style.borderColor = color;
                     cell.style.borderWidth = '2px';
+                    if (isActive) {
+                        cell.style.backgroundColor = activeBg;
+                    }
                 } else if (uniqueDisciplines.length > 1) {
                     const color1 = getDisciplineColor(uniqueDisciplines[0]);
                     const color2 = getDisciplineColor(uniqueDisciplines[1]);
-                    // Создаём градиентную обводку через border-image
-                    cell.style.borderImage = `linear-gradient(to right, ${color1} 0%, ${color1} 50%, ${color2} 50%, ${color2} 100%) 1`;
-                    cell.style.borderWidth = '2px';
+                    // Создаём псевдоэлемент для градиентной обводки с border-radius
+                    const gradientBorder = document.createElement('div');
+                    gradientBorder.className = 'calendar-gradient-border';
+                    gradientBorder.style.cssText = `
+                        position: absolute;
+                        inset: 0;
+                        border-radius: 8px;
+                        padding: 2px;
+                        background: linear-gradient(to right, ${color1} 0%, ${color1} 50%, ${color2} 50%, ${color2} 100%);
+                        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                        mask-composite: exclude;
+                        -webkit-mask-composite: xor;
+                        pointer-events: none;
+                        z-index: 0;
+                    `;
+                    cell.appendChild(gradientBorder);
+                    // Убираем стандартную border и ставим фон
+                    cell.style.borderColor = 'transparent';
+                    cell.style.borderWidth = '0';
+                    cell.style.backgroundColor = activeBg;
                 } else {
                     cell.style.borderWidth = '2px';
-                }
-                
-                // Проверяем, идёт ли турнир (зелёный фон)
-                if (isTournamentActive(dayEventsFiltered[0])) {
-                    cell.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
                 }
                 
                 // Показываем иконки всех уникальных дисциплин
