@@ -489,6 +489,11 @@ body {
     filter: contrast(1.2) brightness(1.1);
 }
 
+/* Изменение цвета логотипа PUBG на белый в календаре */
+.calendar-discipline-icon img.discipline-icon[src*="PUBG.png"] {
+    filter: invert(1) brightness(1.1);
+}
+
 .calendar-discipline-icon .discipline-icon-emoji {
 
     font-size: 20px;
@@ -632,6 +637,11 @@ body {
     filter: contrast(1.2) brightness(1.1);
   }
   
+  /* Изменение цвета логотипа PUBG на белый в календаре (мобильная версия) */
+  .calendar-discipline-icon img.discipline-icon[src*="PUBG.png"] {
+    filter: invert(1) brightness(1.1);
+  }
+  
   .calendar-has-events { animation: none; }
   
   .calendar-cell:hover:not(.calendar-has-events) { box-shadow: none; background: rgba(45, 27, 61, 0.25); }
@@ -772,6 +782,11 @@ body {
   .calendar-filters .filter-btn .discipline-icon[src*="HS.png"] {
     mix-blend-mode: multiply;
     filter: contrast(1.2) brightness(1.1);
+  }
+  
+  /* Изменение цвета логотипа PUBG на белый в фильтрах календаря */
+  .calendar-filters .filter-btn .discipline-icon[src*="PUBG.png"] {
+    filter: invert(1) brightness(1.1);
   }
 
   .calendar-filters .filter-btn .discipline-icon-emoji {
@@ -2401,6 +2416,11 @@ main {
     filter: contrast(1.2) brightness(1.1);
 }
 
+/* Изменение цвета логотипа PUBG с черного на белый */
+.discipline-icon[src*="PUBG.png"] {
+    filter: invert(1) brightness(1.1);
+}
+
 /* Смайлик для дисциплин без логотипа */
 
 .discipline-icon-emoji {
@@ -2453,6 +2473,11 @@ main {
     .discipline-icon[src*="HS.png"] {
         mix-blend-mode: multiply;
         filter: contrast(1.2) brightness(1.1);
+    }
+    
+    /* Изменение цвета логотипа PUBG на белый (мобильная версия) */
+    .discipline-icon[src*="PUBG.png"] {
+        filter: invert(1) brightness(1.1);
     }
 
     
@@ -3613,6 +3638,11 @@ body.modal-open {
     filter: contrast(1.2) brightness(1.1);
 }
 
+/* Изменение цвета логотипа PUBG на белый в фильтрах */
+.filter-btn .discipline-icon[src*="PUBG.png"] {
+    filter: invert(1) brightness(1.1);
+}
+
 .filter-btn .discipline-icon-emoji {
 
     font-size: 20px !important;
@@ -3665,6 +3695,11 @@ body.modal-open {
     .filter-btn .discipline-icon[src*="HS.png"] {
         mix-blend-mode: multiply;
         filter: contrast(1.2) brightness(1.1);
+    }
+    
+    /* Изменение цвета логотипа PUBG на белый в фильтрах (мобильная версия) */
+    .filter-btn .discipline-icon[src*="PUBG.png"] {
+        filter: invert(1) brightness(1.1);
     }
 
     
