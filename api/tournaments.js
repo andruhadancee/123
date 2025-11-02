@@ -79,6 +79,7 @@ module.exports = async (req, res) => {
                                 'мая': '05', 'июня': '06', 'июля': '07', 'августа': '08',
                                 'сентября': '09', 'октября': '10', 'ноября': '11', 'декабря': '12'
                             };
+                            console.log(`📅 Создание события календаря для турнира ${tournament.id}, дата: "${date}"`);
                             // Парсим "день месяц год г."
                             const russianFormat = date.match(/(\d{1,2})\s+(\w+)\s+(\d{4})(?:\s+г\.)?/);
                             if (russianFormat) {
@@ -87,10 +88,16 @@ module.exports = async (req, res) => {
                                 const year = russianFormat[3];
                                 if (month) {
                                     eventDateStr = `${year}-${month}-${day}`;
+                                    console.log(`✅ Преобразовано: ${eventDateStr}`);
+                                } else {
+                                    console.log(`❌ Неизвестный месяц: ${russianFormat[2]}`);
                                 }
                             } else if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
                                 // Уже в формате YYYY-MM-DD
                                 eventDateStr = date;
+                                console.log(`✅ Уже в формате YYYY-MM-DD: ${eventDateStr}`);
+                            } else {
+                                console.log(`❌ Не удалось распарсить дату: "${date}"`);
                             }
                         } catch (e) {
                             console.error('Ошибка парсинга даты:', e);
@@ -102,7 +109,12 @@ module.exports = async (req, res) => {
                                  VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
                                 [title, description || null, eventDateStr, imageUrl || null, discipline || null, prize || null, maxTeams || null, null, customLink || null, tournament.id, startTime || null, watchUrl || null]
                             );
+                            console.log(`✅ Создано событие календаря для турнира ${tournament.id}`);
+                        } else {
+                            console.log(`⚠️ Не создано событие календаря для турнира ${tournament.id} - не удалось распарсить дату`);
                         }
+                    } else {
+                        console.log(`⚠️ Событие календаря уже существует для турнира ${tournament.id}`);
                     }
                 } catch (err) {
                     console.error('Ошибка создания события календаря:', err);
