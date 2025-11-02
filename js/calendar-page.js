@@ -54,6 +54,34 @@
         }
         return colors[discipline];
     }
+    
+    // Функция проверки, идёт ли турнир
+    function isTournamentActive(event) {
+        if (!event.start_time) return false;
+        
+        try {
+            // Парсим дату события
+            const eventDateStr = (event.event_date || event.eventDate).slice(0, 10); // YYYY-MM-DD
+            const [year, month, day] = eventDateStr.split('-').map(n => parseInt(n));
+            
+            // Парсим время
+            const timeMatch = event.start_time.match(/(\d{1,2}):(\d{2})/);
+            if (!timeMatch) return false;
+            
+            const hours = parseInt(timeMatch[1]);
+            const minutes = parseInt(timeMatch[2]);
+            
+            // Создаём Date объект начала турнира
+            const startDateTime = new Date(year, month - 1, day, hours, minutes, 0);
+            
+            // Проверяем, прошло ли время старта
+            const now = new Date();
+            return now >= startDateTime;
+        } catch (error) {
+            console.error('Ошибка проверки статуса турнира:', error);
+            return false;
+        }
+    }
 
     function fmtMonth(d){
         const y = d.getFullYear();
@@ -191,11 +219,17 @@
                 cell.classList.add('calendar-has-events');
                 
                 // Определяем цвет по первой дисциплине
-                const firstDiscipline = dayEventsFiltered[0].discipline;
+                const firstEvent = dayEventsFiltered[0];
+                const firstDiscipline = firstEvent.discipline;
                 if (firstDiscipline) {
                     const color = getDisciplineColor(firstDiscipline);
                     cell.style.borderColor = color;
                     cell.style.borderWidth = '2px';
+                }
+                
+                // Проверяем, идёт ли турнир (зелёный фон)
+                if (isTournamentActive(firstEvent)) {
+                    cell.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
                 }
                 
                 // Показываем логотип дисциплины вместо цифры
@@ -259,6 +293,9 @@
                             regLink = registrationLinks[e.discipline];
                         }
                         
+                        // Генерируем правильную кнопку
+                        const buttonHtml = getCalendarEventButton(e, regLink);
+                        
                         return `
                         <div class="calendar-event-card">
                             ${e.image_url || e.imageUrl ? `<img class="calendar-event-img" src="${e.image_url || e.imageUrl}" alt="${e.title}">` : ''}
@@ -268,9 +305,7 @@
                                 ${e.prize ? `<div class="calendar-event-prize">Призовой фонд: ${e.prize}</div>` : ''}
                                 ${e.description ? `<div class="calendar-event-desc">${e.description}</div>` : ''}
                                 ${e.max_teams || e.maxTeams ? `<div class="calendar-event-teams">Команд: ${e.max_teams || e.maxTeams}</div>` : ''}
-                                <a href="${regLink}" target="_blank" class="btn-submit calendar-apply-btn" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
-                                    Подать заявку
-                                </a>
+                                ${buttonHtml}
                             </div>
                         </div>
                     `;
@@ -279,6 +314,61 @@
         }
         modal.classList.add('active');
         document.body.classList.add('modal-open');
+    }
+    
+    // Функция для генерации кнопки события календаря
+    function getCalendarEventButton(event, regLink) {
+        if (!event.start_time) {
+            // Если время не указано, всегда показываем кнопку регистрации
+            return `<a href="${regLink}" target="_blank" class="btn-submit calendar-apply-btn" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
+                Подать заявку
+            </a>`;
+        }
+        
+        const isActive = isTournamentActive(event);
+        
+        if (isActive) {
+            // Турнир начался - показываем кнопку "Смотреть" или "Регистрация закрыта"
+            const watchUrl = event.watch_url;
+            if (watchUrl && watchUrl.trim()) {
+                return `<a href="${watchUrl.trim()}" target="_blank" class="btn-submit calendar-apply-btn" style="background: linear-gradient(90deg, #10b981 0%, #059669 100%);">
+                    Смотреть турнир
+                </a>`;
+            } else {
+                return `<div class="btn-submit calendar-apply-btn" style="background: rgba(107, 114, 128, 0.6); cursor: not-allowed;">
+                    Регистрация закрыта
+                </div>`;
+            }
+        } else {
+            // Проверяем, за сколько часов до старта
+            try {
+                const eventDateStr = (event.event_date || event.eventDate).slice(0, 10);
+                const [year, month, day] = eventDateStr.split('-').map(n => parseInt(n));
+                const timeMatch = event.start_time.match(/(\d{1,2}):(\d{2})/);
+                if (timeMatch) {
+                    const hours = parseInt(timeMatch[1]);
+                    const minutes = parseInt(timeMatch[2]);
+                    const startDateTime = new Date(year, month - 1, day, hours, minutes, 0);
+                    const now = new Date();
+                    const msDiff = startDateTime - now;
+                    const hoursDiff = msDiff / (1000 * 60 * 60);
+                    
+                    // Если до старта менее 3 часов
+                    if (hoursDiff < 3) {
+                        return `<div class="btn-submit calendar-apply-btn" style="background: rgba(107, 114, 128, 0.6); cursor: not-allowed;">
+                            Регистрация закрыта
+                        </div>`;
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка проверки времени:', error);
+            }
+            
+            // Показываем кнопку регистрации
+            return `<a href="${regLink}" target="_blank" class="btn-submit calendar-apply-btn" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
+                Подать заявку
+            </a>`;
+        }
     }
     
     function closeModal(){

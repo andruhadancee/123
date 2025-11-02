@@ -143,9 +143,16 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
+                            <label for="calendar-start-time">Время начала (МСК) *</label>
+                            <input type="time" id="calendar-start-time" required>
+                            <small>Время начала турнира по московскому времени</small>
+                        </div>
+                        <div class="form-group">
                             <label for="calendar-prize">Призовой фонд *</label>
                             <input type="text" id="calendar-prize" required placeholder="100 000 ₽">
                         </div>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group">
                             <label for="calendar-max-teams">Количество команд *</label>
                             <input type="number" id="calendar-max-teams" required placeholder="16" min="2">
@@ -167,6 +174,11 @@
                         <label for="calendar-custom-link">Пользовательская ссылка</label>
                         <input type="text" id="calendar-custom-link" placeholder="https://...">
                         <small>Если указана, будет использована вместо ссылки на регистрацию</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="calendar-watch-url">Ссылка на трансляцию</label>
+                        <input type="text" id="calendar-watch-url" placeholder="https://youtube.com/..., https://twitch.tv/...">
+                        <small>Ссылка на трансляцию/запись турнира (кнопка появится в момент старта)</small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn-secondary" id="cancel-calendar-event">Отмена</button>
@@ -365,10 +377,18 @@
                 
                 <div class="form-row">
                     <div class="form-group">
+                        <label for="tournament-start-time">Время начала (МСК) *</label>
+                        <input type="time" id="tournament-start-time" required>
+                        <small>Время начала турнира по московскому времени</small>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="tournament-prize">Призовой фонд *</label>
                         <input type="text" id="tournament-prize" placeholder="25 000 ₽" required>
                     </div>
-                    
+                </div>
+                
+                <div class="form-row">
                     <div class="form-group">
                         <label for="tournament-max-teams">Максимум команд *</label>
                         <input type="number" id="tournament-max-teams" placeholder="16" min="2" required>
@@ -381,15 +401,15 @@
                     <small>Если не указана, будет использована ссылка из настроек дисциплины</small>
                 </div>
                 
+                <div class="form-group">
+                    <label for="tournament-watch-url">Ссылка на трансляцию (необязательно)</label>
+                    <input type="text" id="tournament-watch-url" placeholder="https://youtube.com/..., https://twitch.tv/...">
+                    <small>Ссылка на трансляцию/запись турнира (кнопка появится в момент старта)</small>
+                </div>
+                
                 <div class="form-group" id="winner-field" style="display: none;">
                     <label for="tournament-winner">Победитель (для прошедших турниров)</label>
                     <input type="text" id="tournament-winner" placeholder="Название команды-победителя">
-                </div>
-                
-                <div class="form-group" id="watch-url-field" style="display: none;">
-                    <label for="tournament-watch-url">Ссылка "Смотреть" (для прошедших турниров)</label>
-                    <input type="text" id="tournament-watch-url" placeholder="https://youtube.com/..., https://twitch.tv/...">
-                    <small>Ссылка на запись или трансляцию турнира</small>
                 </div>
                 
                 <input type="hidden" id="tournament-status" value="active">

@@ -20,13 +20,13 @@ document.addEventListener('DOMContentLoaded', initializeMainPage);
 window.initializeMainPage = initializeMainPage;
 window.loadActiveTournaments = loadActiveTournaments; // Экспортируем для использования в админке
 
-// Автоматическое обновление турниров отключено (вызывало дёргание карточек)
-// setInterval(() => {
-//     const grid = document.getElementById('tournaments-grid');
-//     if (grid && typeof loadActiveTournaments === 'function') {
-//         loadActiveTournaments(true); // Обновляем с очисткой кеша
-//     }
-// }, 30000);
+// Автоматическое обновление кнопок каждую минуту для проверки времени старта
+setInterval(() => {
+    const grid = document.getElementById('tournaments-grid');
+    if (grid) {
+        updateTournamentButtons();
+    }
+}, 60000); // Каждую минуту
 
 function hideLoader() {
     const loader = document.getElementById('loader');
@@ -34,6 +34,37 @@ function hideLoader() {
         loader.classList.add('hidden');
         setTimeout(() => loader.style.display = 'none', 300);
     }
+}
+
+// Функция обновления кнопок турниров (без дёргания)
+async function updateTournamentButtons() {
+    const grid = document.getElementById('tournaments-grid');
+    if (!grid) return;
+    
+    const links = await API.links.getAll();
+    
+    // Обновляем кнопки для каждой карточки
+    allTournaments.forEach(tournament => {
+        const card = grid.querySelector(`#tournament-card-${tournament.id}`);
+        if (!card) return;
+        
+        const currentButton = card.querySelector('a.btn-submit, div.btn-submit');
+        if (!currentButton) return;
+        
+        // Получаем что должно быть
+        const newButtonHtml = getTournamentButton(tournament, links[tournament.discipline] || '#');
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = newButtonHtml.trim();
+        const newButton = tempDiv.firstElementChild;
+        
+        const currentText = currentButton.textContent.trim();
+        const newText = newButton.textContent.trim();
+        
+        // Если текст кнопки изменился - заменяем
+        if (currentText !== newText) {
+            currentButton.replaceWith(newButton);
+        }
+    });
 }
 
 async function loadActiveTournaments(forceReload = false) {
@@ -141,11 +172,15 @@ function createTournamentCard(tournament, links) {
     
     // Парсим дату для таймера
     const timerId = `timer-${tournament.id}`;
+    const cardId = `tournament-card-${tournament.id}`;
     const dateParts = tournament.date.split(/[.-]/);
     const hasTimer = dateParts.length === 3;
     
+    // Генерируем кнопки на основе времени
+    const buttonHtml = getTournamentButton(tournament, regLink);
+    
     return `
-        <div class="tournament-card" data-discipline="${tournament.discipline}">
+        <div class="tournament-card" data-discipline="${tournament.discipline}" id="${cardId}" data-start-time="${tournament.start_time || ''}">
             <div class="tournament-card-header">
                 <h2>${tournament.title}</h2>
             </div>
@@ -171,11 +206,92 @@ function createTournamentCard(tournament, links) {
             
             <div class="timer-container" id="${timerId}" data-date="${tournament.date}"></div>
             
-            <a href="${regLink}" target="_blank" class="btn-submit" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
-                Подать заявку
-            </a>
+            ${buttonHtml}
         </div>
     `;
+}
+
+// Функция для определения кнопки турнира
+function getTournamentButton(tournament, regLink) {
+    if (!tournament.start_time) {
+        // Если время не указано, всегда показываем кнопку регистрации
+        return `<a href="${regLink}" target="_blank" class="btn-submit" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
+            Подать заявку
+        </a>`;
+    }
+    
+    // Парсим дату и время турнира
+    const tournamentDateTime = parseTournamentDateTime(tournament.date, tournament.start_time);
+    if (!tournamentDateTime) {
+        // Если не удалось распарсить, показываем кнопку регистрации
+        return `<a href="${regLink}" target="_blank" class="btn-submit" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
+            Подать заявку
+        </a>`;
+    }
+    
+    const now = new Date();
+    const msDiff = tournamentDateTime - now;
+    const hoursDiff = msDiff / (1000 * 60 * 60);
+    
+    // Если до старта меньше 3 часов или турнир уже начался
+    if (hoursDiff <= 0) {
+        // Турнир начался - показываем кнопку "Смотреть"
+        const watchUrl = tournament.watch_url || tournament.watchUrl;
+        if (watchUrl && watchUrl.trim()) {
+            return `<a href="${watchUrl.trim()}" target="_blank" class="btn-submit" style="background: linear-gradient(90deg, #10b981 0%, #059669 100%);">
+                Смотреть турнир
+            </a>`;
+        } else {
+            return `<div class="btn-submit" style="background: rgba(107, 114, 128, 0.6); cursor: not-allowed;">
+                Регистрация закрыта
+            </div>`;
+        }
+    } else if (hoursDiff < 3) {
+        // До старта меньше 3 часов - скрываем кнопку регистрации
+        return `<div class="btn-submit" style="background: rgba(107, 114, 128, 0.6); cursor: not-allowed;">
+            Регистрация закрыта
+        </div>`;
+    } else {
+        // Более чем за 3 часа - показываем кнопку регистрации
+        return `<a href="${regLink}" target="_blank" class="btn-submit" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
+            Подать заявку
+        </a>`;
+    }
+}
+
+// Функция для парсинга даты и времени турнира
+function parseTournamentDateTime(dateStr, timeStr) {
+    try {
+        // Парсим дату (формат: "день месяц год г." или "день месяц год")
+        const dateMatch = dateStr.match(/(\d{1,2})\s+(\w+)\s+(\d{4})(?:\s+г\.)?/);
+        if (!dateMatch) return null;
+        
+        const months = {
+            'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
+            'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
+            'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
+        };
+        
+        const day = parseInt(dateMatch[1]);
+        const month = months[dateMatch[2].toLowerCase()];
+        const year = parseInt(dateMatch[3]);
+        
+        if (month === undefined) return null;
+        
+        // Парсим время (формат HH:MM)
+        const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})/);
+        if (!timeMatch) return null;
+        
+        const hours = parseInt(timeMatch[1]);
+        const minutes = parseInt(timeMatch[2]);
+        
+        // Создаем Date объект (МСК время)
+        const dateTime = new Date(year, month, day, hours, minutes, 0);
+        return dateTime;
+    } catch (error) {
+        console.error('Ошибка парсинга даты/времени:', error);
+        return null;
+    }
 }
 
 // Инициализация таймеров после отображения

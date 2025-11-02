@@ -30,6 +30,22 @@ npm run db:init
 
 ---
 
+## 🔄 Дополнительные миграции
+
+### Добавление поля start_time (для новых функций времени):
+
+```bash
+# Выполни файл add-start-time.sql через Neon Dashboard SQL Editor
+```
+
+Или вручную:
+```sql
+ALTER TABLE tournaments ADD COLUMN IF NOT EXISTS start_time TIME;
+ALTER TABLE calendar_events ADD COLUMN IF NOT EXISTS start_time TIME;
+```
+
+---
+
 ## 🔧 Настройка Vercel
 
 Переменные УЖЕ добавлены автоматически при подключении базы!
@@ -54,6 +70,8 @@ POSTGRES_DATABASE
 - id, title, discipline, date, prize
 - teams, max_teams, registration_link, custom_link
 - status ('active' | 'finished'), winner
+- start_time TIME - время начала по МСК
+- watch_url - ссылка на трансляцию
 - created_at, updated_at
 
 ### registration_links

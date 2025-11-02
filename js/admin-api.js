@@ -488,6 +488,8 @@ async function openCalendarModal(event) {
     const maxTeams = document.getElementById('calendar-max-teams');
     const regLink = document.getElementById('calendar-registration-link');
     const customLink = document.getElementById('calendar-custom-link');
+    const startTime = document.getElementById('calendar-start-time');
+    const watchUrl = document.getElementById('calendar-watch-url');
     
     // Загружаем дисциплины в селект
     if (disc && disc.options.length <= 1) {
@@ -509,6 +511,8 @@ async function openCalendarModal(event) {
         if (maxTeams) maxTeams.value = event.max_teams || event.maxTeams || '';
         if (regLink) regLink.value = event.registration_link || event.registrationLink || '';
         if (customLink) customLink.value = event.custom_link || event.customLink || '';
+        if (startTime) startTime.value = event.start_time || '';
+        if (watchUrl) watchUrl.value = event.watch_url || '';
     } else {
         editingCalendarId = null;
         titleEl.textContent = 'Добавить событие';
@@ -522,6 +526,8 @@ async function openCalendarModal(event) {
         if (maxTeams) maxTeams.value = '';
         if (regLink) regLink.value = '';
         if (customLink) customLink.value = '';
+        if (startTime) startTime.value = '';
+        if (watchUrl) watchUrl.value = '';
     }
     modal.classList.add('active');
 }
@@ -596,6 +602,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const maxTeams = document.getElementById('calendar-max-teams').value.trim();
         const registrationLink = document.getElementById('calendar-registration-link').value.trim();
         const customLink = document.getElementById('calendar-custom-link').value.trim();
+        const startTime = document.getElementById('calendar-start-time').value.trim();
+        const watchUrl = document.getElementById('calendar-watch-url').value.trim();
         
         if (!title || !eventDate) return;
         
@@ -608,7 +616,9 @@ document.addEventListener('DOMContentLoaded', () => {
             prize: prize || null,
             maxTeams: maxTeams ? parseInt(maxTeams) : null,
             registrationLink: registrationLink || null,
-            customLink: customLink || null
+            customLink: customLink || null,
+            startTime: startTime || null,
+            watchUrl: watchUrl || null
         };
         
         if (editingCalendarId) {
@@ -709,11 +719,13 @@ function displayFilteredActiveTournaments() {
     
     grid.innerHTML = filtered.map(t => createAdminTournamentCard(t)).join('');
     
-    // Add event listeners for edit and delete buttons
+    // Add event listeners for edit, archive and delete buttons
     filtered.forEach(t => {
         const editBtn = document.getElementById(`edit-${t.id}`);
+        const archiveBtn = document.getElementById(`archive-${t.id}`);
         const deleteBtn = document.getElementById(`delete-${t.id}`);
         if (editBtn) editBtn.addEventListener('click', () => openEditModal(t));
+        if (archiveBtn) archiveBtn.addEventListener('click', () => archiveTournamentConfirm(t.id));
         if (deleteBtn) deleteBtn.addEventListener('click', () => deleteTournamentConfirm(t.id));
     });
 }
@@ -854,6 +866,7 @@ function createAdminTournamentCard(tournament, isPast = false) {
             <div class="tournament-admin-actions">
                 ${!isPast ? `
                 <button class="btn-edit" id="edit-${tournament.id}">Изменить</button>
+                <button class="btn-danger" id="archive-${tournament.id}" style="background: rgba(255, 193, 7, 0.8);">Перенести в архив</button>
                 <button class="btn-danger" id="delete-${tournament.id}">Удалить</button>
                 ` : `
                 <button class="btn-edit" id="edit-past-${tournament.id}">Изменить</button>
@@ -912,7 +925,6 @@ function openAddModal() {
     document.getElementById('tournament-id').value = '';
     document.getElementById('tournament-status').value = 'active';
     document.getElementById('winner-field').style.display = 'none';
-    document.getElementById('watch-url-field').style.display = 'none';
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
 }
@@ -924,7 +936,6 @@ function openAddPastModal() {
     document.getElementById('tournament-id').value = '';
     document.getElementById('tournament-status').value = 'finished';
     document.getElementById('winner-field').style.display = 'block';
-    document.getElementById('watch-url-field').style.display = 'block';
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
 }
@@ -955,6 +966,7 @@ function openEditPastModal(tournament) {
     document.getElementById('tournament-max-teams').value = tournament.max_teams;
     document.getElementById('tournament-custom-link').value = tournament.custom_link || '';
     document.getElementById('tournament-winner').value = tournament.winner || '';
+    document.getElementById('tournament-start-time').value = tournament.start_time || '';
     
     // Проверяем поле watch_url - может быть с подчеркиванием или camelCase
     const watchUrlValue = tournament.watch_url || tournament.watchUrl || '';
@@ -964,7 +976,6 @@ function openEditPastModal(tournament) {
     
     document.getElementById('tournament-status').value = 'finished';
     document.getElementById('winner-field').style.display = 'block';
-    document.getElementById('watch-url-field').style.display = 'block';
     
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
@@ -995,9 +1006,14 @@ function openEditModal(tournament) {
     document.getElementById('tournament-prize').value = tournament.prize;
     document.getElementById('tournament-max-teams').value = tournament.max_teams;
     document.getElementById('tournament-custom-link').value = tournament.custom_link || '';
+    document.getElementById('tournament-start-time').value = tournament.start_time || '';
+    
+    // Проверяем поле watch_url - может быть с подчеркиванием или camelCase
+    const watchUrlValue = tournament.watch_url || tournament.watchUrl || '';
+    document.getElementById('tournament-watch-url').value = watchUrlValue;
+    
     document.getElementById('tournament-status').value = 'active';
     document.getElementById('winner-field').style.display = 'none';
-    document.getElementById('watch-url-field').style.display = 'none';
     
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
@@ -1021,6 +1037,7 @@ async function handleFormSubmit(e) {
         customLink: document.getElementById('tournament-custom-link').value || null,
         winner: document.getElementById('tournament-winner').value || null,
         watchUrl: (document.getElementById('tournament-watch-url') && document.getElementById('tournament-watch-url').value.trim()) || null,
+        startTime: document.getElementById('tournament-start-time').value || null,
         status: status
     };
     
@@ -1059,6 +1076,37 @@ function formatDate(dateString) {
     const year = date.getFullYear();
     
     return `${day} ${month} ${year} г.`;
+}
+
+async function archiveTournamentConfirm(tournamentId) {
+    if (confirm('Перенести турнир в архив? Турнир исчезнет с активных и календаря.')) {
+        try {
+            // Получаем турнир для обновления статуса
+            const tournaments = await API.tournaments.getAll('active');
+            const tournament = tournaments.find(t => t.id === tournamentId);
+            
+            if (tournament) {
+                // Обновляем статус на finished
+                await API.tournaments.update({
+                    id: tournamentId,
+                    title: tournament.title,
+                    discipline: tournament.discipline,
+                    date: tournament.date,
+                    prize: tournament.prize,
+                    maxTeams: tournament.max_teams,
+                    customLink: tournament.custom_link,
+                    status: 'finished',
+                    winner: tournament.winner,
+                    watchUrl: tournament.watch_url,
+                    startTime: tournament.start_time
+                });
+                alert('Турнир перенесен в архив!');
+                await loadActiveTournaments();
+            }
+        } catch (error) {
+            alert('Ошибка переноса турнира: ' + error.message);
+        }
+    }
 }
 
 async function deleteTournamentConfirm(tournamentId) {

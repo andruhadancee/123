@@ -4,6 +4,12 @@
   "installCommand": "npm install",
   "devCommand": null,
   "framework": null,
+  "crons": [
+    {
+      "path": "/api/archive-auto",
+      "schedule": "59 23 * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/admin",

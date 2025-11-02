@@ -6,7 +6,19 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
+// Автоматическое добавление поля start_time если его нет
+async function ensureStartTimeColumn() {
+    try {
+        await pool.query(`ALTER TABLE tournaments ADD COLUMN IF NOT EXISTS start_time TIME`);
+    } catch (e) {
+        // Колонка уже существует
+    }
+}
+
 module.exports = async (req, res) => {
+    // Автоматическая миграция при первом запросе
+    await ensureStartTimeColumn();
+    
     // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -37,14 +49,14 @@ module.exports = async (req, res) => {
         
         // POST - создать турнир
         if (req.method === 'POST') {
-            const { title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl, description, imageUrl } = req.body;
+            const { title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl, description, imageUrl, startTime } = req.body;
             
             const result = await pool.query(
                 `INSERT INTO tournaments 
-                (title, discipline, date, prize, max_teams, custom_link, status, winner, teams, watch_url)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 0, $9)
+                (title, discipline, date, prize, max_teams, custom_link, status, winner, teams, watch_url, start_time)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 0, $9, $10)
                 RETURNING *`,
-                [title, discipline, date, prize, maxTeams, customLink || null, status || 'active', winner || null, watchUrl || null]
+                [title, discipline, date, prize, maxTeams, customLink || null, status || 'active', winner || null, watchUrl || null, startTime || null]
             );
             
             const tournament = result.rows[0];
@@ -53,10 +65,10 @@ module.exports = async (req, res) => {
             if (tournament.status === 'active' && date) {
                 try {
                     await pool.query(
-                        `INSERT INTO calendar_events (title, description, event_date, image_url, discipline, prize, max_teams, registration_link, custom_link, tournament_id)
-                         VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10)
+                        `INSERT INTO calendar_events (title, description, event_date, image_url, discipline, prize, max_teams, registration_link, custom_link, tournament_id, start_time)
+                         VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11)
                          ON CONFLICT DO NOTHING`,
-                        [title, description || null, date, imageUrl || null, discipline || null, prize || null, maxTeams || null, null, customLink || null, tournament.id]
+                        [title, description || null, date, imageUrl || null, discipline || null, prize || null, maxTeams || null, null, customLink || null, tournament.id, startTime || null]
                     );
                 } catch (err) {
                     console.error('Ошибка создания события календаря:', err);
@@ -68,15 +80,15 @@ module.exports = async (req, res) => {
         
         // PUT - обновить турнир
         if (req.method === 'PUT') {
-            const { id, title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl } = req.body;
+            const { id, title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl, startTime } = req.body;
             
             const result = await pool.query(
                 `UPDATE tournaments 
                 SET title = $1, discipline = $2, date = $3, prize = $4, 
-                    max_teams = $5, custom_link = $6, status = $7, winner = $8, watch_url = $9, updated_at = CURRENT_TIMESTAMP
-                WHERE id = $10
+                    max_teams = $5, custom_link = $6, status = $7, winner = $8, watch_url = $9, start_time = $10, updated_at = CURRENT_TIMESTAMP
+                WHERE id = $11
                 RETURNING *`,
-                [title, discipline, date, prize, maxTeams, customLink || null, status, winner || null, watchUrl || null, id]
+                [title, discipline, date, prize, maxTeams, customLink || null, status, winner || null, watchUrl || null, startTime || null, id]
             );
             
             if (result.rows.length === 0) {
@@ -90,9 +102,9 @@ module.exports = async (req, res) => {
                 try {
                     await pool.query(
                         `UPDATE calendar_events 
-                         SET title = $1, description = $2, event_date = $3::date, image_url = $4, discipline = $5, prize = $6, max_teams = $7, custom_link = $8, updated_at = CURRENT_TIMESTAMP
-                         WHERE tournament_id = $9`,
-                        [title, req.body.description || null, date, req.body.imageUrl || null, discipline || null, prize || null, maxTeams || null, customLink || null, id]
+                         SET title = $1, description = $2, event_date = $3::date, image_url = $4, discipline = $5, prize = $6, max_teams = $7, custom_link = $8, start_time = $9, updated_at = CURRENT_TIMESTAMP
+                         WHERE tournament_id = $10`,
+                        [title, req.body.description || null, date, req.body.imageUrl || null, discipline || null, prize || null, maxTeams || null, customLink || null, startTime || null, id]
                     );
                 } catch (err) {
                     console.error('Ошибка обновления события календаря:', err);
