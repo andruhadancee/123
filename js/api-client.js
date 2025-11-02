@@ -496,7 +496,6 @@ async function getDisciplineIcon(discipline) {
     const disciplineData = await getDisciplineData(discipline);
     
     // Старые жестко заданные иконки (для обратной совместимости)
-    // Временно убраны логотипы, которые пока не загружены (404 ошибки)
     const icons = {
         'Dota 2': 'pngwing.com 1.png',
         'CHC DOTA 2': 'pngwing.com 1.png', // Используем тот же логотип что и для Dota 2
@@ -504,12 +503,11 @@ async function getDisciplineIcon(discipline) {
         'CS:GO': 'Group 29.png',
         'Counter-Strike 2': 'Group 29.png',
         'Mobile Legends': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
-        'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png'
-        // Временно отключено до загрузки файлов:
-        // 'PUBG': 'pubg-logo.png',
-        // 'HS': 'hs-logo.png',
-        // 'Своя игра': 'svoya-igra-logo.png',
-        // 'СВОЯ ИГРА': 'svoya-igra-logo.png'
+        'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
+        'PUBG': 'PUBG.png',
+        'HS': 'HS.png',
+        'Своя игра': 'СВОЯ ИГРА.png',
+        'СВОЯ ИГРА': 'СВОЯ ИГРА.png'
     };
     
     // Если есть logo_url из БД - используем его (приоритет)
@@ -527,8 +525,6 @@ async function getDisciplineIcon(discipline) {
 
 // Синхронная версия для случаев, когда нужна быстрая работа без await
 function getDisciplineIconSync(discipline) {
-    // Временно убраны логотипы, которые пока не загружены (404 ошибки)
-    // Пока для них будет показываться джойстик 🎮
     const icons = {
         'Dota 2': 'pngwing.com 1.png',
         'CHC DOTA 2': 'pngwing.com 1.png', // Используем тот же логотип что и для Dota 2
@@ -536,12 +532,11 @@ function getDisciplineIconSync(discipline) {
         'CS:GO': 'Group 29.png',
         'Counter-Strike 2': 'Group 29.png',
         'Mobile Legends': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
-        'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png'
-        // Временно отключено до загрузки файлов:
-        // 'PUBG': 'pubg-logo.png',
-        // 'HS': 'hs-logo.png',
-        // 'Своя игра': 'svoya-igra-logo.png',
-        // 'СВОЯ ИГРА': 'svoya-igra-logo.png'
+        'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
+        'PUBG': 'PUBG.png',
+        'HS': 'HS.png',
+        'Своя игра': 'СВОЯ ИГРА.png',
+        'СВОЯ ИГРА': 'СВОЯ ИГРА.png'
     };
     
     if (icons[discipline]) {
