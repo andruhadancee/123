@@ -3,6 +3,31 @@
 let allPastTournaments = [];
 let selectedDiscipline = 'all';
 
+// Функция для нормализации даты к формату "день месяц год"
+function formatDateForDisplay(dateStr) {
+    try {
+        // Проверяем, уже ли это русский формат
+        if (dateStr.match(/\d+\s+\w+\s+\d+/)) {
+            return dateStr;
+        }
+        
+        // Парсим YYYY-MM-DD
+        const parts = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/);
+        if (parts) {
+            const [, year, month, day] = parts;
+            const months = [
+                'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+                'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+            ];
+            return `${parseInt(day)} ${months[parseInt(month) - 1]} ${year} г.`;
+        }
+        
+        return dateStr; // Если не удалось распарсить, возвращаем как есть
+    } catch (e) {
+        return dateStr;
+    }
+}
+
 // Функция очистки кеша (берем из API client)
 function clearArchiveCache() {
     try {
@@ -136,7 +161,7 @@ function createPastTournamentCard(tournament) {
                 </div>
                 <div class="info-item">
                     <span class="info-label">Дата</span>
-                    <span class="info-value">${tournament.date}</span>
+                    <span class="info-value">${formatDateForDisplay(tournament.date)}</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Призовой фонд</span>
