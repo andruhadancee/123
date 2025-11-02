@@ -336,17 +336,14 @@
         const isActive = isTournamentActive(event);
         
         if (isActive) {
-            // Турнир начался - показываем кнопку "Смотреть" или "Регистрация закрыта"
+            // Турнир начался - показываем кнопку "Смотреть"
             const watchUrl = event.watch_url;
-            if (watchUrl && watchUrl.trim()) {
-                return `<a href="${watchUrl.trim()}" target="_blank" class="btn-submit calendar-apply-btn" style="background: linear-gradient(90deg, #10b981 0%, #059669 100%);">
-                    Смотреть турнир
-                </a>`;
-            } else {
-                return `<div class="btn-submit calendar-apply-btn" style="background: rgba(107, 114, 128, 0.6); cursor: not-allowed;">
-                    Регистрация закрыта
-                </div>`;
-            }
+            // Если ссылка не указана, используем дефолтную
+            const defaultWatchUrl = 'https://www.twitch.tv/wbteamcyberclub';
+            const finalWatchUrl = (watchUrl && watchUrl.trim()) || defaultWatchUrl;
+            return `<a href="${finalWatchUrl}" target="_blank" class="btn-submit calendar-apply-btn" style="background: linear-gradient(90deg, #10b981 0%, #059669 100%);">
+                Смотреть турнир
+            </a>`;
         } else {
             // До старта - показываем кнопку регистрации
             return `<a href="${regLink}" target="_blank" class="btn-submit calendar-apply-btn" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>

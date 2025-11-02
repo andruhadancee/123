@@ -81,6 +81,17 @@ module.exports = async (req, res) => {
                     
                     if (existingTournament.rows.length > 0) {
                         tournamentId = existingTournament.rows[0].id;
+                        // Обновляем watch_url если он был указан
+                        if (watchUrl && watchUrl.trim()) {
+                            try {
+                                await pool.query(
+                                    `UPDATE tournaments SET watch_url = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2`,
+                                    [watchUrl.trim(), tournamentId]
+                                );
+                            } catch (err) {
+                                console.error('Ошибка обновления watch_url турнира:', err);
+                            }
+                        }
                     } else {
                         // Создаём новый турнир только если его нет
                         const tournamentResult = await pool.query(
