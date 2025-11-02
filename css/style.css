@@ -469,6 +469,13 @@ body {
 
 }
 
+/* Увеличенные логотипы HS и СВОЯ ИГРА в календаре */
+.calendar-discipline-icon img.discipline-icon[src*="HS.png"],
+.calendar-discipline-icon img.discipline-icon[src*="СВОЯ ИГРА.png"] {
+    width: 120% !important;
+    height: 120% !important;
+}
+
 .calendar-discipline-icon .discipline-icon-emoji {
 
     font-size: 20px;
@@ -713,6 +720,13 @@ body {
 
     height: 18px !important;
 
+  }
+  
+  /* Увеличенные логотипы HS и СВОЯ ИГРА в фильтрах календаря (мобильная версия) */
+  .calendar-filters .filter-btn .discipline-icon[src*="HS.png"],
+  .calendar-filters .filter-btn .discipline-icon[src*="СВОЯ ИГРА.png"] {
+    width: 24px !important;
+    height: 24px !important;
   }
 
   .calendar-filters .filter-btn .discipline-icon-emoji {
@@ -2320,6 +2334,14 @@ main {
 
 }
 
+/* Увеличенные логотипы для HS и СВОЯ ИГРА */
+.discipline-icon[src*="HS.png"],
+.discipline-icon[src*="СВОЯ ИГРА.png"] {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 2px;
+}
+
 /* Смайлик для дисциплин без логотипа */
 
 .discipline-icon-emoji {
@@ -2352,6 +2374,13 @@ main {
 
         padding: 3px;
 
+    }
+    
+    /* Увеличенные логотипы HS и СВОЯ ИГРА (мобильная версия) */
+    .discipline-icon[src*="HS.png"],
+    .discipline-icon[src*="СВОЯ ИГРА.png"] {
+        width: 32px !important;
+        height: 32px !important;
     }
 
     
@@ -3492,6 +3521,13 @@ body.modal-open {
 
 }
 
+/* Увеличенные логотипы для HS и СВОЯ ИГРА в фильтрах */
+.filter-btn .discipline-icon[src*="HS.png"],
+.filter-btn .discipline-icon[src*="СВОЯ ИГРА.png"] {
+    width: 32px !important;
+    height: 32px !important;
+}
+
 .filter-btn .discipline-icon-emoji {
 
     font-size: 20px !important;
@@ -3524,6 +3560,13 @@ body.modal-open {
 
         height: 22px !important;
 
+    }
+    
+    /* Увеличенные логотипы HS и СВОЯ ИГРА в фильтрах (мобильная версия) */
+    .filter-btn .discipline-icon[src*="HS.png"],
+    .filter-btn .discipline-icon[src*="СВОЯ ИГРА.png"] {
+        width: 28px !important;
+        height: 28px !important;
     }
 
     
