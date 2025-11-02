@@ -3542,6 +3542,8 @@ body.modal-open {
 
     align-items: center;
 
+    width: 100%;
+
 }
 
 .timer-badge {
@@ -3599,6 +3601,8 @@ body.modal-open {
     color: #ff3b30;
 
     box-shadow: 0 2px 6px rgba(255, 59, 48, 0.15);
+
+    width: 100%;
 
 }
 

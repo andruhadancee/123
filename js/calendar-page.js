@@ -78,6 +78,7 @@
             
             // Проверяем, прошло ли время старта
             const now = new Date();
+            console.log(`Календарь: проверка активности турнира, начало: ${startDateTime}, сейчас: ${now}, активно: ${now >= startDateTime}`);
             return now >= startDateTime;
         } catch (error) {
             console.error('Ошибка проверки статуса турнира:', error);
