@@ -2380,6 +2380,7 @@ main {
 }
 
 /* Увеличенные логотипы для HS и СВОЯ ИГРА */
+.discipline-icon[src*="HS.PNG"],
 .discipline-icon[src*="HS.jpg"],
 .discipline-icon[src*="HS.png"],
 .discipline-icon[src*="СВОЯ ИГРА.jpg"],
