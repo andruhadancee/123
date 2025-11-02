@@ -925,12 +925,20 @@ async function loadRegistrationLinksForm() {
     const disciplines = await API.disciplines.getAll();
     const links = await API.links.getAll();
     
-    grid.innerHTML = disciplines.map(disciplineData => {
+    const disciplineList = disciplines.map(disciplineData => {
         const discipline = typeof disciplineData === 'object' ? disciplineData.name : disciplineData;
+        let iconHtml = '🎮';
+        if (typeof window.getDisciplineIconSync === 'function') {
+            try {
+                iconHtml = window.getDisciplineIconSync(discipline);
+            } catch (e) {
+                iconHtml = '🎮';
+            }
+        }
         return `
         <div class="link-item" data-discipline="${discipline}">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                ${window.getDisciplineIconSync ? window.getDisciplineIconSync(discipline) : '🎮'}
+                ${iconHtml}
                 <label style="margin-bottom: 0; flex: 1;">${discipline}</label>
             </div>
             <input type="text" 
@@ -939,7 +947,10 @@ async function loadRegistrationLinksForm() {
                    value="${links[discipline] || ''}" 
                    placeholder="Любая ссылка: https://..., mailto:..., tel:...">
         </div>
-    `).join('');
+    `;
+    }).join('');
+    
+    grid.innerHTML = disciplineList;
 }
 
 async function saveRegistrationLinks() {
