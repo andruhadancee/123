@@ -470,7 +470,9 @@ body {
 }
 
 /* Увеличенные логотипы HS и СВОЯ ИГРА в календаре */
+.calendar-discipline-icon img.discipline-icon[src*="HS.jpg"],
 .calendar-discipline-icon img.discipline-icon[src*="HS.png"],
+.calendar-discipline-icon img.discipline-icon[src*="СВОЯ ИГРА.jpg"],
 .calendar-discipline-icon img.discipline-icon[src*="СВОЯ ИГРА.png"],
 .calendar-discipline-icon img.discipline-icon[src*="PUBG.png"] {
     width: 120% !important;
@@ -478,6 +480,13 @@ body {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+}
+
+/* Удаление белого фона у логотипа HS в календаре */
+.calendar-discipline-icon img.discipline-icon[src*="HS.jpg"],
+.calendar-discipline-icon img.discipline-icon[src*="HS.png"] {
+    mix-blend-mode: multiply;
+    filter: contrast(1.2) brightness(1.1);
 }
 
 .calendar-discipline-icon .discipline-icon-emoji {
@@ -604,7 +613,9 @@ body {
   
   .calendar-discipline-icon img { width: 100%; height: 100%; object-fit: contain; filter: brightness(1.2); }
   
+  .calendar-discipline-icon img.discipline-icon[src*="HS.jpg"],
   .calendar-discipline-icon img.discipline-icon[src*="HS.png"],
+  .calendar-discipline-icon img.discipline-icon[src*="СВОЯ ИГРА.jpg"],
   .calendar-discipline-icon img.discipline-icon[src*="СВОЯ ИГРА.png"],
   .calendar-discipline-icon img.discipline-icon[src*="PUBG.png"] {
     width: 130% !important;
@@ -612,6 +623,13 @@ body {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+  }
+  
+  /* Удаление белого фона у логотипа HS в календаре (мобильная версия) */
+  .calendar-discipline-icon img.discipline-icon[src*="HS.jpg"],
+  .calendar-discipline-icon img.discipline-icon[src*="HS.png"] {
+    mix-blend-mode: multiply;
+    filter: contrast(1.2) brightness(1.1);
   }
   
   .calendar-has-events { animation: none; }
@@ -737,7 +755,9 @@ body {
   }
   
   /* Увеличенные логотипы HS и СВОЯ ИГРА в фильтрах календаря (мобильная версия) */
+  .calendar-filters .filter-btn .discipline-icon[src*="HS.jpg"],
   .calendar-filters .filter-btn .discipline-icon[src*="HS.png"],
+  .calendar-filters .filter-btn .discipline-icon[src*="СВОЯ ИГРА.jpg"],
   .calendar-filters .filter-btn .discipline-icon[src*="СВОЯ ИГРА.png"],
   .calendar-filters .filter-btn .discipline-icon[src*="PUBG.png"] {
     width: 24px !important;
@@ -745,6 +765,13 @@ body {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+  }
+  
+  /* Удаление белого фона у логотипа HS в фильтрах календаря */
+  .calendar-filters .filter-btn .discipline-icon[src*="HS.jpg"],
+  .calendar-filters .filter-btn .discipline-icon[src*="HS.png"] {
+    mix-blend-mode: multiply;
+    filter: contrast(1.2) brightness(1.1);
   }
 
   .calendar-filters .filter-btn .discipline-icon-emoji {
@@ -2366,6 +2393,13 @@ main {
     box-shadow: none !important;
 }
 
+/* Удаление белого фона у логотипа HS */
+.discipline-icon[src*="HS.jpg"],
+.discipline-icon[src*="HS.png"] {
+    mix-blend-mode: multiply;
+    filter: contrast(1.2) brightness(1.1);
+}
+
 /* Смайлик для дисциплин без логотипа */
 
 .discipline-icon-emoji {
@@ -2401,7 +2435,9 @@ main {
     }
     
     /* Увеличенные логотипы HS и СВОЯ ИГРА (мобильная версия) */
+    .discipline-icon[src*="HS.jpg"],
     .discipline-icon[src*="HS.png"],
+    .discipline-icon[src*="СВОЯ ИГРА.jpg"],
     .discipline-icon[src*="СВОЯ ИГРА.png"],
     .discipline-icon[src*="PUBG.png"] {
         width: 32px !important;
@@ -2409,6 +2445,13 @@ main {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
+    }
+    
+    /* Удаление белого фона у логотипа HS (мобильная версия) */
+    .discipline-icon[src*="HS.jpg"],
+    .discipline-icon[src*="HS.png"] {
+        mix-blend-mode: multiply;
+        filter: contrast(1.2) brightness(1.1);
     }
 
     
@@ -3550,7 +3593,9 @@ body.modal-open {
 }
 
 /* Увеличенные логотипы для HS и СВОЯ ИГРА в фильтрах */
+.filter-btn .discipline-icon[src*="HS.jpg"],
 .filter-btn .discipline-icon[src*="HS.png"],
+.filter-btn .discipline-icon[src*="СВОЯ ИГРА.jpg"],
 .filter-btn .discipline-icon[src*="СВОЯ ИГРА.png"],
 .filter-btn .discipline-icon[src*="PUBG.png"] {
     width: 32px !important;
@@ -3558,6 +3603,13 @@ body.modal-open {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+}
+
+/* Удаление белого фона у логотипа HS в фильтрах */
+.filter-btn .discipline-icon[src*="HS.jpg"],
+.filter-btn .discipline-icon[src*="HS.png"] {
+    mix-blend-mode: multiply;
+    filter: contrast(1.2) brightness(1.1);
 }
 
 .filter-btn .discipline-icon-emoji {
@@ -3595,7 +3647,9 @@ body.modal-open {
     }
     
     /* Увеличенные логотипы HS и СВОЯ ИГРА в фильтрах (мобильная версия) */
+    .filter-btn .discipline-icon[src*="HS.jpg"],
     .filter-btn .discipline-icon[src*="HS.png"],
+    .filter-btn .discipline-icon[src*="СВОЯ ИГРА.jpg"],
     .filter-btn .discipline-icon[src*="СВОЯ ИГРА.png"],
     .filter-btn .discipline-icon[src*="PUBG.png"] {
         width: 28px !important;
@@ -3603,6 +3657,13 @@ body.modal-open {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
+    }
+    
+    /* Удаление белого фона у логотипа HS в фильтрах (мобильная версия) */
+    .filter-btn .discipline-icon[src*="HS.jpg"],
+    .filter-btn .discipline-icon[src*="HS.png"] {
+        mix-blend-mode: multiply;
+        filter: contrast(1.2) brightness(1.1);
     }
 
     
