@@ -948,9 +948,11 @@ function openEditPastModal(tournament) {
     document.getElementById('tournament-name').value = tournament.title;
     document.getElementById('tournament-discipline').value = tournament.discipline;
     
-    // Convert date format
+    // Convert date format if needed
+    // Support both Russian format "день месяц год г." and YYYY-MM-DD
     const dateMatch = tournament.date.match(/(\d+)\s+(\w+)\s+(\d+)/);
     if (dateMatch) {
+        // Russian format - convert to YYYY-MM-DD
         const months = {
             'января': '01', 'февраля': '02', 'марта': '03', 'апреля': '04',
             'мая': '05', 'июня': '06', 'июля': '07', 'августа': '08',
@@ -960,6 +962,9 @@ function openEditPastModal(tournament) {
         const month = months[dateMatch[2]];
         const year = dateMatch[3];
         document.getElementById('tournament-date').value = `${year}-${month}-${day}`;
+    } else {
+        // Already in YYYY-MM-DD format
+        document.getElementById('tournament-date').value = tournament.date;
     }
     
     document.getElementById('tournament-prize').value = tournament.prize;
@@ -989,9 +994,11 @@ function openEditModal(tournament) {
     document.getElementById('tournament-name').value = tournament.title;
     document.getElementById('tournament-discipline').value = tournament.discipline;
     
-    // Convert date format
+    // Convert date format if needed
+    // Support both Russian format "день месяц год г." and YYYY-MM-DD
     const dateMatch = tournament.date.match(/(\d+)\s+(\w+)\s+(\d+)/);
     if (dateMatch) {
+        // Russian format - convert to YYYY-MM-DD
         const months = {
             'января': '01', 'февраля': '02', 'марта': '03', 'апреля': '04',
             'мая': '05', 'июня': '06', 'июля': '07', 'августа': '08',
@@ -1001,6 +1008,9 @@ function openEditModal(tournament) {
         const month = months[dateMatch[2]];
         const year = dateMatch[3];
         document.getElementById('tournament-date').value = `${year}-${month}-${day}`;
+    } else {
+        // Already in YYYY-MM-DD format
+        document.getElementById('tournament-date').value = tournament.date;
     }
     
     document.getElementById('tournament-prize').value = tournament.prize;
@@ -1069,17 +1079,13 @@ async function handleFormSubmit(e) {
 }
 
 function formatDate(dateString) {
-    const months = [
-        'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-        'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
-    ];
-    
+    // Используем формат YYYY-MM-DD для единообразия со всей системой
     const date = new Date(dateString);
-    const day = date.getDate();
-    const month = months[date.getMonth()];
     const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
     
-    return `${day} ${month} ${year} г.`;
+    return `${year}-${month}-${day}`;
 }
 
 async function archiveTournamentConfirm(tournamentId) {
