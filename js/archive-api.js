@@ -182,15 +182,9 @@ function createPastTournamentCard(tournament) {
                     <span class="info-value">${tournament.prize}</span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">Участников</span>
-                    <span class="info-value">${tournament.teams || 0} команд</span>
+                    <span class="info-label">Команд участвовало</span>
+                    <span class="info-value">${tournament.teams || 0}</span>
                 </div>
-                ${tournament.winner ? `
-                <div class="info-item" style="grid-column: 1 / -1;">
-                    <span class="info-label">🏆 Победитель</span>
-                    <span class="info-value">${tournament.winner}</span>
-                </div>
-                ` : ''}
             </div>
             
             <div class="tournament-watch-button-container" style="padding: 0 20px 20px 20px; margin-top: 16px; min-height: 42px;">
