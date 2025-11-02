@@ -109,7 +109,7 @@ async function loadDisciplineFilters() {
             Все
         </button>
         ${availableDisciplines.map(d => {
-            const icon = window.getDisciplineIcon ? window.getDisciplineIcon(d) : '';
+            const icon = window.getDisciplineIconSync ? window.getDisciplineIconSync(d) : '🎮';
             return `
             <button class="filter-btn" data-discipline="${d}" onclick="filterTeamsByDiscipline('${d}')">
                 ${icon} ${d}
@@ -139,7 +139,7 @@ function createTournamentTeamsSection(tournament, teams) {
         ? teams.map(team => createTeamCard(team, tournament)).join('')
         : '<div class="empty-state"><p>Команды еще не зарегистрировались</p></div>';
     
-    const disciplineIcon = window.getDisciplineIcon ? window.getDisciplineIcon(tournament.discipline) : '';
+    const disciplineIcon = window.getDisciplineIconSync ? window.getDisciplineIconSync(tournament.discipline) : '🎮';
     
     return `
         <div class="tournament-section">

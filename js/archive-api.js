@@ -112,7 +112,7 @@ async function loadDisciplineFilters() {
         </button>
         ${availableDisciplines.map(d => `
             <button class="filter-btn" data-discipline="${d}" onclick="filterArchiveByDiscipline('${d}')">
-                ${getDisciplineIcon(d)} ${d}
+                ${window.getDisciplineIconSync ? window.getDisciplineIconSync(d) : '🎮'} ${d}
             </button>
         `).join('')}
     `;

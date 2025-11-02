@@ -150,7 +150,7 @@
                 <button class="filter-btn ${selectedDiscipline === d ? 'active' : ''}" 
                         data-discipline="${d}" 
                         style="background: ${getDisciplineColor(d)}; border-color: ${getDisciplineColor(d)};">
-                    ${window.getDisciplineIcon ? window.getDisciplineIcon(d) : ''} ${d}
+                    ${window.getDisciplineIconSync ? window.getDisciplineIconSync(d) : '🎮'} ${d}
                 </button>
             `).join('')}
         `;
@@ -305,8 +305,8 @@
                 uniqueDisciplines.forEach(discipline => {
                     const disciplineIcon = document.createElement('div');
                     disciplineIcon.className = 'calendar-discipline-icon';
-                    if (window.getDisciplineIcon) {
-                        disciplineIcon.innerHTML = window.getDisciplineIcon(discipline);
+                    if (window.getDisciplineIconSync) {
+                        disciplineIcon.innerHTML = window.getDisciplineIconSync(discipline);
                     } else {
                         disciplineIcon.innerHTML = '<span class="discipline-icon discipline-icon-emoji">🎮</span>';
                     }
