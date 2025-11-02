@@ -337,7 +337,7 @@
         
         if (isActive) {
             // Турнир начался - показываем кнопку "Смотреть"
-            const watchUrl = event.watch_url;
+            const watchUrl = event.watch_url || event.watchUrl;
             // Если ссылка не указана, используем дефолтную
             const defaultWatchUrl = 'https://www.twitch.tv/wbteamcyberclub';
             const finalWatchUrl = (watchUrl && watchUrl.trim()) || defaultWatchUrl;

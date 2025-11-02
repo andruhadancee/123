@@ -64,12 +64,46 @@ module.exports = async (req, res) => {
             // Автоматически создаём событие календаря для активных турниров
             if (tournament.status === 'active' && date) {
                 try {
-                    await pool.query(
-                        `INSERT INTO calendar_events (title, description, event_date, image_url, discipline, prize, max_teams, registration_link, custom_link, tournament_id, start_time)
-                         VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11)
-                         ON CONFLICT DO NOTHING`,
-                        [title, description || null, date, imageUrl || null, discipline || null, prize || null, maxTeams || null, null, customLink || null, tournament.id, startTime || null]
+                    // Проверяем, нет ли уже события для этого турнира
+                    const existingEvent = await pool.query(
+                        'SELECT id FROM calendar_events WHERE tournament_id = $1',
+                        [tournament.id]
                     );
+                    
+                    if (existingEvent.rows.length === 0) {
+                        // Преобразуем дату в YYYY-MM-DD для calendar_events
+                        let eventDateStr = null;
+                        try {
+                            const months = {
+                                'января': '01', 'февраля': '02', 'марта': '03', 'апреля': '04',
+                                'мая': '05', 'июня': '06', 'июля': '07', 'августа': '08',
+                                'сентября': '09', 'октября': '10', 'ноября': '11', 'декабря': '12'
+                            };
+                            // Парсим "день месяц год г."
+                            const russianFormat = date.match(/(\d{1,2})\s+(\w+)\s+(\d{4})(?:\s+г\.)?/);
+                            if (russianFormat) {
+                                const day = russianFormat[1].padStart(2, '0');
+                                const month = months[russianFormat[2].toLowerCase()];
+                                const year = russianFormat[3];
+                                if (month) {
+                                    eventDateStr = `${year}-${month}-${day}`;
+                                }
+                            } else if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                                // Уже в формате YYYY-MM-DD
+                                eventDateStr = date;
+                            }
+                        } catch (e) {
+                            console.error('Ошибка парсинга даты:', e);
+                        }
+                        
+                        if (eventDateStr) {
+                            await pool.query(
+                                `INSERT INTO calendar_events (title, description, event_date, image_url, discipline, prize, max_teams, registration_link, custom_link, tournament_id, start_time, watch_url)
+                                 VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+                                [title, description || null, eventDateStr, imageUrl || null, discipline || null, prize || null, maxTeams || null, null, customLink || null, tournament.id, startTime || null, watchUrl || null]
+                            );
+                        }
+                    }
                 } catch (err) {
                     console.error('Ошибка создания события календаря:', err);
                 }
@@ -100,12 +134,39 @@ module.exports = async (req, res) => {
             // Обновляем или удаляем связанное событие календаря
             if (tournament.status === 'active' && date) {
                 try {
-                    await pool.query(
-                        `UPDATE calendar_events 
-                         SET title = $1, description = $2, event_date = $3::date, image_url = $4, discipline = $5, prize = $6, max_teams = $7, custom_link = $8, start_time = $9, updated_at = CURRENT_TIMESTAMP
-                         WHERE tournament_id = $10`,
-                        [title, req.body.description || null, date, req.body.imageUrl || null, discipline || null, prize || null, maxTeams || null, customLink || null, startTime || null, id]
-                    );
+                    // Преобразуем дату в YYYY-MM-DD для calendar_events
+                    let eventDateStr = null;
+                    try {
+                        const months = {
+                            'января': '01', 'февраля': '02', 'марта': '03', 'апреля': '04',
+                            'мая': '05', 'июня': '06', 'июля': '07', 'августа': '08',
+                            'сентября': '09', 'октября': '10', 'ноября': '11', 'декабря': '12'
+                        };
+                        // Парсим "день месяц год г."
+                        const russianFormat = date.match(/(\d{1,2})\s+(\w+)\s+(\d{4})(?:\s+г\.)?/);
+                        if (russianFormat) {
+                            const day = russianFormat[1].padStart(2, '0');
+                            const month = months[russianFormat[2].toLowerCase()];
+                            const year = russianFormat[3];
+                            if (month) {
+                                eventDateStr = `${year}-${month}-${day}`;
+                            }
+                        } else if (date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                            // Уже в формате YYYY-MM-DD
+                            eventDateStr = date;
+                        }
+                    } catch (e) {
+                        console.error('Ошибка парсинга даты:', e);
+                    }
+                    
+                    if (eventDateStr) {
+                        await pool.query(
+                            `UPDATE calendar_events 
+                             SET title = $1, description = $2, event_date = $3::date, image_url = $4, discipline = $5, prize = $6, max_teams = $7, custom_link = $8, start_time = $9, watch_url = $10, updated_at = CURRENT_TIMESTAMP
+                             WHERE tournament_id = $11`,
+                            [title, req.body.description || null, eventDateStr, req.body.imageUrl || null, discipline || null, prize || null, maxTeams || null, customLink || null, startTime || null, watchUrl || null, id]
+                        );
+                    }
                 } catch (err) {
                     console.error('Ошибка обновления события календаря:', err);
                 }
