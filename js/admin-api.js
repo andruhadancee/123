@@ -1058,6 +1058,10 @@ async function handleFormSubmit(e) {
             await loadPastTournaments();
         } else {
             await loadActiveTournaments();
+            // Также обновляем календарь, если он открыт
+            if (typeof loadCalendarAdmin === 'function') {
+                await loadCalendarAdmin();
+            }
         }
     } catch (error) {
         alert('Ошибка сохранения турнира: ' + error.message);
