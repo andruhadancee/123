@@ -194,6 +194,12 @@ function createTournamentCard(tournament, links) {
                     <span class="info-label">Дата</span>
                     <span class="info-value">${tournament.date}</span>
                 </div>
+                ${tournament.start_time ? `
+                <div class="info-item">
+                    <span class="info-label">Время старта</span>
+                    <span class="info-value">${tournament.start_time} МСК</span>
+                </div>
+                ` : ''}
                 <div class="info-item">
                     <span class="info-label">Призовой фонд</span>
                     <span class="info-value">${tournament.prize}</span>
@@ -204,7 +210,7 @@ function createTournamentCard(tournament, links) {
                 </div>
             </div>
             
-            <div class="timer-container" id="${timerId}" data-date="${tournament.date}"></div>
+            <div class="timer-container" id="${timerId}" data-date="${tournament.date}" data-start-time="${tournament.start_time || ''}"></div>
             
             ${buttonHtml}
         </div>
@@ -294,9 +300,10 @@ function initTimers() {
     
     containers.forEach(container => {
         const dateText = container.getAttribute('data-date');
-        console.log(`Таймер ${container.id}: дата = ${dateText}`);
+        const startTime = container.getAttribute('data-start-time');
+        console.log(`Таймер ${container.id}: дата = ${dateText}, время = ${startTime}`);
         if (dateText) {
-            initCountdown(container.id, dateText);
+            initCountdown(container.id, dateText, startTime);
         }
     });
 }
@@ -325,7 +332,7 @@ async function loadSocialLinks() {
 }
 
 // Функция таймера обратного отсчета
-function initCountdown(timerId, dateString) {
+function initCountdown(timerId, dateString, startTime = '') {
     const container = document.getElementById(timerId);
     if (!container) return;
     
@@ -363,6 +370,17 @@ function initCountdown(timerId, dateString) {
                     console.log('Невалидная дата');
                     container.innerHTML = '';
                     return;
+                }
+            }
+            
+            // Если указано время старта, добавляем его к дате
+            if (startTime && startTime.trim()) {
+                const timeMatch = startTime.match(/(\d{1,2}):(\d{2})/);
+                if (timeMatch) {
+                    const hours = parseInt(timeMatch[1]);
+                    const minutes = parseInt(timeMatch[2]);
+                    targetDate.setHours(hours, minutes, 0, 0);
+                    console.log('Добавлено время старта:', hours, minutes);
                 }
             }
             
