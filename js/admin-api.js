@@ -981,6 +981,8 @@ function openAddModal() {
     document.getElementById('tournament-id').value = '';
     document.getElementById('tournament-status').value = 'active';
     document.getElementById('winner-field').style.display = 'none';
+    document.getElementById('teams-field').style.display = 'none';
+    document.getElementById('tournament-teams').required = false;
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
 }
@@ -992,6 +994,9 @@ function openAddPastModal() {
     document.getElementById('tournament-id').value = '';
     document.getElementById('tournament-status').value = 'finished';
     document.getElementById('winner-field').style.display = 'block';
+    document.getElementById('teams-field').style.display = 'block';
+    // Делаем поле teams обязательным для прошедших турниров
+    document.getElementById('tournament-teams').required = true;
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
 }
@@ -1029,6 +1034,10 @@ function openEditPastModal(tournament) {
     document.getElementById('tournament-winner').value = tournament.winner || '';
     document.getElementById('tournament-start-time').value = tournament.start_time || '';
     
+    // Загружаем количество участвующих команд
+    const teamsValue = tournament.teams || 0;
+    document.getElementById('tournament-teams').value = teamsValue;
+    
     // Проверяем поле watch_url - может быть с подчеркиванием или camelCase
     const watchUrlValue = tournament.watch_url || tournament.watchUrl || '';
     document.getElementById('tournament-watch-url').value = watchUrlValue;
@@ -1041,6 +1050,9 @@ function openEditPastModal(tournament) {
     
     document.getElementById('tournament-status').value = 'finished';
     document.getElementById('winner-field').style.display = 'block';
+    document.getElementById('teams-field').style.display = 'block';
+    // Делаем поле teams обязательным для прошедших турниров
+    document.getElementById('tournament-teams').required = true;
     
     document.getElementById('tournament-modal').classList.add('active');
     updateDisciplineDropdown();
@@ -1049,6 +1061,11 @@ function openEditPastModal(tournament) {
 function openEditModal(tournament) {
     currentEditingId = tournament.id;
     document.getElementById('modal-title').textContent = 'Редактировать турнир';
+    
+    // Скрываем поля для прошедших турниров
+    document.getElementById('winner-field').style.display = 'none';
+    document.getElementById('teams-field').style.display = 'none';
+    document.getElementById('tournament-teams').required = false;
     
     document.getElementById('tournament-id').value = tournament.id;
     document.getElementById('tournament-name').value = tournament.title;
@@ -1096,6 +1113,10 @@ function openEditModal(tournament) {
 function closeModal() {
     document.getElementById('tournament-modal').classList.remove('active');
     currentEditingId = null;
+    // Скрываем поля для прошедших турниров при закрытии
+    document.getElementById('winner-field').style.display = 'none';
+    document.getElementById('teams-field').style.display = 'none';
+    document.getElementById('tournament-teams').required = false;
 }
 
 async function handleFormSubmit(e) {

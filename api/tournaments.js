@@ -151,14 +151,17 @@ module.exports = async (req, res) => {
         
         // POST - создать турнир
         if (req.method === 'POST') {
-            const { title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl, description, imageUrl, startTime } = req.body;
+            const { title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl, description, imageUrl, startTime, teams } = req.body;
+            
+            // Для прошедших турниров используем указанное количество команд, для активных - 0
+            const teamsCount = (status === 'finished' && teams !== undefined) ? teams : 0;
             
             const result = await pool.query(
                 `INSERT INTO tournaments 
                 (title, discipline, date, prize, max_teams, custom_link, status, winner, teams, watch_url, start_time, image_url)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 0, $9, $10, $11)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
                 RETURNING *`,
-                [title, discipline, date, prize, maxTeams, customLink || null, status || 'active', winner || null, watchUrl || null, startTime || null, imageUrl || null]
+                [title, discipline, date, prize, maxTeams, customLink || null, status || 'active', winner || null, teamsCount, watchUrl || null, startTime || null, imageUrl || null]
             );
             
             const tournament = result.rows[0];
@@ -228,16 +231,27 @@ module.exports = async (req, res) => {
         
         // PUT - обновить турнир
         if (req.method === 'PUT') {
-            const { id, title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl, startTime, imageUrl } = req.body;
+            const { id, title, discipline, date, prize, maxTeams, customLink, status, winner, watchUrl, startTime, imageUrl, teams } = req.body;
             
-            const result = await pool.query(
-                `UPDATE tournaments 
+            // Если обновляется прошедший турнир и указано teams, обновляем его
+            // Если статус меняется на finished и указано teams, обновляем
+            // Иначе оставляем текущее значение teams (не обновляем для активных турниров)
+            const values = [title, discipline, date, prize, maxTeams, customLink || null, status, winner || null, watchUrl || null, startTime || null, imageUrl || null];
+            
+            let updateQuery = `UPDATE tournaments 
                 SET title = $1, discipline = $2, date = $3, prize = $4, 
-                    max_teams = $5, custom_link = $6, status = $7, winner = $8, watch_url = $9, start_time = $10, image_url = $11, updated_at = CURRENT_TIMESTAMP
-                WHERE id = $12
-                RETURNING *`,
-                [title, discipline, date, prize, maxTeams, customLink || null, status, winner || null, watchUrl || null, startTime || null, imageUrl || null, id]
-            );
+                    max_teams = $5, custom_link = $6, status = $7, winner = $8, watch_url = $9, start_time = $10, image_url = $11`;
+            
+            // Если статус finished и указано teams, обновляем teams
+            if (status === 'finished' && teams !== undefined) {
+                updateQuery += `, teams = $12`;
+                values.push(teams);
+            }
+            
+            updateQuery += `, updated_at = CURRENT_TIMESTAMP WHERE id = $${values.length + 1} RETURNING *`;
+            values.push(id);
+            
+            const result = await pool.query(updateQuery, values);
             
             if (result.rows.length === 0) {
                 return res.status(404).json({ error: 'Турнир не найден' });
