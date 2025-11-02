@@ -1237,18 +1237,16 @@ async function loadDisciplinesList() {
     await loadAdminDisciplineColors();
     
     list.innerHTML = disciplines.map(d => {
-        const discipline = typeof d === 'object' ? d : { name: d, id: null, color: null, logo_url: null };
+        const discipline = typeof d === 'object' ? d : { name: d, id: null, color: null };
         const displayName = discipline.name;
         const disciplineId = discipline.id;
         const disciplineColor = discipline.color || '#8b5abf';
-        const disciplineLogo = discipline.logo_url || '';
         
         return `
         <div class="discipline-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(107, 45, 143, 0.2); border-radius: 8px; margin-bottom: 10px;">
             <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
                 <div style="width: 30px; height: 30px; border-radius: 4px; background: ${disciplineColor}; border: 2px solid ${disciplineColor};"></div>
                 <span style="font-size: 16px; font-weight: 500;">${displayName}</span>
-                ${disciplineLogo ? `<img src="${disciplineLogo}" style="width: 30px; height: 30px; object-fit: contain;" alt="${displayName}">` : ''}
             </div>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-edit" onclick="editDiscipline(${disciplineId ? disciplineId : `'${displayName.replace(/'/g, "\\'")}'`})">Изменить</button>
@@ -1263,10 +1261,8 @@ async function loadDisciplinesList() {
 async function addDiscipline() {
     const input = document.getElementById('new-discipline-input');
     const colorInput = document.getElementById('new-discipline-color');
-    const logoInput = document.getElementById('new-discipline-logo');
     const newDiscipline = input.value.trim();
     const color = colorInput ? colorInput.value : null;
-    const logo = logoInput ? logoInput.value.trim() : null;
     
     if (!newDiscipline) {
         alert('Введите название дисциплины!');
@@ -1274,7 +1270,7 @@ async function addDiscipline() {
     }
     
     try {
-        await API.disciplines.create(newDiscipline, color, logo || null);
+        await API.disciplines.create(newDiscipline, color, null);
         // Очищаем кеш дисциплин
         if (typeof clearDisciplinesCache === 'function') {
             clearDisciplinesCache();
@@ -1283,7 +1279,6 @@ async function addDiscipline() {
         await loadRegistrationLinksForm();
         input.value = '';
         if (colorInput) colorInput.value = '#8b5abf';
-        if (logoInput) logoInput.value = '';
         alert(`Дисциплина "${newDiscipline}" добавлена!`);
     } catch (error) {
         alert('Ошибка добавления дисциплины: ' + error.message);
@@ -1307,13 +1302,12 @@ async function editDiscipline(idOrName) {
         return;
     }
     
-    const disc = typeof discipline === 'object' ? discipline : { name: discipline, id: null, color: null, logo_url: null };
+    const disc = typeof discipline === 'object' ? discipline : { name: discipline, id: null, color: null };
     
     document.getElementById('discipline-edit-id').value = disc.id || '';
     document.getElementById('discipline-edit-name').value = disc.name;
     document.getElementById('discipline-edit-color').value = disc.color || '#8b5abf';
     document.getElementById('discipline-edit-color-text').value = disc.color || '#8b5abf';
-    document.getElementById('discipline-edit-logo').value = disc.logo_url || '';
     
     document.getElementById('discipline-edit-modal').classList.add('active');
 }
@@ -1333,7 +1327,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = document.getElementById('discipline-edit-id').value;
             const name = document.getElementById('discipline-edit-name').value.trim();
             const color = document.getElementById('discipline-edit-color').value;
-            const logo = document.getElementById('discipline-edit-logo').value.trim();
             
             if (!name) {
                 alert('Введите название дисциплины!');
@@ -1348,8 +1341,7 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 await API.disciplines.update(parseInt(id), {
                     name: name,
-                    color: color || null,
-                    logo_url: logo || null
+                    color: color || null
                 });
                 
                 // Очищаем кеш дисциплин
