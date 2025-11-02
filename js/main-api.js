@@ -230,12 +230,9 @@ function getTournamentButton(tournament, regLink) {
     }
     
     const now = new Date();
-    const msDiff = tournamentDateTime - now;
-    const hoursDiff = msDiff / (1000 * 60 * 60);
     
-    // Если до старта меньше 3 часов или турнир уже начался
-    if (hoursDiff <= 0) {
-        // Турнир начался - показываем кнопку "Смотреть"
+    // Если турнир уже начался - показываем кнопку "Смотреть" или "Регистрация закрыта"
+    if (now >= tournamentDateTime) {
         const watchUrl = tournament.watch_url || tournament.watchUrl;
         if (watchUrl && watchUrl.trim()) {
             return `<a href="${watchUrl.trim()}" target="_blank" class="btn-submit" style="background: linear-gradient(90deg, #10b981 0%, #059669 100%);">
@@ -246,13 +243,8 @@ function getTournamentButton(tournament, regLink) {
                 Регистрация закрыта
             </div>`;
         }
-    } else if (hoursDiff < 3) {
-        // До старта меньше 3 часов - скрываем кнопку регистрации
-        return `<div class="btn-submit" style="background: rgba(107, 114, 128, 0.6); cursor: not-allowed;">
-            Регистрация закрыта
-        </div>`;
     } else {
-        // Более чем за 3 часа - показываем кнопку регистрации
+        // До старта - показываем кнопку регистрации
         return `<a href="${regLink}" target="_blank" class="btn-submit" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
             Подать заявку
         </a>`;

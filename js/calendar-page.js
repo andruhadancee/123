@@ -11,6 +11,8 @@
     const filtersInner = document.getElementById('calendar-filters');
 
     let current = new Date();
+    let currentlyOpenedDate = null; // Для автообновления
+    let allEventsCache = []; // Кеш всех событий
     // Восстанавливаем сохраненный месяц из localStorage
     const savedMonth = localStorage.getItem('calendarCurrentMonth');
     if (savedMonth) {
@@ -92,6 +94,7 @@
     async function load(){
         const monthKey = fmtMonth(current);
         events = await API.calendar.getAll(monthKey);
+        allEventsCache = events; // Сохраняем в кеш
         disciplines = await API.disciplines.getAll();
         registrationLinks = await API.links.getAll(); // Загружаем ссылки для кнопки "Подать заявку"
         loadFilters();
@@ -256,7 +259,10 @@
             }
 
             // При клике показываем все события этого дня (не только отфильтрованные)
-            cell.onclick = () => openDay(dayEventsAll, dateStr);
+            cell.onclick = () => {
+                currentlyOpenedDate = dateStr;
+                openDay(dayEventsAll, dateStr);
+            };
             grid.appendChild(cell);
         }
     }
@@ -340,31 +346,7 @@
                 </div>`;
             }
         } else {
-            // Проверяем, за сколько часов до старта
-            try {
-                const eventDateStr = (event.event_date || event.eventDate).slice(0, 10);
-                const [year, month, day] = eventDateStr.split('-').map(n => parseInt(n));
-                const timeMatch = event.start_time.match(/(\d{1,2}):(\d{2})/);
-                if (timeMatch) {
-                    const hours = parseInt(timeMatch[1]);
-                    const minutes = parseInt(timeMatch[2]);
-                    const startDateTime = new Date(year, month - 1, day, hours, minutes, 0);
-                    const now = new Date();
-                    const msDiff = startDateTime - now;
-                    const hoursDiff = msDiff / (1000 * 60 * 60);
-                    
-                    // Если до старта менее 3 часов
-                    if (hoursDiff < 3) {
-                        return `<div class="btn-submit calendar-apply-btn" style="background: rgba(107, 114, 128, 0.6); cursor: not-allowed;">
-                            Регистрация закрыта
-                        </div>`;
-                    }
-                }
-            } catch (error) {
-                console.error('Ошибка проверки времени:', error);
-            }
-            
-            // Показываем кнопку регистрации
+            // До старта - показываем кнопку регистрации
             return `<a href="${regLink}" target="_blank" class="btn-submit calendar-apply-btn" ${regLink === '#' ? 'onclick="alert(\'Ссылка на регистрацию не настроена в админке\'); return false;"' : ''}>
                 Подать заявку
             </a>`;
@@ -424,4 +406,14 @@
 
     loadSocialLinks();
     load();
+    
+    // Автоматическое обновление кнопок каждую минуту для проверки времени старта
+    setInterval(() => {
+        const modal = document.getElementById('event-modal');
+        if (modal && modal.classList.contains('active') && currentlyOpenedDate) {
+            // Если модалка открыта - перерендерим события
+            const dayEventsForDate = allEventsCache.filter(e => (e.event_date || e.eventDate).slice(0, 10) === currentlyOpenedDate);
+            openDay(dayEventsForDate, currentlyOpenedDate);
+        }
+    }, 60000); // Каждую минуту
 })();

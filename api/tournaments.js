@@ -97,7 +97,7 @@ module.exports = async (req, res) => {
             
             const tournament = result.rows[0];
             
-            // Обновляем связанное событие календаря
+            // Обновляем или удаляем связанное событие календаря
             if (tournament.status === 'active' && date) {
                 try {
                     await pool.query(
@@ -108,6 +108,14 @@ module.exports = async (req, res) => {
                     );
                 } catch (err) {
                     console.error('Ошибка обновления события календаря:', err);
+                }
+            } else if (tournament.status === 'finished') {
+                // Если турнир переносится в архив - удаляем событие календаря
+                try {
+                    await pool.query('DELETE FROM calendar_events WHERE tournament_id = $1', [id]);
+                    console.log(`🗑️ Удалено событие календаря для турнира ${id}`);
+                } catch (err) {
+                    console.error('Ошибка удаления события календаря:', err);
                 }
             }
             

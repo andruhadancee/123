@@ -50,6 +50,15 @@ module.exports = async (req, res) => {
                         'UPDATE tournaments SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
                         ['finished', tournament.id]
                     );
+                    
+                    // Удаляем связанное событие календаря
+                    try {
+                        await pool.query('DELETE FROM calendar_events WHERE tournament_id = $1', [tournament.id]);
+                        console.log(`🗑️ Удалено событие календаря для турнира ${tournament.id}`);
+                    } catch (err) {
+                        console.error('Ошибка удаления события календаря:', err);
+                    }
+                    
                     archivedCount++;
                     console.log(`✅ Турнир "${tournament.title}" (ID: ${tournament.id}) перенесён в архив`);
                 }
