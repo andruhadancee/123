@@ -20,13 +20,13 @@ document.addEventListener('DOMContentLoaded', initializeMainPage);
 window.initializeMainPage = initializeMainPage;
 window.loadActiveTournaments = loadActiveTournaments; // Экспортируем для использования в админке
 
-// Автоматическое обновление турниров каждые 30 секунд для актуальных счетчиков команд
-setInterval(() => {
-    const grid = document.getElementById('tournaments-grid');
-    if (grid && typeof loadActiveTournaments === 'function') {
-        loadActiveTournaments(true); // Обновляем с очисткой кеша
-    }
-}, 30000);
+// Автоматическое обновление турниров отключено (вызывало дёргание карточек)
+// setInterval(() => {
+//     const grid = document.getElementById('tournaments-grid');
+//     if (grid && typeof loadActiveTournaments === 'function') {
+//         loadActiveTournaments(true); // Обновляем с очисткой кеша
+//     }
+// }, 30000);
 
 function hideLoader() {
     const loader = document.getElementById('loader');

@@ -68,6 +68,15 @@
         registrationLinks = await API.links.getAll(); // Загружаем ссылки для кнопки "Подать заявку"
         loadFilters();
         render();
+        hideLoader();
+    }
+    
+    function hideLoader() {
+        const loader = document.getElementById('loader');
+        if (loader) {
+            loader.classList.add('hidden');
+            setTimeout(() => loader.style.display = 'none', 300);
+        }
     }
 
     function loadFilters() {

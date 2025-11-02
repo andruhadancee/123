@@ -8,6 +8,17 @@
     <link rel="stylesheet" href="css/style.css?v=6.9">
 </head>
 <body>
+    <!-- Loader -->
+    <div class="loader-container" id="loader">
+        <canvas id="loader-particles-canvas"></canvas>
+        <div class="loader">
+            <div class="loader-gamepad">🎮</div>
+            <div class="loader-gamepad">🎮</div>
+            <div class="loader-gamepad">🎮</div>
+        </div>
+        <div class="loader-text">Загрузка календаря...</div>
+    </div>
+
     <div class="animated-bg">
         <canvas id="particles-canvas"></canvas>
     </div>
@@ -79,6 +90,7 @@
     </main>
 
     <script src="js/api-client.js"></script>
+    <script src="js/loader-particles.js"></script>
     <script src="js/particles.js"></script>
     <script src="js/calendar-page.js?v=3.1"></script>
 </body>
