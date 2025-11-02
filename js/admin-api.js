@@ -1466,7 +1466,7 @@ function displayFilteredTeamsAdmin() {
     container.innerHTML = filtered.map(({tournament, teams}) => {
         return `
             <div class="tournament-section" style="margin-bottom: 30px;">
-                <h3 style="margin-bottom: 15px;">${tournament.title} - ${formatDisciplineWithIcon(tournament.discipline)}</h3>
+                <h3 style="margin-bottom: 15px;">${tournament.title} - ${window.formatDisciplineWithIconSync ? window.formatDisciplineWithIconSync(tournament.discipline) : tournament.discipline}</h3>
                 ${teams.length > 0 ? teams.map((team) => `
                     <div class="discipline-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(107, 45, 143, 0.2); border-radius: 8px; margin-bottom: 10px;">
                         <div>
