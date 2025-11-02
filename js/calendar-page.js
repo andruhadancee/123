@@ -278,13 +278,18 @@
             const uniqueEvents = [];
             const seen = new Set();
             
+            console.log(`📅 openDay: ${dayEvents.length} событий для ${dateStr}`);
             dayEvents.forEach(e => {
                 const key = e.tournament_id ? `tournament_${e.tournament_id}` : `${e.title}_${dateStr}`;
+                console.log(`  - Событие: ${e.title} (ID: ${e.id}, tournament_id: ${e.tournament_id})`);
                 if (!seen.has(key)) {
                     seen.add(key);
                     uniqueEvents.push(e);
+                } else {
+                    console.log(`    ⚠️ Пропущено (дубликат по ключу: ${key})`);
                 }
             });
+            console.log(`✅ uniqueEvents: ${uniqueEvents.length} событий`);
             
             eventTitle.textContent = `События — ${dateStr}`;
             eventBody.innerHTML = `
