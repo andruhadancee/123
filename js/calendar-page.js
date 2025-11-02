@@ -66,8 +66,8 @@
             const eventDateStr = (event.event_date || event.eventDate).slice(0, 10); // YYYY-MM-DD
             const [year, month, day] = eventDateStr.split('-').map(n => parseInt(n));
             
-            // Парсим время
-            const timeMatch = event.start_time.match(/(\d{1,2}):(\d{2})/);
+            // Парсим время (формат HH:MM или HH:MM:SS)
+            const timeMatch = event.start_time.match(/(\d{1,2}):(\d{2})(?::\d{2})?/);
             if (!timeMatch) return false;
             
             const hours = parseInt(timeMatch[1]);
@@ -309,7 +309,7 @@
                                 <h3>${e.title}</h3>
                                 ${e.discipline ? `<div class="calendar-event-discipline" style="color: ${getDisciplineColor(e.discipline)}">${e.discipline}</div>` : ''}
                                 ${e.prize ? `<div class="calendar-event-prize">Призовой фонд: ${e.prize}</div>` : ''}
-                                ${e.start_time ? `<div class="calendar-event-time">Время старта: ${e.start_time} МСК</div>` : ''}
+                                ${e.start_time ? `<div class="calendar-event-time">Время старта: ${e.start_time.split(':').slice(0, 2).join(':')} МСК</div>` : ''}
                                 ${e.description ? `<div class="calendar-event-desc">${e.description}</div>` : ''}
                                 ${e.max_teams || e.maxTeams ? `<div class="calendar-event-teams">Команд: ${e.max_teams || e.maxTeams}</div>` : ''}
                                 ${buttonHtml}

@@ -197,7 +197,7 @@ function createTournamentCard(tournament, links) {
                 ${tournament.start_time ? `
                 <div class="info-item">
                     <span class="info-label">Время старта</span>
-                    <span class="info-value">${tournament.start_time} МСК</span>
+                    <span class="info-value">${tournament.start_time.split(':').slice(0, 2).join(':')} МСК</span>
                 </div>
                 ` : ''}
                 <div class="info-item">
@@ -276,8 +276,8 @@ function parseTournamentDateTime(dateStr, timeStr) {
         
         if (month === undefined) return null;
         
-        // Парсим время (формат HH:MM)
-        const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})/);
+        // Парсим время (формат HH:MM или HH:MM:SS)
+        const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})(?::\d{2})?/);
         if (!timeMatch) return null;
         
         const hours = parseInt(timeMatch[1]);
@@ -375,7 +375,7 @@ function initCountdown(timerId, dateString, startTime = '') {
             
             // Если указано время старта, добавляем его к дате
             if (startTime && startTime.trim()) {
-                const timeMatch = startTime.match(/(\d{1,2}):(\d{2})/);
+                const timeMatch = startTime.match(/(\d{1,2}):(\d{2})(?::\d{2})?/);
                 if (timeMatch) {
                     const hours = parseInt(timeMatch[1]);
                     const minutes = parseInt(timeMatch[2]);

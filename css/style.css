@@ -3550,8 +3550,6 @@ body.modal-open {
 
     align-items: center;
 
-    justify-content: center;
-
     gap: 6px;
 
     padding: 6px 12px;
@@ -3569,8 +3567,6 @@ body.modal-open {
     color: var(--color-text-secondary);
 
     box-shadow: 0 2px 6px rgba(139, 90, 191, 0.1);
-
-    width: 100%;
 
 }
 
