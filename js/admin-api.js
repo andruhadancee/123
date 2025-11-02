@@ -106,7 +106,7 @@ function setupEventListeners() {
     // Logout - убрано, так как кнопка удалена
 }
 
-function switchTab(tabName) {
+async function switchTab(tabName) {
     // Update tab buttons
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -119,6 +119,11 @@ function switchTab(tabName) {
     });
     document.getElementById(`${tabName}-tab`).classList.add('active');
     
+    // Загружаем данные для конкретной вкладки только при переключении
+    if (tabName === 'teams') {
+        await loadTeamsAdmin();
+    }
+    
     // Сохраняем текущую вкладку в localStorage
     localStorage.setItem('adminActiveTab', tabName);
 }
@@ -127,7 +132,9 @@ async function loadAdminData() {
     console.log('📥 Загрузка данных в админку...');
     await loadActiveTournaments();
     await loadPastTournaments();
-    await loadTeamsAdmin();
+    // Загружаем цвета дисциплин перед загрузкой команд и других компонентов
+    await loadAdminDisciplineColors();
+    // Не загружаем команды автоматически - только по запросу
     await loadDisciplinesList();
     await loadRegistrationLinksForm();
     await loadSocialLinksForm();
@@ -157,7 +164,31 @@ let adminCalendarEvents = [];
 let adminCalendarSelectedDiscipline = 'all';
 let adminCalendarDisciplines = [];
 
+// Кеш цветов дисциплин для админки
+let adminDisciplineColorsCache = {};
+
+// Загрузка цветов из БД
+async function loadAdminDisciplineColors() {
+    try {
+        const disciplines = await API.disciplines.getAll();
+        adminDisciplineColorsCache = {};
+        disciplines.forEach(d => {
+            if (typeof d === 'object' && d.name) {
+                adminDisciplineColorsCache[d.name] = d.color;
+            }
+        });
+    } catch (error) {
+        console.error('Ошибка загрузки цветов дисциплин:', error);
+    }
+}
+
 function getAdminDisciplineColor(discipline) {
+    // Сначала пытаемся получить из кеша (цвет из БД)
+    if (adminDisciplineColorsCache[discipline]) {
+        return adminDisciplineColorsCache[discipline];
+    }
+    
+    // Fallback на жестко заданные цвета
     const colors = {
         'Dota 2': '#b83d2d',
         'CS 2': '#cc8844',
@@ -195,6 +226,8 @@ async function loadCalendarAdmin() {
     const monthKey = fmtMonth(adminCalendarCurrent);
     adminCalendarEvents = await API.calendar.getAll(monthKey);
     adminCalendarDisciplines = await API.disciplines.getAll();
+    // Обновляем кеш цветов перед отрисовкой календаря
+    await loadAdminDisciplineColors();
     
     title.textContent = adminCalendarCurrent.toLocaleString('ru-RU', { month:'long', year:'numeric' });
     loadAdminCalendarFilters();
@@ -205,16 +238,21 @@ function loadAdminCalendarFilters() {
     const filtersContainer = document.getElementById('calendar-filters-admin');
     if (!filtersContainer) return;
     
+    const disciplineNames = adminCalendarDisciplines.map(d => typeof d === 'object' ? d.name : d);
+    
     filtersContainer.innerHTML = `
         <h3>Фильтр по дисциплинам</h3>
         <button class="filter-btn ${adminCalendarSelectedDiscipline === 'all' ? 'active' : ''}" data-discipline="all">Все</button>
-        ${adminCalendarDisciplines.map(d => `
+        ${disciplineNames.map(d => {
+            const color = getAdminDisciplineColor(d);
+            return `
             <button class="filter-btn ${adminCalendarSelectedDiscipline === d ? 'active' : ''}" 
                     data-discipline="${d}" 
-                    style="background: ${getAdminDisciplineColor(d)}; border-color: ${getAdminDisciplineColor(d)}; opacity: 0.75; filter: brightness(0.85);">
-                ${window.getDisciplineIcon ? window.getDisciplineIcon(d) : ''} ${d}
+                    style="background: ${color}; border-color: ${color}; opacity: 0.75; filter: brightness(0.85);">
+                    ${window.getDisciplineIconSync ? window.getDisciplineIconSync(d) : ''} ${d}
             </button>
-        `).join('')}
+        `;
+        }).join('')}
     `;
     
     filtersContainer.querySelectorAll('.filter-btn').forEach(btn => {
@@ -495,7 +533,10 @@ async function openCalendarModal(event) {
     if (disc && disc.options.length <= 1) {
         const disciplines = await API.disciplines.getAll();
         disc.innerHTML = '<option value="">Выберите дисциплину</option>' +
-            disciplines.map(d => `<option value="${d}">${d}</option>`).join('');
+            disciplines.map(d => {
+                const name = typeof d === 'object' ? d.name : d;
+                return `<option value="${name}">${name}</option>`;
+            }).join('');
     }
 
     if (event && event.id) {
@@ -736,7 +777,8 @@ async function loadActiveDisciplineFilters() {
     
     const disciplines = await API.disciplines.getAll();
     const disciplinesSet = new Set(allActiveTournaments.map(t => t.discipline));
-    const availableDisciplines = [...new Set(disciplines.filter(d => disciplinesSet.has(d)))];
+    const disciplineNames = disciplines.map(d => typeof d === 'object' ? d.name : d);
+    const availableDisciplines = [...new Set(disciplineNames.filter(d => disciplinesSet.has(d)))];
     
     filtersContainer.innerHTML = `
         <button class="filter-btn ${selectedActiveDiscipline === 'all' ? 'active' : ''}" data-discipline="all" onclick="filterActiveTournamentsByDiscipline('all')">
@@ -744,7 +786,7 @@ async function loadActiveDisciplineFilters() {
         </button>
         ${availableDisciplines.map(d => `
             <button class="filter-btn ${selectedActiveDiscipline === d ? 'active' : ''}" data-discipline="${d}" onclick="filterActiveTournamentsByDiscipline('${d}')">
-                ${getDisciplineIcon(d)} ${d}
+                ${window.getDisciplineIconSync ? window.getDisciplineIconSync(d) : '🎮'} ${d}
             </button>
         `).join('')}
     `;
@@ -803,7 +845,8 @@ async function loadPastDisciplineFilters() {
     
     const disciplines = await API.disciplines.getAll();
     const disciplinesSet = new Set(allPastTournaments.map(t => t.discipline));
-    const availableDisciplines = [...new Set(disciplines.filter(d => disciplinesSet.has(d)))];
+    const disciplineNames = disciplines.map(d => typeof d === 'object' ? d.name : d);
+    const availableDisciplines = [...new Set(disciplineNames.filter(d => disciplinesSet.has(d)))];
     
     filtersContainer.innerHTML = `
         <button class="filter-btn ${selectedPastDiscipline === 'all' ? 'active' : ''}" data-discipline="all" onclick="filterPastTournamentsByDiscipline('all')">
@@ -811,7 +854,7 @@ async function loadPastDisciplineFilters() {
         </button>
         ${availableDisciplines.map(d => `
             <button class="filter-btn ${selectedPastDiscipline === d ? 'active' : ''}" data-discipline="${d}" onclick="filterPastTournamentsByDiscipline('${d}')">
-                ${getDisciplineIcon(d)} ${d}
+                ${window.getDisciplineIconSync ? window.getDisciplineIconSync(d) : '🎮'} ${d}
             </button>
         `).join('')}
     `;
@@ -842,7 +885,7 @@ function createAdminTournamentCard(tournament, isPast = false) {
                 </div>
                 <div class="info-item">
                     <span class="info-label">Дисциплина</span>
-                    <span class="info-value">${formatDisciplineWithIcon(tournament.discipline)}</span>
+                    <span class="info-value">${window.formatDisciplineWithIconSync ? window.formatDisciplineWithIconSync(tournament.discipline) : tournament.discipline}</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">Дата</span>
@@ -882,10 +925,12 @@ async function loadRegistrationLinksForm() {
     const disciplines = await API.disciplines.getAll();
     const links = await API.links.getAll();
     
-    grid.innerHTML = disciplines.map(discipline => `
+    grid.innerHTML = disciplines.map(disciplineData => {
+        const discipline = typeof disciplineData === 'object' ? disciplineData.name : disciplineData;
+        return `
         <div class="link-item" data-discipline="${discipline}">
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                ${getDisciplineIcon(discipline)}
+                ${window.getDisciplineIconSync ? window.getDisciplineIconSync(discipline) : '🎮'}
                 <label style="margin-bottom: 0; flex: 1;">${discipline}</label>
             </div>
             <input type="text" 
@@ -1177,18 +1222,40 @@ async function loadDisciplinesList() {
     const list = document.getElementById('disciplines-list');
     const disciplines = await API.disciplines.getAll();
     
-    list.innerHTML = disciplines.map(d => `
+    // Обновляем кеш цветов после загрузки дисциплин
+    await loadAdminDisciplineColors();
+    
+    list.innerHTML = disciplines.map(d => {
+        const discipline = typeof d === 'object' ? d : { name: d, id: null, color: null, logo_url: null };
+        const displayName = discipline.name;
+        const disciplineId = discipline.id;
+        const disciplineColor = discipline.color || '#8b5abf';
+        const disciplineLogo = discipline.logo_url || '';
+        
+        return `
         <div class="discipline-item" style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: rgba(107, 45, 143, 0.2); border-radius: 8px; margin-bottom: 10px;">
-            <span style="font-size: 16px; font-weight: 500;">${d}</span>
-            <button class="btn-danger" onclick="deleteDiscipline('${d.replace(/'/g, "\\'")}')">Удалить</button>
+            <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                <div style="width: 30px; height: 30px; border-radius: 4px; background: ${disciplineColor}; border: 2px solid ${disciplineColor};"></div>
+                <span style="font-size: 16px; font-weight: 500;">${displayName}</span>
+                ${disciplineLogo ? `<img src="${disciplineLogo}" style="width: 30px; height: 30px; object-fit: contain;" alt="${displayName}">` : ''}
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-edit" onclick="editDiscipline(${disciplineId ? disciplineId : `'${displayName.replace(/'/g, "\\'")}'`})">Изменить</button>
+                <button class="btn-danger" onclick="deleteDiscipline('${displayName.replace(/'/g, "\\'")}')">Удалить</button>
+            </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 // Добавление дисциплины
 async function addDiscipline() {
     const input = document.getElementById('new-discipline-input');
+    const colorInput = document.getElementById('new-discipline-color');
+    const logoInput = document.getElementById('new-discipline-logo');
     const newDiscipline = input.value.trim();
+    const color = colorInput ? colorInput.value : null;
+    const logo = logoInput ? logoInput.value.trim() : null;
     
     if (!newDiscipline) {
         alert('Введите название дисциплины!');
@@ -1196,15 +1263,134 @@ async function addDiscipline() {
     }
     
     try {
-        await API.disciplines.create(newDiscipline);
+        await API.disciplines.create(newDiscipline, color, logo || null);
+        // Очищаем кеш дисциплин
+        if (typeof clearDisciplinesCache === 'function') {
+            clearDisciplinesCache();
+        }
         await loadDisciplinesList();
         await loadRegistrationLinksForm();
         input.value = '';
+        if (colorInput) colorInput.value = '#8b5abf';
+        if (logoInput) logoInput.value = '';
         alert(`Дисциплина "${newDiscipline}" добавлена!`);
     } catch (error) {
         alert('Ошибка добавления дисциплины: ' + error.message);
     }
 }
+
+// Редактирование дисциплины
+async function editDiscipline(idOrName) {
+    const disciplines = await API.disciplines.getAll();
+    let discipline = null;
+    
+    // Находим дисциплину по ID или имени
+    if (typeof idOrName === 'number') {
+        discipline = disciplines.find(d => (typeof d === 'object' ? d.id : null) === idOrName);
+    } else {
+        discipline = disciplines.find(d => (typeof d === 'object' ? d.name : d) === idOrName);
+    }
+    
+    if (!discipline) {
+        alert('Дисциплина не найдена');
+        return;
+    }
+    
+    const disc = typeof discipline === 'object' ? discipline : { name: discipline, id: null, color: null, logo_url: null };
+    
+    document.getElementById('discipline-edit-id').value = disc.id || '';
+    document.getElementById('discipline-edit-name').value = disc.name;
+    document.getElementById('discipline-edit-color').value = disc.color || '#8b5abf';
+    document.getElementById('discipline-edit-color-text').value = disc.color || '#8b5abf';
+    document.getElementById('discipline-edit-logo').value = disc.logo_url || '';
+    
+    document.getElementById('discipline-edit-modal').classList.add('active');
+}
+
+// Обработка формы редактирования дисциплины
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('discipline-edit-form');
+    const cancelBtn = document.getElementById('cancel-discipline-edit-btn');
+    const closeBtn = document.getElementById('close-discipline-edit-modal');
+    const colorInput = document.getElementById('discipline-edit-color');
+    const colorTextInput = document.getElementById('discipline-edit-color-text');
+    
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('discipline-edit-id').value;
+            const name = document.getElementById('discipline-edit-name').value.trim();
+            const color = document.getElementById('discipline-edit-color').value;
+            const logo = document.getElementById('discipline-edit-logo').value.trim();
+            
+            if (!name) {
+                alert('Введите название дисциплины!');
+                return;
+            }
+            
+            if (!id) {
+                alert('Ошибка: ID дисциплины не найден');
+                return;
+            }
+            
+            try {
+                await API.disciplines.update(parseInt(id), {
+                    name: name,
+                    color: color || null,
+                    logo_url: logo || null
+                });
+                
+                // Очищаем кеш дисциплин
+                if (typeof clearDisciplinesCache === 'function') {
+                    clearDisciplinesCache();
+                }
+                await loadAdminDisciplineColors(); // Обновляем кеш цветов
+                await loadDisciplinesList();
+                await loadRegistrationLinksForm();
+                
+                // Перезагружаем компоненты, использующие цвета
+                if (typeof loadActiveDisciplineFilters === 'function') {
+                    await loadActiveDisciplineFilters();
+                }
+                if (typeof loadCalendarAdmin === 'function') {
+                    await loadCalendarAdmin();
+                }
+                
+                document.getElementById('discipline-edit-modal').classList.remove('active');
+                alert('Дисциплина обновлена!');
+            } catch (error) {
+                alert('Ошибка обновления дисциплины: ' + error.message);
+            }
+        });
+    }
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            document.getElementById('discipline-edit-modal').classList.remove('active');
+        });
+    }
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            document.getElementById('discipline-edit-modal').classList.remove('active');
+        });
+    }
+    
+    // Синхронизация color picker и текстового поля
+    if (colorInput && colorTextInput) {
+        colorInput.addEventListener('input', () => {
+            colorTextInput.value = colorInput.value;
+        });
+        colorTextInput.addEventListener('input', () => {
+            if (colorTextInput.value.match(/^#[0-9A-Fa-f]{6}$/)) {
+                colorInput.value = colorTextInput.value;
+            }
+        });
+    }
+});
+
+window.editDiscipline = editDiscipline;
 
 // Удаление дисциплины
 async function deleteDiscipline(discipline) {
@@ -1307,7 +1493,8 @@ async function loadTeamsDisciplineFilters() {
     
     const disciplines = await API.disciplines.getAll();
     const disciplinesSet = new Set(allTeamsData.map(data => data.tournament.discipline).filter(d => d));
-    const availableDisciplines = [...new Set(disciplines.filter(d => disciplinesSet.has(d)))];
+    const disciplineNames = disciplines.map(d => typeof d === 'object' ? d.name : d);
+    const availableDisciplines = [...new Set(disciplineNames.filter(d => disciplinesSet.has(d)))];
     
     filtersContainer.innerHTML = `
         <button class="filter-btn ${selectedTeamsDiscipline === 'all' ? 'active' : ''}" data-discipline="all" onclick="filterTeamsAdminByDiscipline('all')">
@@ -1315,7 +1502,7 @@ async function loadTeamsDisciplineFilters() {
         </button>
         ${availableDisciplines.map(d => `
             <button class="filter-btn ${selectedTeamsDiscipline === d ? 'active' : ''}" data-discipline="${d}" onclick="filterTeamsAdminByDiscipline('${d}')">
-                ${getDisciplineIcon(d)} ${d}
+                ${window.getDisciplineIconSync ? window.getDisciplineIconSync(d) : '🎮'} ${d}
             </button>
         `).join('')}
     `;
@@ -1516,9 +1703,11 @@ async function loadDisciplinesForRegulation() {
     const select = document.getElementById('regulation-discipline');
     const disciplines = await API.disciplines.getAll();
     
-    // API возвращает массив строк, а не объектов
     select.innerHTML = '<option value="">Выберите дисциплину</option>' +
-        disciplines.map(d => `<option value="${d}">${d}</option>`).join('');
+        disciplines.map(d => {
+            const name = typeof d === 'object' ? d.name : d;
+            return `<option value="${name}">${name}</option>`;
+        }).join('');
 }
 
 async function handleRegulationFormSubmit(e) {

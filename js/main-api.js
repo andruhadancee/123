@@ -154,7 +154,8 @@ async function loadDisciplineFilters() {
     
     const disciplines = await API.disciplines.getAll();
     const disciplinesSet = new Set(allTournaments.map(t => t.discipline));
-    const availableDisciplines = [...new Set(disciplines.filter(d => disciplinesSet.has(d)))];
+    const disciplineNames = disciplines.map(d => typeof d === 'object' ? d.name : d);
+    const availableDisciplines = [...new Set(disciplineNames.filter(d => disciplinesSet.has(d)))];
     
     filtersContainer.innerHTML = `
         <button class="filter-btn active" data-discipline="all" onclick="filterByDiscipline('all')">

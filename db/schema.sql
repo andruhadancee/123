@@ -57,7 +57,10 @@ CREATE TABLE IF NOT EXISTS social_links (
 CREATE TABLE IF NOT EXISTS disciplines (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    color VARCHAR(7),
+    logo_url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Таблица зарегистрированных команд

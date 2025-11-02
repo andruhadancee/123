@@ -31,8 +31,32 @@
     let disciplines = [];
     let registrationLinks = {}; // Кеш ссылок на регистрацию
 
-    // Цвета для дисциплин - смягчённые тона
+    // Кеш цветов дисциплин
+    let disciplineColorsCache = {};
+    
+    // Загрузка цветов из БД
+    async function loadDisciplineColors() {
+        try {
+            const disciplines = await API.disciplines.getAll();
+            disciplineColorsCache = {};
+            disciplines.forEach(d => {
+                if (typeof d === 'object' && d.name) {
+                    disciplineColorsCache[d.name] = d.color;
+                }
+            });
+        } catch (error) {
+            console.error('Ошибка загрузки цветов дисциплин:', error);
+        }
+    }
+    
+    // Цвета для дисциплин - смягчённые тона (fallback)
     function getDisciplineColor(discipline) {
+        // Сначала пытаемся получить из кеша (цвет из БД)
+        if (disciplineColorsCache[discipline]) {
+            return disciplineColorsCache[discipline];
+        }
+        
+        // Fallback на жестко заданные цвета
         const colors = {
             'Dota 2': '#b83d2d',           // приглушённый красный
             'CS 2': '#cc8844',             // приглушённый оранжевый
@@ -98,6 +122,8 @@
         console.log(`📅 Загружено событий календаря: ${events.length} для месяца ${monthKey}`);
         allEventsCache = events; // Сохраняем в кеш
         disciplines = await API.disciplines.getAll();
+        // Загружаем цвета дисциплин
+        await loadDisciplineColors();
         registrationLinks = await API.links.getAll(); // Загружаем ссылки для кнопки "Подать заявку"
         loadFilters();
         render();

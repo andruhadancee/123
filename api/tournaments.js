@@ -41,9 +41,52 @@ module.exports = async (req, res) => {
                 params = [status];
             }
             
-            query += ' ORDER BY created_at DESC';
+            query += ' ORDER BY date ASC';
             
             const result = await pool.query(query, params);
+            
+            // Сортируем результаты по дате (от ближайших к дальнейшим)
+            // Парсим даты для корректной сортировки (поддерживаем разные форматы)
+            result.rows.sort((a, b) => {
+                const parseDate = (dateStr) => {
+                    // Формат YYYY-MM-DD
+                    if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                        return new Date(dateStr);
+                    }
+                    // Русский формат "день месяц год г."
+                    const russianMatch = dateStr.match(/(\d{1,2})\s+(\w+)\s+(\d{4})/);
+                    if (russianMatch) {
+                        const months = {
+                            'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
+                            'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
+                            'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
+                        };
+                        const day = parseInt(russianMatch[1]);
+                        const month = months[russianMatch[2].toLowerCase()];
+                        const year = parseInt(russianMatch[3]);
+                        if (month !== undefined) {
+                            return new Date(year, month, day);
+                        }
+                    }
+                    // Fallback: пытаемся парсить как Date
+                    return new Date(dateStr);
+                };
+                
+                const dateA = parseDate(a.date);
+                const dateB = parseDate(b.date);
+                
+                // Если есть start_time, учитываем его
+                if (a.start_time && b.start_time) {
+                    const timeA = a.start_time.match(/(\d{1,2}):(\d{2})/);
+                    const timeB = b.start_time.match(/(\d{1,2}):(\d{2})/);
+                    if (timeA && timeB) {
+                        dateA.setHours(parseInt(timeA[1]), parseInt(timeA[2]), 0, 0);
+                        dateB.setHours(parseInt(timeB[1]), parseInt(timeB[2]), 0, 0);
+                    }
+                }
+                
+                return dateA - dateB;
+            });
             
             // Автоматически создаем события календаря для активных турниров без события
             for (const tournament of result.rows) {

@@ -187,25 +187,37 @@ const API = {
     
     // Дисциплины
     disciplines: {
-        // Получить все дисциплины
+        // Получить все дисциплины (теперь возвращает объекты с id, name, color, logo_url)
         async getAll() {
             try {
                 const response = await fetch(`${API_BASE_URL}/api/disciplines`);
                 if (!response.ok) throw new Error('Ошибка загрузки дисциплин');
-                return await response.json();
+                const disciplines = await response.json();
+                // Для обратной совместимости: если это массив объектов, возвращаем их, иначе fallback
+                if (Array.isArray(disciplines) && disciplines.length > 0 && typeof disciplines[0] === 'object') {
+                    return disciplines;
+                }
+                // Fallback на старый формат (массив строк)
+                return ['CS 2', 'Dota 2', 'Valorant', 'Overwatch 2', 'League of Legends'].map(name => ({ name, color: null, logo_url: null }));
             } catch (error) {
                 console.error('❌ Ошибка получения дисциплин:', error);
-                return ['CS 2', 'Dota 2', 'Valorant', 'Overwatch 2', 'League of Legends']; // Fallback
+                return ['CS 2', 'Dota 2', 'Valorant', 'Overwatch 2', 'League of Legends'].map(name => ({ name, color: null, logo_url: null }));
             }
         },
         
+        // Получить только имена дисциплин (для обратной совместимости)
+        async getNames() {
+            const disciplines = await this.getAll();
+            return disciplines.map(d => typeof d === 'string' ? d : d.name);
+        },
+        
         // Добавить дисциплину
-        async create(name) {
+        async create(name, color = null, logo_url = null) {
             try {
                 const response = await fetch(`${API_BASE_URL}/api/disciplines`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name })
+                    body: JSON.stringify({ name, color, logo_url })
                 });
                 if (!response.ok) {
                     const error = await response.json();
@@ -214,6 +226,25 @@ const API = {
                 return await response.json();
             } catch (error) {
                 console.error('❌ Ошибка добавления дисциплины:', error);
+                throw error;
+            }
+        },
+        
+        // Обновить дисциплину
+        async update(id, data) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/disciplines`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, ...data })
+                });
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Ошибка обновления дисциплины');
+                }
+                return await response.json();
+            } catch (error) {
+                console.error('❌ Ошибка обновления дисциплины:', error);
                 throw error;
             }
         },
@@ -440,18 +471,50 @@ const API = {
     }
 };
 
+// Глобальный кеш дисциплин для быстрого доступа к цветам и логотипам
+let disciplinesCache = null;
+
+// Функция для загрузки и кеширования дисциплин
+async function loadDisciplinesCache() {
+    if (!disciplinesCache) {
+        disciplinesCache = await API.disciplines.getAll();
+    }
+    return disciplinesCache;
+}
+
+// Функция для получения данных дисциплины
+async function getDisciplineData(disciplineName) {
+    await loadDisciplinesCache();
+    if (Array.isArray(disciplinesCache)) {
+        return disciplinesCache.find(d => (typeof d === 'string' ? d : d.name) === disciplineName) || { name: disciplineName, color: null, logo_url: null };
+    }
+    return { name: disciplineName, color: null, logo_url: null };
+}
+
 // Функция для получения иконки дисциплины
-function getDisciplineIcon(discipline) {
+async function getDisciplineIcon(discipline) {
+    const disciplineData = await getDisciplineData(discipline);
+    
+    // Старые жестко заданные иконки (для обратной совместимости)
     const icons = {
         'Dota 2': 'pngwing.com 1.png',
         'CS 2': 'Group 29.png',
         'CS:GO': 'Group 29.png',
         'Counter-Strike 2': 'Group 29.png',
         'Mobile Legends': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
-        'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png'
+        'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
+        'PUBG': 'pubg-logo.png', // Новые логотипы
+        'HS': 'hs-logo.png',
+        'Своя игра': 'svoya-igra-logo.png',
+        'СВОЯ ИГРА': 'svoya-igra-logo.png'
     };
     
-    // Если есть логотип - используем картинку, иначе смайлик джойстика
+    // Если есть logo_url из БД - используем его (приоритет)
+    if (disciplineData.logo_url && disciplineData.logo_url.trim()) {
+        return `<img src="${disciplineData.logo_url}" class="discipline-icon" alt="${discipline}">`;
+    }
+    
+    // Иначе используем жестко заданные иконки
     if (icons[discipline]) {
         return `<img src="${icons[discipline]}" class="discipline-icon" alt="${discipline}">`;
     } else {
@@ -459,15 +522,53 @@ function getDisciplineIcon(discipline) {
     }
 }
 
-// Функция для обёртки дисциплины с иконкой
-function formatDisciplineWithIcon(discipline) {
-    return `<span class="discipline-with-icon">${getDisciplineIcon(discipline)}<span>${discipline}</span></span>`;
+// Синхронная версия для случаев, когда нужна быстрая работа без await
+function getDisciplineIconSync(discipline) {
+    const icons = {
+        'Dota 2': 'pngwing.com 1.png',
+        'CS 2': 'Group 29.png',
+        'CS:GO': 'Group 29.png',
+        'Counter-Strike 2': 'Group 29.png',
+        'Mobile Legends': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
+        'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
+        'PUBG': 'pubg-logo.png',
+        'HS': 'hs-logo.png',
+        'Своя игра': 'svoya-igra-logo.png',
+        'СВОЯ ИГРА': 'svoya-igra-logo.png'
+    };
+    
+    if (icons[discipline]) {
+        return `<img src="${icons[discipline]}" class="discipline-icon" alt="${discipline}">`;
+    } else {
+        return `<span class="discipline-icon discipline-icon-emoji">🎮</span>`;
+    }
+}
+
+// Функция для обёртки дисциплины с иконкой (асинхронная версия)
+async function formatDisciplineWithIcon(discipline) {
+    const icon = await getDisciplineIcon(discipline);
+    return `<span class="discipline-with-icon">${icon}<span>${discipline}</span></span>`;
+}
+
+// Синхронная версия для случаев, когда нужна быстрая работа без await
+function formatDisciplineWithIconSync(discipline) {
+    const icon = getDisciplineIconSync(discipline);
+    return `<span class="discipline-with-icon">${icon}<span>${discipline}</span></span>`;
 }
 
 // Экспортируем для использования в других файлах
 window.API = API;
 window.getDisciplineIcon = getDisciplineIcon;
+window.getDisciplineIconSync = getDisciplineIconSync;
+window.getDisciplineData = getDisciplineData;
+window.loadDisciplinesCache = loadDisciplinesCache;
 window.formatDisciplineWithIcon = formatDisciplineWithIcon;
+window.formatDisciplineWithIconSync = formatDisciplineWithIconSync;
+
+// Функция для обновления кеша дисциплин (вызывать после изменения дисциплин)
+window.clearDisciplinesCache = function() {
+    disciplinesCache = null;
+};
 
 console.log('✅ API Client загружен и готов к работе');
 
