@@ -499,6 +499,7 @@ async function getDisciplineIcon(discipline) {
     // Временно убраны логотипы, которые пока не загружены (404 ошибки)
     const icons = {
         'Dota 2': 'pngwing.com 1.png',
+        'CHC DOTA 2': 'pngwing.com 1.png', // Используем тот же логотип что и для Dota 2
         'CS 2': 'Group 29.png',
         'CS:GO': 'Group 29.png',
         'Counter-Strike 2': 'Group 29.png',
@@ -530,6 +531,7 @@ function getDisciplineIconSync(discipline) {
     // Пока для них будет показываться джойстик 🎮
     const icons = {
         'Dota 2': 'pngwing.com 1.png',
+        'CHC DOTA 2': 'pngwing.com 1.png', // Используем тот же логотип что и для Dota 2
         'CS 2': 'Group 29.png',
         'CS:GO': 'Group 29.png',
         'Counter-Strike 2': 'Group 29.png',
