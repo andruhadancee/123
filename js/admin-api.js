@@ -897,7 +897,7 @@ function createAdminTournamentCard(tournament, isPast = false) {
                 </div>
                 <div class="info-item">
                     <span class="info-label">Команд</span>
-                    <span class="info-value">${tournament.teams || 0} / ${tournament.max_teams}</span>
+                    <span class="info-value">${isPast ? (tournament.teams || 0) : `${tournament.teams || 0} / ${tournament.max_teams}`}</span>
                 </div>
                 ${isPast && tournament.winner ? `
                 <div class="info-item">
