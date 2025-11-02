@@ -21,6 +21,7 @@ async function ensureTable() {
             custom_link TEXT,
             tournament_id INTEGER,
             start_time TIME,
+            watch_url TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
@@ -34,6 +35,7 @@ async function ensureTable() {
         await pool.query(`ALTER TABLE calendar_events ADD COLUMN IF NOT EXISTS custom_link TEXT`);
         await pool.query(`ALTER TABLE calendar_events ADD COLUMN IF NOT EXISTS tournament_id INTEGER`);
         await pool.query(`ALTER TABLE calendar_events ADD COLUMN IF NOT EXISTS start_time TIME`);
+        await pool.query(`ALTER TABLE calendar_events ADD COLUMN IF NOT EXISTS watch_url TEXT`);
     } catch (e) {
         // Колонки уже существуют
     }
@@ -104,19 +106,19 @@ module.exports = async (req, res) => {
                 // Обновляем существующее событие
                 const result = await pool.query(
                     `UPDATE calendar_events 
-                     SET title = $1, description = $2, image_url = $3, discipline = $4, prize = $5, max_teams = $6, registration_link = $7, custom_link = $8, tournament_id = $9, start_time = $10, updated_at = CURRENT_TIMESTAMP
-                     WHERE id = $11
+                     SET title = $1, description = $2, image_url = $3, discipline = $4, prize = $5, max_teams = $6, registration_link = $7, custom_link = $8, tournament_id = $9, start_time = $10, watch_url = $11, updated_at = CURRENT_TIMESTAMP
+                     WHERE id = $12
                      RETURNING *`,
-                    [title, description || null, imageUrl || null, discipline || null, prize || null, maxTeams || null, registrationLink || null, customLink || null, tournamentId, startTime || null, existingEvent.rows[0].id]
+                    [title, description || null, imageUrl || null, discipline || null, prize || null, maxTeams || null, registrationLink || null, customLink || null, tournamentId, startTime || null, watchUrl || null, existingEvent.rows[0].id]
                 );
                 return res.status(200).json(result.rows[0]);
             }
             
             const result = await pool.query(
-                `INSERT INTO calendar_events (title, description, event_date, image_url, discipline, prize, max_teams, registration_link, custom_link, tournament_id, start_time)
-                 VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11)
+                `INSERT INTO calendar_events (title, description, event_date, image_url, discipline, prize, max_teams, registration_link, custom_link, tournament_id, start_time, watch_url)
+                 VALUES ($1, $2, $3::date, $4, $5, $6, $7, $8, $9, $10, $11, $12)
                  RETURNING *`,
-                [title, description || null, eventDate, imageUrl || null, discipline || null, prize || null, maxTeams || null, registrationLink || null, customLink || null, tournamentId, startTime || null]
+                [title, description || null, eventDate, imageUrl || null, discipline || null, prize || null, maxTeams || null, registrationLink || null, customLink || null, tournamentId, startTime || null, watchUrl || null]
             );
             return res.status(201).json(result.rows[0]);
         }
@@ -141,10 +143,10 @@ module.exports = async (req, res) => {
             
             const result = await pool.query(
                 `UPDATE calendar_events
-                 SET title = $1, description = $2, event_date = $3::date, image_url = $4, discipline = $5, prize = $6, max_teams = $7, registration_link = $8, custom_link = $9, start_time = $10, updated_at = CURRENT_TIMESTAMP
-                 WHERE id = $11
+                 SET title = $1, description = $2, event_date = $3::date, image_url = $4, discipline = $5, prize = $6, max_teams = $7, registration_link = $8, custom_link = $9, start_time = $10, watch_url = $11, updated_at = CURRENT_TIMESTAMP
+                 WHERE id = $12
                  RETURNING *`,
-                [title, description || null, eventDate, imageUrl || null, discipline || null, prize || null, maxTeams || null, registrationLink || null, customLink || null, startTime || null, id]
+                [title, description || null, eventDate, imageUrl || null, discipline || null, prize || null, maxTeams || null, registrationLink || null, customLink || null, startTime || null, watchUrl || null, id]
             );
             if (result.rows.length === 0) return res.status(404).json({ error: 'Событие не найдено' });
             return res.status(200).json(result.rows[0]);
