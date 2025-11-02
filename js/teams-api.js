@@ -99,8 +99,14 @@ async function loadDisciplineFilters() {
     if (!filtersContainer) return;
     
     const disciplines = await API.disciplines.getAll();
+    // Преобразуем дисциплины из БД в массив имен
+    const disciplineNames = disciplines.map(d => typeof d === 'object' ? d.name : d);
+    
     // Получаем доступные дисциплины из команд
-    const availableDisciplines = [...new Set(Object.values(allTeamsData).flat().map(t => t.discipline).filter(d => d))];
+    const availableDisciplinesFromTeams = [...new Set(Object.values(allTeamsData).flat().map(t => t.discipline).filter(d => d))];
+    
+    // Фильтруем только те дисциплины, которые есть в командах
+    const availableDisciplines = disciplineNames.filter(d => availableDisciplinesFromTeams.includes(d));
     
     console.log('Available disciplines:', availableDisciplines);
     
