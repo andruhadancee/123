@@ -260,31 +260,58 @@ function getTournamentButton(tournament, regLink) {
 // Функция для парсинга даты и времени турнира
 function parseTournamentDateTime(dateStr, timeStr) {
     try {
-        // Парсим дату (формат: "день месяц год г." или "день месяц год")
-        const dateMatch = dateStr.match(/(\d{1,2})\s+(\w+)\s+(\d{4})(?:\s+г\.)?/);
-        if (!dateMatch) return null;
+        let day, month, year;
         
-        const months = {
-            'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
-            'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
-            'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
-        };
+        // Пробуем разные форматы даты
+        // Формат с точками: 2025-11-02 или 02.11.2025
+        const dotsFormat = dateStr.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+        const dashesFormat = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+        // Формат русский: "день месяц год г." или "день месяц год"
+        const russianFormat = dateStr.match(/(\d{1,2})\s+(\w+)\s+(\d{4})(?:\s+г\.)?/);
         
-        const day = parseInt(dateMatch[1]);
-        const month = months[dateMatch[2].toLowerCase()];
-        const year = parseInt(dateMatch[3]);
+        if (dotsFormat) {
+            // Формат DD.MM.YYYY
+            day = parseInt(dotsFormat[1]);
+            month = parseInt(dotsFormat[2]) - 1; // месяцы в JS: 0-11
+            year = parseInt(dotsFormat[3]);
+        } else if (dashesFormat) {
+            // Формат YYYY-MM-DD
+            year = parseInt(dashesFormat[1]);
+            month = parseInt(dashesFormat[2]) - 1; // месяцы в JS: 0-11
+            day = parseInt(dashesFormat[3]);
+        } else if (russianFormat) {
+            // Формат русский: "день месяц год г."
+            const months = {
+                'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3,
+                'мая': 4, 'июня': 5, 'июля': 6, 'августа': 7,
+                'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
+            };
+            day = parseInt(russianFormat[1]);
+            month = months[russianFormat[2].toLowerCase()];
+            year = parseInt(russianFormat[3]);
+        } else {
+            console.error('Не удалось распарсить дату:', dateStr);
+            return null;
+        }
         
-        if (month === undefined) return null;
+        if (month === undefined || isNaN(year) || isNaN(month) || isNaN(day)) {
+            console.error('Невалидная дата:', dateStr);
+            return null;
+        }
         
         // Парсим время (формат HH:MM или HH:MM:SS)
         const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})(?::\d{2})?/);
-        if (!timeMatch) return null;
+        if (!timeMatch) {
+            console.error('Не удалось распарсить время:', timeStr);
+            return null;
+        }
         
         const hours = parseInt(timeMatch[1]);
         const minutes = parseInt(timeMatch[2]);
         
         // Создаем Date объект (МСК время)
         const dateTime = new Date(year, month, day, hours, minutes, 0);
+        console.log(`Парсинг даты/времени: ${dateStr} ${timeStr} -> ${dateTime}`);
         return dateTime;
     } catch (error) {
         console.error('Ошибка парсинга даты/времени:', error);

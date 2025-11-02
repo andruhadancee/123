@@ -3552,7 +3552,7 @@ body.modal-open {
 
     gap: 6px;
 
-    padding: 6px 12px;
+    padding: 10px 24px;
 
     background: rgba(139, 90, 191, 0.08);
 
@@ -3560,7 +3560,7 @@ body.modal-open {
 
     border-radius: 8px;
 
-    font-size: 12px;
+    font-size: 13px;
 
     font-weight: 600;
 
