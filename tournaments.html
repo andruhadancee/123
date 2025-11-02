@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Календарь – WB Cyber Club</title>
+    <title>WB Cyber Club - Турниры</title>
     <link rel="icon" type="image/png" href="Group 2131328338.png">
-    <link rel="stylesheet" href="css/style.css?v=6.9">
+    <link rel="icon" type="image/png" sizes="32x32" href="Group 2131328338.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="Group 2131328338.png">
+    <link rel="apple-touch-icon" href="Group 2131328338.png">
+    <link rel="shortcut icon" type="image/png" href="Group 2131328338.png">
+    <link rel="stylesheet" href="css/style.css?v=2.5">
+    <link rel="stylesheet" href="css/skeleton.css">
 </head>
 <body>
     <!-- Loader -->
@@ -16,26 +21,30 @@
             <div class="loader-gamepad">🎮</div>
             <div class="loader-gamepad">🎮</div>
         </div>
-        <div class="loader-text">Загрузка календаря...</div>
+        <div class="loader-text">Загрузка турниров...</div>
     </div>
 
+    <!-- Animated Background -->
     <div class="animated-bg">
         <canvas id="particles-canvas"></canvas>
     </div>
-
+    
+    <!-- Header -->
     <header>
         <div class="container">
             <a href="index.html" class="logo">
                 <img src="cyberclub-logo.png" alt="WB Cyber Club" class="logo-image">
             </a>
+            
             <nav>
                 <a href="index.html">Главная</a>
-                <a href="tournaments.html">Турниры</a>
+                <a href="tournaments.html" class="active">Турниры</a>
                 <a href="teams.html">Команды</a>
                 <a href="archive.html">Архив турниров</a>
                 <a href="regulations.html">Регламент</a>
-                <a href="calendar.html" class="active">Календарь</a>
+                <a href="calendar.html">Календарь</a>
             </nav>
+            
             <div class="social-links">
                 <a href="#" class="social-btn twitch" title="Twitch" target="_blank" rel="noopener noreferrer">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -57,42 +66,49 @@
         </div>
     </header>
 
+    <!-- Regulations Modal -->
+    <div class="modal" id="regulations-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Регламент турниров</h2>
+                <button class="modal-close" id="close-regulations-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Выберите дисциплину для просмотра регламента:</p>
+                <div id="regulations-buttons" class="regulations-buttons">
+                    <!-- Кнопки дисциплин будут добавлены динамически -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <main class="container">
-        <h1 class="page-title">Календарь активностей</h1>
-
-        <div id="calendar-controls" class="calendar-controls">
-            <button class="calendar-nav-btn" id="prev-month" aria-label="Предыдущий месяц">◀</button>
-            <div id="month-title" class="calendar-month"></div>
-            <button class="calendar-nav-btn" id="next-month" aria-label="Следующий месяц">▶</button>
-        </div>
-
-        <div class="calendar-wrapper">
-            <div id="calendar-grid" class="calendar-grid-container"></div>
-            <div class="filters-section">
-                <div id="calendar-filters" class="calendar-filters">
-                    <h3>Фильтры дисциплин</h3>
-                    <button class="filter-btn active" data-discipline="all">Все</button>
-                    <!-- Фильтры будут добавлены динамически -->
-                </div>
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="filter-label">Фильтр по дисциплинам:</div>
+            <div class="filters" id="discipline-filters">
+                <!-- Filter buttons will be added dynamically -->
             </div>
         </div>
-
-        <div id="calendar-events" style="margin-top:20px;"></div>
-
-        <div class="modal" id="event-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 id="event-title">Событие</h2>
-                    <button class="modal-close" id="event-modal-close">&times;</button>
-                </div>
-                <div class="modal-body" id="event-body"></div>
-            </div>
+        
+        <div class="tournaments-grid" id="tournaments-grid">
+            <!-- Tournaments will be loaded here dynamically -->
         </div>
     </main>
 
+    <!-- API Client -->
     <script src="js/api-client.js"></script>
+    <!-- Loader Particles -->
     <script src="js/loader-particles.js"></script>
+    <!-- Particles -->
     <script src="js/particles.js"></script>
-    <script src="js/calendar-page.js?v=3.1"></script>
+    <!-- Animations -->
+    <script src="js/animations.js"></script>
+    <!-- Regulations Script -->
+    <script src="js/regulations.js"></script>
+    <!-- Main Script -->
+    <script src="js/main-api.js"></script>
 </body>
 </html>
+
