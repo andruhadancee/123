@@ -143,6 +143,10 @@ function createPastTournamentCard(tournament) {
         watchUrl = null;
     }
     
+    // Проверяем image_url
+    const imageUrl = tournament.image_url || tournament.imageUrl || null;
+    const hasImage = imageUrl && typeof imageUrl === 'string' && imageUrl.trim() !== '';
+    
     // Отладка убрана - кнопка работает
     
     // Проверяем наличие валидной ссылки
@@ -150,6 +154,11 @@ function createPastTournamentCard(tournament) {
     
     return `
         <div class="tournament-card">
+            ${hasImage ? `
+            <div class="tournament-card-image">
+                <img src="${imageUrl.trim()}" alt="${tournament.title}">
+            </div>
+            ` : ''}
             <div class="tournament-card-header">
                 <h2>${tournament.title}</h2>
             </div>
@@ -179,7 +188,7 @@ function createPastTournamentCard(tournament) {
                 ` : ''}
             </div>
             
-            <div class="tournament-watch-button-container" style="margin-top: 16px; min-height: 42px; display: flex; align-items: center; justify-content: center;">
+            <div class="tournament-watch-button-container" style="padding: 0 20px 20px 20px; margin-top: 16px; min-height: 42px; display: flex; align-items: center; justify-content: center;">
                 ${hasWatchUrl ? `
                 <a href="${watchUrl.trim()}" target="_blank" class="btn-submit" style="text-align: center; display: block; text-decoration: none; width: 100%;">
                     Смотреть

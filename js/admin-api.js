@@ -1033,6 +1033,10 @@ function openEditPastModal(tournament) {
     const watchUrlValue = tournament.watch_url || tournament.watchUrl || '';
     document.getElementById('tournament-watch-url').value = watchUrlValue;
     
+    // Загружаем image_url
+    const imageUrlValue = tournament.image_url || tournament.imageUrl || '';
+    document.getElementById('tournament-image-url').value = imageUrlValue;
+    
     // Турнир загружен в форму
     
     document.getElementById('tournament-status').value = 'finished';
@@ -1078,6 +1082,10 @@ function openEditModal(tournament) {
     const watchUrlValue = tournament.watch_url || tournament.watchUrl || '';
     document.getElementById('tournament-watch-url').value = watchUrlValue;
     
+    // Загружаем image_url
+    const imageUrlValue = tournament.image_url || tournament.imageUrl || '';
+    document.getElementById('tournament-image-url').value = imageUrlValue;
+    
     document.getElementById('tournament-status').value = 'active';
     document.getElementById('winner-field').style.display = 'none';
     
@@ -1103,6 +1111,7 @@ async function handleFormSubmit(e) {
         customLink: document.getElementById('tournament-custom-link').value || null,
         winner: document.getElementById('tournament-winner').value || null,
         watchUrl: (document.getElementById('tournament-watch-url') && document.getElementById('tournament-watch-url').value.trim()) || null,
+        imageUrl: (document.getElementById('tournament-image-url') && document.getElementById('tournament-image-url').value.trim()) || null,
         startTime: document.getElementById('tournament-start-time').value || null,
         status: status
     };

@@ -1658,7 +1658,13 @@ main {
 
     border-radius: 12px;
 
-    padding: 16px 20px;
+    padding: 0;
+
+    overflow: hidden;
+
+    display: flex;
+
+    flex-direction: column;
 
     position: relative;
 
@@ -1680,8 +1686,22 @@ main {
 
 }
 
-.tournament-card-header {
+.tournament-card-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
 
+.tournament-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.tournament-card-header {
+    padding: 16px 20px 12px 20px;
     display: flex;
 
     justify-content: space-between;
@@ -1723,7 +1743,7 @@ main {
 }
 
 .tournament-info {
-
+    padding: 0 20px;
     display: grid;
 
     grid-template-columns: 1fr 1fr;
