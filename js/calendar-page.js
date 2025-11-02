@@ -223,29 +223,51 @@
             if (dayEventsFiltered.length > 0){
                 cell.classList.add('calendar-has-events');
                 
-                // Определяем цвет по первой дисциплине
-                const firstEvent = dayEventsFiltered[0];
-                const firstDiscipline = firstEvent.discipline;
-                if (firstDiscipline) {
-                    const color = getDisciplineColor(firstDiscipline);
+                // Собираем уникальные дисциплины для этого дня
+                const uniqueDisciplines = [];
+                const disciplinesSet = new Set();
+                dayEventsAllRaw.forEach(e => {
+                    if (e.discipline && !disciplinesSet.has(e.discipline)) {
+                        disciplinesSet.add(e.discipline);
+                        uniqueDisciplines.push(e.discipline);
+                    }
+                });
+                
+                // Если несколько дисциплин - делаем градиентную обводку
+                if (uniqueDisciplines.length === 1) {
+                    const discipline = uniqueDisciplines[0];
+                    const color = getDisciplineColor(discipline);
                     cell.style.borderColor = color;
+                    cell.style.borderWidth = '2px';
+                } else if (uniqueDisciplines.length > 1) {
+                    const color1 = getDisciplineColor(uniqueDisciplines[0]);
+                    const color2 = getDisciplineColor(uniqueDisciplines[1]);
+                    // Создаём градиентную обводку через border-image
+                    cell.style.borderImage = `linear-gradient(to right, ${color1} 0%, ${color1} 50%, ${color2} 50%, ${color2} 100%) 1`;
+                    cell.style.borderWidth = '2px';
+                } else {
                     cell.style.borderWidth = '2px';
                 }
                 
                 // Проверяем, идёт ли турнир (зелёный фон)
-                if (isTournamentActive(firstEvent)) {
+                if (isTournamentActive(dayEventsFiltered[0])) {
                     cell.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
                 }
                 
-                // Показываем логотип дисциплины вместо цифры
-                const disciplineIcon = document.createElement('div');
-                disciplineIcon.className = 'calendar-discipline-icon';
-                if (firstDiscipline && window.getDisciplineIcon) {
-                    disciplineIcon.innerHTML = window.getDisciplineIcon(firstDiscipline);
-                } else {
-                    disciplineIcon.innerHTML = '<span class="discipline-icon discipline-icon-emoji">🎮</span>';
-                }
-                cell.appendChild(disciplineIcon);
+                // Показываем иконки всех уникальных дисциплин
+                const disciplineIconsWrapper = document.createElement('div');
+                disciplineIconsWrapper.className = 'calendar-discipline-icons';
+                uniqueDisciplines.forEach(discipline => {
+                    const disciplineIcon = document.createElement('div');
+                    disciplineIcon.className = 'calendar-discipline-icon';
+                    if (window.getDisciplineIcon) {
+                        disciplineIcon.innerHTML = window.getDisciplineIcon(discipline);
+                    } else {
+                        disciplineIcon.innerHTML = '<span class="discipline-icon discipline-icon-emoji">🎮</span>';
+                    }
+                    disciplineIconsWrapper.appendChild(disciplineIcon);
+                });
+                cell.appendChild(disciplineIconsWrapper);
 
                 // Отображаем текст событий сразу в квадратике
                 const eventsText = document.createElement('div');

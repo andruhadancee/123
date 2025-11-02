@@ -425,13 +425,19 @@ body {
 
 }
 
+.calendar-discipline-icons {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 2;
+}
+
 .calendar-discipline-icon {
 
-    position: absolute;
-
-    top: 6px;
-
-    right: 6px;
+    position: relative;
 
     width: 28px;
 
@@ -442,8 +448,6 @@ body {
     align-items: center;
 
     justify-content: center;
-
-    z-index: 2;
 
     overflow: hidden;
 
@@ -581,7 +585,9 @@ body {
 
   .calendar-events-text { margin-top: auto; font-size: 9px; padding: 0 2px; line-height: 1.1; }
 
-  .calendar-discipline-icon { top: 4px; right: 4px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .calendar-discipline-icons { top: 2px; right: 2px; gap: 1px; }
+  
+  .calendar-discipline-icon { position: relative; top: 0; right: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
   .calendar-discipline-icon .discipline-icon-emoji { font-size: 16px; line-height: 1; }
   
