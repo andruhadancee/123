@@ -193,9 +193,9 @@ function createPastTournamentCard(tournament) {
                 ` : ''}
             </div>
             
-            <div class="tournament-watch-button-container" style="padding: 0 20px 20px 20px; margin-top: 16px; min-height: 42px; display: flex; align-items: center; justify-content: flex-start;">
+            <div class="tournament-watch-button-container" style="padding: 0 20px 20px 20px; margin-top: 16px; min-height: 42px;">
                 ${hasWatchUrl ? `
-                <a href="${watchUrl.trim()}" target="_blank" class="btn-submit" style="text-align: left; display: inline-block; text-decoration: none; width: auto;">
+                <a href="${watchUrl.trim()}" target="_blank" class="btn-submit">
                     Смотреть
                 </a>
                 ` : `
