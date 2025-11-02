@@ -505,9 +505,9 @@ async function getDisciplineIcon(discipline) {
         'Mobile Legends': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
         'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
         'PUBG': 'PUBG.png',
-        'HS': 'HS.png',
-        'Своя игра': 'СВОЯ ИГРА.png',
-        'СВОЯ ИГРА': 'СВОЯ ИГРА.png'
+        'HS': 'HS.jpg',
+        'Своя игра': 'СВОЯ ИГРА.jpg',
+        'СВОЯ ИГРА': 'СВОЯ ИГРА.jpg'
     };
     
     // Если есть logo_url из БД - используем его (приоритет)
@@ -534,9 +534,9 @@ function getDisciplineIconSync(discipline) {
         'Mobile Legends': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
         'MLBB': 'mobile_legends_new_logo_update_white_by_newjer53_df45cyq-pre 1.png',
         'PUBG': 'PUBG.png',
-        'HS': 'HS.png',
-        'Своя игра': 'СВОЯ ИГРА.png',
-        'СВОЯ ИГРА': 'СВОЯ ИГРА.png'
+        'HS': 'HS.jpg',
+        'Своя игра': 'СВОЯ ИГРА.jpg',
+        'СВОЯ ИГРА': 'СВОЯ ИГРА.jpg'
     };
     
     if (icons[discipline]) {

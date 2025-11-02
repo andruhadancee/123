@@ -2353,7 +2353,9 @@ main {
 }
 
 /* Увеличенные логотипы для HS и СВОЯ ИГРА */
+.discipline-icon[src*="HS.jpg"],
 .discipline-icon[src*="HS.png"],
+.discipline-icon[src*="СВОЯ ИГРА.jpg"],
 .discipline-icon[src*="СВОЯ ИГРА.png"],
 .discipline-icon[src*="PUBG.png"] {
     width: 36px !important;
