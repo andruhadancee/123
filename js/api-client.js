@@ -98,15 +98,17 @@ const API = {
     // Турниры
     tournaments: {
         // Получить все турниры (можно фильтровать по статусу)
-        async getAll(status = null) {
+        async getAll(status = null, forceReload = false) {
             try {
                 const cacheKey = `tournaments_${status || 'all'}`;
                 
-                // Пытаемся получить из кеша
-                const cached = getCachedData(cacheKey);
-                if (cached) return cached;
+                // Если не требуется принудительная перезагрузка, пытаемся получить из кеша
+                if (!forceReload) {
+                    const cached = getCachedData(cacheKey);
+                    if (cached) return cached;
+                }
                 
-                // Если в кеше нет, загружаем с сервера
+                // Если в кеше нет или требуется перезагрузка, загружаем с сервера
                 let url = `${API_BASE_URL}/api/tournaments`;
                 if (status) {
                     url += `?status=${status}`;

@@ -95,6 +95,7 @@
     async function load(){
         const monthKey = fmtMonth(current);
         events = await API.calendar.getAll(monthKey);
+        console.log(`📅 Загружено событий календаря: ${events.length} для месяца ${monthKey}`);
         allEventsCache = events; // Сохраняем в кеш
         disciplines = await API.disciplines.getAll();
         registrationLinks = await API.links.getAll(); // Загружаем ссылки для кнопки "Подать заявку"

@@ -696,8 +696,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-async function loadActiveTournaments() {
-    allActiveTournaments = await API.tournaments.getAll('active');
+async function loadActiveTournaments(forceReload = false) {
+    allActiveTournaments = await API.tournaments.getAll('active', forceReload);
     await loadActiveDisciplineFilters();
     displayFilteredActiveTournaments();
 }
@@ -765,8 +765,8 @@ function filterActiveTournamentsByDiscipline(discipline) {
 
 window.filterActiveTournamentsByDiscipline = filterActiveTournamentsByDiscipline;
 
-async function loadPastTournaments() {
-    allPastTournaments = await API.tournaments.getAll('finished');
+async function loadPastTournaments(forceReload = false) {
+    allPastTournaments = await API.tournaments.getAll('finished', forceReload);
     await loadPastDisciplineFilters();
     displayFilteredPastTournaments();
 }
@@ -1065,9 +1065,9 @@ async function handleFormSubmit(e) {
         
         // Обновляем отображение
         if (status === 'finished') {
-            await loadPastTournaments();
+            await loadPastTournaments(true); // Принудительно загружаем свежие данные
         } else {
-            await loadActiveTournaments();
+            await loadActiveTournaments(true); // Принудительно загружаем свежие данные
             // Также обновляем календарь, если он открыт
             if (typeof loadCalendarAdmin === 'function') {
                 await loadCalendarAdmin();
