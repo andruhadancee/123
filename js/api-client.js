@@ -236,7 +236,7 @@ const API = {
                 const response = await fetch(`${API_BASE_URL}/api/disciplines`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, ...data })
+                    body: JSON.stringify(Object.assign({ id: id }, data))
                 });
                 if (!response.ok) {
                     const error = await response.json();
@@ -570,5 +570,5 @@ window.clearDisciplinesCache = function() {
     disciplinesCache = null;
 };
 
-console.log('✅ API Client загружен и готов к работе');
+console.log('API Client загружен и готов к работе');
 

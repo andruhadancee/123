@@ -1415,11 +1415,17 @@ async function updateDisciplineDropdown() {
     const disciplines = await API.disciplines.getAll();
     
     select.innerHTML = '<option value="">Выберите дисциплину</option>' +
-        disciplines.map(d => `<option value="${d}">${d}</option>`).join('');
+        disciplines.map(d => {
+            const name = typeof d === 'object' ? d.name : d;
+            return `<option value="${name}">${name}</option>`;
+        }).join('');
     
     // Восстанавливаем выбранное значение если оно есть
-    if (currentValue && disciplines.includes(currentValue)) {
-        select.value = currentValue;
+    if (currentValue) {
+        const disciplineNames = disciplines.map(d => typeof d === 'object' ? d.name : d);
+        if (disciplineNames.includes(currentValue)) {
+            select.value = currentValue;
+        }
     }
 }
 
