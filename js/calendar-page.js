@@ -274,7 +274,8 @@
                 eventsText.className = 'calendar-events-text';
                 eventsText.innerHTML = dayEventsFiltered.slice(0, 2).map(e => {
                     const shortTitle = e.title.length > 15 ? e.title.substring(0, 15) + '...' : e.title;
-                    return `<div class="calendar-event-item" style="color: ${firstDiscipline ? getDisciplineColor(firstDiscipline) : '#8b5abf'}">${shortTitle}</div>`;
+                    const eventColor = e.discipline ? getDisciplineColor(e.discipline) : '#8b5abf';
+                    return `<div class="calendar-event-item" style="color: ${eventColor}">${shortTitle}</div>`;
                 }).join('');
                 if (dayEventsFiltered.length > 2) {
                     eventsText.innerHTML += `<div class="calendar-event-more">+${dayEventsFiltered.length - 2}</div>`;
